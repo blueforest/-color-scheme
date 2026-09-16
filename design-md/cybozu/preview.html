@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design System Preview: lorem ipsum (Cybozu)</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #fff;
+    color: #333;
+    font-family: "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", Meiryo, メイリオ, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 2.0;
+    letter-spacing: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* NAV */
+  .nav {
+    position: sticky; top: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 32px; height: 64px;
+    background: #fff;
+    border-bottom: 1px solid #ddd;
+  }
+  .nav-brand { font-size: 18px; font-weight: 700; color: #333; text-decoration: none; }
+  .nav-links { display: flex; gap: 24px; list-style: none; }
+  .nav-links a { font-size: 14px; font-weight: 400; color: #666; text-decoration: none; transition: color 0.15s; }
+  .nav-links a:hover { color: #333; }
+
+  /* HERO */
+  .hero { padding: 80px 32px 64px; text-align: center; background: #f7f7f7; }
+  .hero h1 {
+    font-size: 28px; font-weight: 700; line-height: 2.0;
+    color: #333; margin-bottom: 16px;
+  }
+  .hero p {
+    font-size: 16px; font-weight: 400; line-height: 2.0;
+    color: #555; max-width: 640px; margin: 0 auto 32px;
+  }
+
+  /* SECTIONS */
+  .section { padding: 64px 32px; max-width: 860px; margin: 0 auto; }
+  .section-label {
+    font-size: 12px; font-weight: 600; color: #999;
+    text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.06em;
+  }
+  .section-title {
+    font-size: 22px; font-weight: 700; line-height: 2.0;
+    margin-bottom: 32px; color: #333;
+  }
+  .section-divider { border: none; border-top: 1px solid #ddd; margin: 0; }
+  .section-gray { background: #f7f7f7; padding: 64px 32px; }
+  .section-gray .section-inner { max-width: 860px; margin: 0 auto; }
+
+  /* TYPOGRAPHY */
+  .type-sample { margin-bottom: 28px; padding-bottom: 24px; border-bottom: 1px solid #eee; }
+  .type-sample:last-child { border-bottom: none; }
+  .type-meta { font-size: 12px; font-weight: 400; color: #999; margin-top: 8px; font-family: Menlo, Consolas, monospace; }
+  .type-context { display: inline-block; background: #f0f0f0; color: #666; font-size: 11px; padding: 2px 8px; border-radius: 4px; margin-left: 8px; }
+
+  /* LINE-HEIGHT COMPARISON */
+  .lh-comparison { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-bottom: 32px; }
+  .lh-box { padding: 24px; border: 1px solid #ddd; border-radius: 8px; background: #fff; }
+  .lh-box h3 { font-size: 14px; font-weight: 700; margin-bottom: 12px; color: #333; }
+  .lh-box-label { font-size: 11px; font-weight: 600; color: #999; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .lh-highlight { background: #fffde7; }
+
+  /* ARTICLE PREVIEW */
+  .article-preview { max-width: 640px; margin: 0 auto; }
+  .article-preview h1 { font-size: 28px; font-weight: 700; line-height: 2.0; margin-bottom: 16px; }
+  .article-preview h2 { font-size: 16px; font-weight: 400; line-height: 2.0; margin: 24px 0 12px; }
+  .article-preview p { font-size: 16px; font-weight: 400; line-height: 2.0; letter-spacing: normal; font-feature-settings: normal; margin-bottom: 16px; color: #333; }
+  .article-preview p strong { font-weight: 700; }
+
+  /* COLORS */
+  .color-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(155px, 1fr)); gap: 12px; margin-bottom: 24px; }
+  .color-swatch { border-radius: 8px; overflow: hidden; background: #fff; border: 1px solid #ddd; }
+  .color-swatch-block { height: 72px; width: 100%; }
+  .color-swatch-info { padding: 10px 12px; }
+  .color-swatch-name { font-size: 13px; font-weight: 600; margin-bottom: 2px; color: #333; }
+  .color-swatch-hex { font-size: 12px; color: #999; font-family: Menlo, Consolas, monospace; }
+  .color-swatch-role { font-size: 11px; color: #999; margin-top: 3px; }
+
+  /* FONT STACK */
+  .font-stack { background: #f7f7f7; border: 1px solid #ddd; border-radius: 8px; padding: 20px 24px; margin-bottom: 24px; font-family: Menlo, Consolas, monospace; font-size: 13px; line-height: 1.8; color: #333; overflow-x: auto; white-space: pre-wrap; word-break: break-all; }
+
+  /* CARDS */
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
+  .card { background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 24px; }
+  .card h3 { font-size: 16px; font-weight: 700; line-height: 2.0; margin-bottom: 8px; }
+  .card p { font-size: 16px; color: #555; line-height: 2.0; }
+
+  /* FOOTER */
+  .footer { padding: 32px; text-align: center; background: #f7f7f7; font-size: 12px; color: #999; }
+  .footer a { color: #666; text-decoration: underline; }
+
+  @media (max-width: 769px) {
+    .hero h1 { font-size: 22px; }
+    .nav-links { display: none; }
+    .section { padding: 48px 20px; }
+    .section-gray { padding: 48px 20px; }
+    .lh-comparison { grid-template-columns: 1fr; }
+    .card-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="nav-brand" href="#">lorem ipsum Cybozu</a>
+  <ul class="nav-links">
+    <li><a href="#typography">Typography</a></li>
+    <li><a href="#line-height">Line Height</a></li>
+    <li><a href="#article">Article</a></li>
+    <li><a href="#colors">Colors</a></li>
+    <li><a href="#font-stack">Font Stack</a></li>
+  </ul>
+</nav>
+
+<section class="hero">
+  <h1>Design System Preview<br>cybozu.co.jp</h1>
+  <p>DESIGN.md lorem ipsum dolor sit amet consectetur adipiscing. line-height: 2.0 lorem ipsum dolor sit amet, lorem ipsum dolor Pro W3 lorem ipsum dolor sit amet consectetur adipiscing.</p>
+</section>
+
+<hr class="section-divider">
+
+<!-- TYPOGRAPHY -->
+<section class="section" id="typography">
+  <div class="section-label">01 / Typography</div>
+  <h2 class="section-title">lorem ipsum dolor sit</h2>
+
+  <div class="type-sample">
+    <div style="font-size:16px; font-weight:700; line-height:2.0;">lorem ipsum dolor sit, lorem ipsum dolor sit</div>
+    <div class="type-meta">16px / 700 / line-height: 2.0 / letter-spacing: normal / palt: lorem<span class="type-context">lorem ipsum (p bold)</span></div>
+  </div>
+  <div class="type-sample">
+    <div style="font-size:16px; font-weight:400; line-height:2.0;">lorem ipsum dolor — Heading 2</div>
+    <div class="type-meta">16px / 400 / line-height: 2.0 / letter-spacing: normal / palt: lorem<span class="type-context">h2</span></div>
+  </div>
+  <div class="type-sample">
+    <div style="font-size:16px; font-weight:400; line-height:2.0;">lorem ipsum dolor — lorem ipsum dolor“lorem ipsum dolor sit amet consectetur”lorem ipsum dolor sit amet consectetur. lorem ipsum dolor sit amet, lorem ipsum dolor sit amet consectetur adipiscing. line-height: 2.0 lorem ipsum dolor sit amet, lorem ipsum dolor sit amet consectetur adipiscing elit.</div>
+    <div class="type-meta">16px / 400 / line-height: 2.0 / letter-spacing: normal / palt: lorem<span class="type-context">body</span></div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- LINE-HEIGHT COMPARISON -->
+<section class="section-gray" id="line-height">
+<div class="section-inner">
+  <div class="section-label">02 / Line Height Comparison</div>
+  <h2 class="section-title">lorem ipsum — line-height: 2.0 vs 1.5</h2>
+  <p style="font-size:14px; color:#666; margin-bottom:24px;">lorem ipsum dolor SmartHR lorem ipsum dolor. lorem ipsum dolor sit amet consectetur adipiscing.</p>
+
+  <div class="lh-comparison">
+    <div class="lh-box lh-highlight">
+      <div class="lh-box-label">lorem ipsum — line-height: 2.0</div>
+      <h3>cybozu.co.jp</h3>
+      <p style="font-size:16px; line-height:2.0; color:#333;">lorem ipsum dolor sit amet consectetur. lorem ipsum dolor, lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod. lorem ipsum dolor sit, 100 lorem 100 lorem ipsum dolor sit amet. lorem ipsum dolor sit amet consectetur.</p>
+    </div>
+    <div class="lh-box">
+      <div class="lh-box-label">SmartHR — line-height: 1.5</div>
+      <h3>smarthr.jp</h3>
+      <p style="font-size:16px; line-height:1.5; color:#333;">lorem ipsum dolor sit amet consectetur. lorem ipsum dolor, lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod. lorem ipsum dolor sit, 100 lorem 100 lorem ipsum dolor sit amet. lorem ipsum dolor sit amet consectetur.</p>
+    </div>
+  </div>
+
+  <div class="lh-comparison">
+    <div class="lh-box lh-highlight">
+      <div class="lh-box-label">lorem ipsum — line-height: 2.0</div>
+      <h3>lorem ipsum dolor sit</h3>
+      <p style="font-size:16px; line-height:2.0; color:#333;">lorem ipsum dolor sit amet consectetur. lorem ipsum dolor sit amet consectetur adipiscing elit sed do. lorem ipsum, lorem, lorem ipsum. lorem ipsum dolor sit, lorem ipsum dolor sit amet consectetur adipiscing elit sed. kintone lorem Garoon lorem ipsum dolor, lorem ipsum dolor sit amet consectetur adipiscing.</p>
+    </div>
+    <div class="lh-box">
+      <div class="lh-box-label">SmartHR — line-height: 1.5</div>
+      <h3>lorem ipsum dolor sit</h3>
+      <p style="font-size:16px; line-height:1.5; color:#333;">lorem ipsum dolor sit amet consectetur. lorem ipsum dolor sit amet consectetur adipiscing elit sed do. lorem ipsum, lorem, lorem ipsum. lorem ipsum dolor sit, lorem ipsum dolor sit amet consectetur adipiscing elit sed. kintone lorem Garoon lorem ipsum dolor, lorem ipsum dolor sit amet consectetur adipiscing.</p>
+    </div>
+  </div>
+
+  <p style="font-size:13px; color:#999; margin-top:16px;">lorem: lorem ipsum(line-height: 2.0)lorem ipsum dolor, 1 lorem ipsum dolor sit amet. lorem: SmartHR(line-height: 1.5)lorem UI lorem ipsum dolor sit amet consectetur.</p>
+</div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ARTICLE PREVIEW -->
+<section class="section" id="article">
+  <div class="section-label">03 / Article Preview</div>
+  <h2 class="section-title">lorem ipsum dolor sit amet consectetur</h2>
+  <div class="article-preview">
+    <h1>lorem ipsum dolor sit amet consectetur</h1>
+    <p><strong>lorem ipsum dolor sit, lorem ipsum dolor sit</strong>. lorem ipsum dolor sit, lorem ipsum dolor sit amet consectetur adipiscing elit sed do. kintone, Garoon, lorem ipsum Office, lorem ipsum dolor. lorem ipsum dolor sit amet, lorem ipsum dolor sit amet consectetur.</p>
+    <h2>lorem ipsum dolor sit</h2>
+    <p>100 lorem ipsum 100 lorem ipsum dolor sit. lorem ipsum dolor sit amet consectetur, lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod. lorem ipsum, lorem, lorem ipsum dolor. lorem ipsum dolor sit amet, lorem ipsum dolor.</p>
+    <h2>lorem ipsum dolor sit amet consectetur</h2>
+    <p>lorem ipsum, lorem ipsum dolor, lorem ipsum dolor sit. lorem ipsum dolor sit amet consectetur adipiscing, lorem ipsum dolor sit amet consectetur adipiscing. lorem ipsum dolor sit amet consectetur, lorem ipsum dolor sit amet consectetur adipiscing.</p>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- COLORS -->
+<section class="section" id="colors">
+  <div class="section-label">04 / Colors</div>
+  <h2 class="section-title">lorem ipsum dolor</h2>
+
+  <div class="color-grid">
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#333"></div><div class="color-swatch-info"><div class="color-swatch-name">Text Primary</div><div class="color-swatch-hex">#333333</div><div class="color-swatch-role">lorem ipsum dolor</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#fff; border-bottom:1px solid #ddd"></div><div class="color-swatch-info"><div class="color-swatch-name">Background</div><div class="color-swatch-hex">#ffffff</div><div class="color-swatch-role">lorem ipsum</div></div></div>
+  </div>
+
+  <p style="font-size:13px; color:#999; margin-top:16px;">CSS Custom Properties lorem ipsum dolor sit amet consectetur adipiscing. lorem ipsum dolor sit amet consectetur adipiscing.</p>
+</section>
+
+<hr class="section-divider">
+
+<!-- FONT STACK -->
+<section class="section" id="font-stack">
+  <div class="section-label">05 / Font Stack</div>
+  <h2 class="section-title">lorem ipsum dolor sit</h2>
+
+  <div class="font-stack">font-family: "lorem ipsum dolor Pro W3", "Hiragino Kaku Gothic Pro", Meiryo, lorem ipsum, "ＭＳ Ｐlorem ipsum", "MS PGothic", sans-serif;</div>
+
+  <div class="card-grid">
+    <div class="card">
+      <h3>lorem ipsum dolor</h3>
+      <p>lorem ipsum dolor Pro W3 lorem ipsum dolor sit amet consectetur. lorem ipsum dolor sit amet consectetur adipiscing.</p>
+    </div>
+    <div class="card">
+      <h3>Pro vs ProN</h3>
+      <p>lorem ipsum dolor Pro(JIS90 lorem)lorem. ProN(JIS2004 lorem)lorem ipsum dolor, lorem ipsum dolor sit amet consectetur.</p>
+    </div>
+    <div class="card">
+      <h3>lorem ipsum dolor</h3>
+      <p>ＭＳ Ｐlorem ipsum dolor / lorem ipsum dolor sit, lorem Windows lorem ipsum dolor sit amet consectetur.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- SPEC SUMMARY -->
+<section class="section" id="spec">
+  <div class="section-label">06 / Spec Summary</div>
+  <h2 class="section-title">lorem ipsum dolor</h2>
+
+  <div class="card-grid">
+    <div class="card">
+      <h3>line-height: 2.0</h3>
+      <p>lorem ipsum dolor. note lorem ipsum dolor sit amet consectetur adipiscing. SmartHR(1.5)lorem ipsum dolor 33%lorem.</p>
+    </div>
+    <div class="card">
+      <h3>palt: lorem</h3>
+      <p>font-feature-settings lorem normal. lorem ipsum dolor sit amet consectetur, lorem ipsum dolor sit. lorem ipsum dolor sit amet consectetur.</p>
+    </div>
+    <div class="card">
+      <h3>CSS Custom Properties lorem</h3>
+      <p>lorem ipsum dolor sit amet consectetur adipiscing. lorem ipsum CSS lorem ipsum dolor sit.</p>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  Generated from <a href="https://cybozu.co.jp/">cybozu.co.jp</a> DESIGN.md — awesome-design-md-jp
+</footer>
+
+</body>
+</html>

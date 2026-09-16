@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design System Preview: lorem ipsum dolor NAKAMURA TOKICHI</title>
+<!--
+  原典は Noto Serif JP を自己ホストしている。Google Fonts で配信されているため代替は不要。
+  ただしウェイトの制約が重要:
+
+    @font-face { font-family:"Noto Serif JP"; src:url(".../NotoSerifJP-Light.woff");
+                 font-weight:300; font-display:swap; }
+    @font-face { font-family:"Noto Serif JP"; src:url(".../NotoSerifJP-Medium.woff");
+                 font-weight:500; font-display:swap; }
+
+  自己ホストされているのは Light(300) と Medium(500) の 2 ウェイトだけ。
+  400 / 700 は載っていないので、font-weight:700 を指定した箇所（ナビの親項目・電話番号）は
+  合成太字か Medium への丸めになる。実装では 300 / 500 の 2 段で設計すること。
+  このプレビューでは原典に合わせて 300 / 500 のみ読み込む。
+
+  原典には serif ファミリが 2 つ混在する:
+    "Noto Serif JP"       … 自己ホスト。本文・見出し・ナビのほぼ全部
+    "Noto Serif Japanese" … Shopify のテーマ設定（--font-body-family）が配信。
+                            検索入力・言語セレクタ・一部フォームラベルのみ
+  移植時は前者に一本化するのが望ましい。ここでは "Noto Serif JP" に統一している。
+
+  原典の組版設定:
+    html { font-size: calc(var(--font-body-scale) * 62.5%) }   1rem = 10px
+    body { font-size:15px; font-weight:300; line-height:1.8; letter-spacing:0.6px; color:#333 }
+    font-feature-settings: normal    全域。palt は一切使っていない
+
+  この設計の核心は letter-spacing。
+    小見出し「中村銘茶」   18px に 18px  = 1.0em
+    セクション見出し       28px に 14px  = 0.5em
+    ナビ（カテゴリ）       14px に  2px  = 0.143em
+    本文                   15px に 0.6px = 0.04em
+  詰めるのではなく「開ける」方向に振る。palt を足すとこの設計と喧嘩する。
+
+  角丸と影は Shopify のテーマ変数レベルでゼロにされている
+  （--buttons-radius:0 / --*-shadow-opacity:0.0）。
+  例外は検索フィールドの 100px、ランキングバッジの 50%、バリアントピルの 40px だけ。
+
+  第三者アプリの色（#0f571e / #72a95a / #222222 / #0000ee）はテーマの一部ではないので
+  このプレビューには含めない。テーマのボタン色は #333333 の墨。
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* ===== Colors: Shopify の color-scheme として定義される ===== */
+    --color-foreground:   #333333;  /* 墨。文字・ボタン面・罫のすべて */
+    --color-background:   #ffffff;  /* scheme-1。トップ・ヘッダー */
+    --color-background-3: #fffef8;  /* scheme-3。商品一覧・商品詳細の生成り */
+    --color-button:       #333333;
+    --color-button-text:  #ffffff;
+
+    --kincha:        #c7b385;  /* 金茶。ランキングバッジのみ。サイト唯一の差し色 */
+    --text-secondary: rgba(51,51,51,.75);
+    --text-muted:     #4d4d4d;
+    --nav-parent:     #666666;
+    --panel:          #f8f8f8;
+    --overlay-light:  rgba(0,0,0,.04);
+    --scrim:          rgba(0,0,0,.4);
+    --scrim-light:    rgba(255,255,255,.5);
+
+    --border:         #dddddd;
+    --border-strong:  #aaaaaa;
+    --border-card:    rgba(51,51,51,.1);   /* --product-card-border-opacity: 0.1 */
+    --border-media:   rgba(51,51,51,.05);  /* --media-border-opacity: 0.05 */
+    --border-input:   rgba(51,51,51,.55);  /* --inputs-border-opacity: 0.55 */
+    --error:          #e83737;
+    --soldout:        rgba(56,56,56,.5);
+
+    /* ===== Fonts ===== */
+    --font: "Noto Serif JP", serif;
+    --font-mono: SFMono-Regular, Consolas, Menlo, monospace;
+
+    /* ===== Weights: 実質 300 / 500 の 2 段 ===== */
+    --w-light: 300;
+    --w-medium: 500;
+
+    /* ===== Letter spacing: この設計の核心 ===== */
+    --ls-body:      .04em;   /* 15px に 0.6px */
+    --ls-sub:      1.0em;    /* 小見出し「中村銘茶」 */
+    --ls-section:   .5em;    /* セクション見出し「季節を味わう」 */
+    --ls-section-2: .15em;   /* 生成り面のセクション見出し */
+    --ls-nav:       .143em;  /* ナビ（カテゴリ） */
+    --ls-onphoto:   .125em;  /* 写真上の商品名 */
+    --ls-caption:   .077em;
+
+    /* ===== Line height ===== */
+    --lh-body: 1.8;
+    --lh-head: 1.3;
+
+    /* ===== Shape: すべて 0。例外 3 つのみ ===== */
+    --buttons-radius: 0px;
+    --inputs-radius: 0px;
+    --media-radius: 0px;
+    --product-card-corner-radius: 0px;
+    --popup-corner-radius: 0px;
+    --r-search: 100px;         /* 検索フィールド（サイト唯一のピル） */
+    --r-rank: 50%;             /* ランキングバッジ */
+    --variant-pills-radius: 40px;
+    --badge-corner-radius: 40px;
+
+    /* ===== Layout ===== */
+    --page-width: 130rem;      /* = 1300px */
+    --grid-desktop: 8px;
+    --grid-mobile: 4px;
+    --spacing-sections: 0px;
+
+    /* ===== Motion ===== */
+    --duration-short: .1s;
+    --duration-default: .2s;
+    --duration-medium: .3s;
+    --duration-long: .5s;
+    --alpha-link: .85;
+  }
+
+  html { font-size: 62.5%; }   /* 1rem = 10px */
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font);
+    font-size: 1.5rem;                 /* 15px */
+    font-weight: var(--w-light);
+    line-height: var(--lh-body);
+    letter-spacing: var(--ls-body);
+    font-feature-settings: normal;     /* palt は使わない */
+    -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+  }
+  .container { width: 100%; max-width: var(--page-width); margin: 0 auto; padding: 0 2rem; }
+  .narrow { max-width: 80rem; }
+  .kinari { background: var(--color-background-3); }
+
+  /* ===== Announcement ===== */
+  .announce { text-align: center; padding: 1.2rem 2rem; font-size: 1.3rem;
+    letter-spacing: var(--ls-caption); color: var(--text-muted);
+    border-bottom: 1px solid var(--border); }
+
+  /* ===== Header ===== */
+  .header { border-bottom: 1px solid var(--border); }
+  .header-top { display: flex; align-items: center; justify-content: space-between;
+    gap: 2rem; padding: 1.6rem 0; flex-wrap: wrap; }
+  .logo { display: flex; align-items: center; gap: 1rem; }
+  .logo-mark { width: 42px; height: 42px; border-radius: 50%;
+    background: var(--color-foreground); color: #fff; display: flex; align-items: center;
+    justify-content: center; font-size: 2rem; letter-spacing: normal; }
+  .logo-jp { font-size: 2.4rem; font-weight: var(--w-medium); letter-spacing: .04em; line-height: 1.2; }
+  .logo-en { font-size: 1.1rem; letter-spacing: .18em; color: var(--text-secondary); }
+  .header-tools { display: flex; align-items: center; gap: 1.6rem; }
+  .search { display: flex; align-items: center; gap: .8rem;
+    border: 1px solid var(--border-input); border-radius: var(--r-search);
+    padding: 1.2rem 1.6rem; min-width: 240px; }
+  .search input { border: none; outline: none; background: transparent; width: 100%;
+    font-family: var(--font); font-size: 1.3rem; font-weight: 400;
+    letter-spacing: .031em; color: var(--color-foreground); }
+  .icon-btn { font-size: 1.2rem; text-align: center; color: var(--text-secondary);
+    letter-spacing: var(--ls-caption); text-decoration: none; }
+
+  .gnav { display: flex; justify-content: center; gap: 4rem; padding: 1.4rem 0 2rem; flex-wrap: wrap; }
+  .gnav a { font-size: 1.4rem; font-weight: var(--w-light);
+    letter-spacing: var(--ls-nav); color: var(--color-foreground); text-decoration: none; }
+  .gnav a:hover { opacity: var(--alpha-link); }
+
+  /* ===== Hero ===== */
+  .hero { height: 420px; position: relative; display: flex; align-items: flex-end;
+    background-image:
+      linear-gradient(0deg, rgba(60,48,30,.35), rgba(60,48,30,0) 60%),
+      repeating-linear-gradient(88deg, #6d5636 0 26px, #5c4729 26px 30px),
+      linear-gradient(#7b6540, #4d3c22); }
+  .hero-cap { padding: 3rem; color: #fff; }
+  .hero-cap .ttl { font-size: 1.6rem; letter-spacing: var(--ls-onphoto); line-height: 1.5; }
+
+  /* ===== Section ===== */
+  .section { padding: 8rem 0; }               /* --spacing-sections は 0。余白は内側で取る */
+  .section + .section { border-top: 1px solid var(--border); }
+  .sec-h { font-size: 2.8rem; font-weight: var(--w-light); line-height: var(--lh-head);
+    letter-spacing: var(--ls-section); margin-right: -.5em; text-align: center;
+    margin-bottom: 1rem; }
+  .sec-h-left { text-align: left; margin-right: 0; }
+  .sub-h { font-size: 1.8rem; font-weight: var(--w-light); line-height: var(--lh-head);
+    letter-spacing: var(--ls-sub); margin-right: -1em; text-align: center; }
+  .note { font-size: 1.3rem; letter-spacing: var(--ls-caption); color: var(--text-muted);
+    line-height: 1.8; margin-top: 1.2rem; }
+  .mono { font-family: var(--font-mono); font-size: 1.2rem; letter-spacing: normal;
+    font-weight: 400; }
+
+  /* ===== Grid ===== */
+  .grid { display: grid; gap: var(--grid-desktop); }
+  .g2 { grid-template-columns: repeat(2,1fr); }
+  .g3 { grid-template-columns: repeat(3,1fr); }
+  .g4 { grid-template-columns: repeat(4,1fr); }
+  .gap-l { gap: 2.4rem; }
+  @media (max-width: 989px){ .g4 { grid-template-columns: repeat(3,1fr); } }
+  @media (max-width: 749px){ .g3,.g4 { grid-template-columns: repeat(2,1fr); } .g2 { grid-template-columns:1fr; }
+    .grid { gap: var(--grid-mobile); } }
+
+  /* ===== Swatch ===== */
+  .swatch { border: 1px solid var(--border-card); }
+  .swatch-block { height: 84px; }
+  .swatch-info { padding: 1.2rem 1.4rem 1.6rem; }
+  .swatch-name { font-size: 1.4rem; font-weight: var(--w-medium); letter-spacing: var(--ls-body); line-height: 1.4; }
+  .swatch-hex { font-family: var(--font-mono); font-size: 1.1rem; letter-spacing: normal;
+    color: var(--text-muted); margin-top: .5rem; }
+  .swatch-role { font-size: 1.1rem; color: var(--text-muted); margin-top: .6rem; line-height: 1.7; }
+
+  /* ===== Type rows ===== */
+  .type-row { display: grid; grid-template-columns: 210px 1fr; gap: 2.4rem;
+    padding: 2.4rem 0; border-bottom: 1px solid var(--border); align-items: baseline; }
+  .type-meta { font-family: var(--font-mono); font-size: 1.1rem; letter-spacing: normal;
+    color: var(--text-muted); line-height: 1.7; }
+  @media (max-width: 749px){ .type-row { grid-template-columns: 1fr; gap: .8rem; } }
+
+  .t-sec   { font-size: 2.8rem; font-weight: 300; line-height: 1.3; letter-spacing: .5em; }
+  .t-sec2  { font-size: 2.8rem; font-weight: 300; line-height: 1.8; letter-spacing: .15em; }
+  .t-sub   { font-size: 1.8rem; font-weight: 300; line-height: 1.3; letter-spacing: 1em; }
+  .t-lg    { font-size: 2.4rem; font-weight: 300; line-height: 1.3; letter-spacing: var(--ls-body); }
+  .t-pt    { font-size: 1.6rem; font-weight: 300; line-height: 1.3; letter-spacing: var(--ls-body); }
+  .t-body  { font-size: 1.5rem; font-weight: 300; line-height: 1.8; letter-spacing: var(--ls-body); }
+  .t-nav   { font-size: 1.4rem; font-weight: 300; line-height: 1.3; letter-spacing: var(--ls-nav); }
+  .t-cap   { font-size: 1.3rem; font-weight: 300; line-height: 1.3; letter-spacing: var(--ls-caption); color: var(--text-muted); }
+  .t-legal { font-size: 1.2rem; font-weight: 300; line-height: 1.8; letter-spacing: var(--ls-body); }
+  .t-med   { font-size: 1.6rem; font-weight: 500; line-height: 1.25; letter-spacing: var(--ls-body); }
+  .t-tel   { font-size: 3rem; font-weight: 500; line-height: 1.2; letter-spacing: var(--ls-body); }
+
+  /* ===== Buttons ===== */
+  .btn { display: inline-flex; align-items: center; justify-content: center;
+    font-family: var(--font); font-weight: var(--w-light); letter-spacing: var(--ls-body);
+    font-feature-settings: normal; cursor: pointer; text-decoration: none;
+    border-radius: var(--buttons-radius); box-shadow: none;
+    transition: opacity var(--duration-default); }
+  .btn:hover { opacity: var(--alpha-link); }
+  .btn-primary { background: var(--color-button); color: var(--color-button-text);
+    border: 1px solid var(--color-button); font-size: 1.5rem; padding: 1.2rem 2.4rem; }
+  .btn-secondary { background: transparent; color: var(--color-foreground);
+    border: 1px solid var(--color-foreground); font-size: 1.5rem; padding: 1.2rem 2.4rem; }
+  .btn-inverse { background: transparent; color: #fff; border: 1px solid #fff;
+    font-size: 1.5rem; padding: 1.2rem 2.4rem; }
+  .btn-wide { background: var(--color-button); color: var(--color-button-text);
+    border: none; border-radius: 2px; font-size: 1.5rem; padding: .8rem 4rem; }
+  .btn-row { display: flex; flex-wrap: wrap; gap: 1.6rem; align-items: center; }
+  .btn:disabled { background: var(--soldout); border-color: transparent; cursor: not-allowed; }
+
+  /* ===== Badges ===== */
+  .rank { width: 30px; height: 30px; border-radius: var(--r-rank); background: var(--kincha);
+    color: #fff; display: inline-flex; align-items: center; justify-content: center;
+    font-size: 1.5rem; font-weight: var(--w-medium); letter-spacing: normal; }
+  .vpill { display: inline-flex; align-items: center; border-radius: var(--variant-pills-radius);
+    border: 1px solid var(--border-input); background: #fff; color: var(--color-foreground);
+    padding: 0 1.6rem; height: 34px; font-size: 1.4rem; font-weight: 400; letter-spacing: var(--ls-body); }
+  .vpill[aria-pressed="true"] { border-color: var(--color-foreground); }
+  .badge-row { display: flex; flex-wrap: wrap; gap: 1.2rem; align-items: center; }
+
+  /* ===== Product cards ===== */
+  .pcard { border: 0; border-radius: var(--product-card-corner-radius); box-shadow: none;
+    text-align: left; text-decoration: none; color: var(--color-foreground); display: block; }
+  .pcard .media { position: relative; aspect-ratio: 1 / 1;
+    border: 1px solid var(--border-media); border-radius: var(--media-radius);
+    background-image: repeating-linear-gradient(120deg, #e6e2d2 0 18px, #dcd7c3 18px 28px),
+      linear-gradient(#efece0, #ddd8c6); }
+  .pcard .media .rank { position: absolute; top: 1rem; left: 1rem; }
+  .pcard .ttl { font-size: 1.5rem; font-weight: var(--w-light); line-height: 1.3;
+    letter-spacing: var(--ls-body); margin-top: 1.2rem; }
+  .pcard .price { font-size: 1.4rem; font-weight: var(--w-light); letter-spacing: var(--ls-body);
+    color: var(--text-secondary); margin-top: .4rem; }
+  .pcard:hover .media { opacity: var(--alpha-link); }
+
+  /* ===== News ===== */
+  .news { border-top: 1px solid var(--border); }
+  .news a { display: block; padding: 2rem .4rem; border-bottom: 1px solid var(--border);
+    text-decoration: none; color: var(--color-foreground); }
+  .news a:hover { opacity: var(--alpha-link); }
+  .news .date { font-size: 1.3rem; letter-spacing: var(--ls-caption); color: var(--text-muted); }
+  .news .ttl { font-size: 1.4rem; font-weight: var(--w-light); line-height: 1.4;
+    letter-spacing: .071em; margin-top: .4rem; }
+
+  /* ===== Forms ===== */
+  .field { margin-bottom: 2.4rem; }
+  .field label { display: block; font-size: 1.6rem; font-weight: var(--w-light);
+    letter-spacing: .063em; color: var(--text-secondary); margin-bottom: .8rem; }
+  .field input, .field textarea, .field select { width: 100%; background: #fff;
+    border: 1px solid var(--border-input); border-radius: var(--inputs-radius);
+    box-shadow: none; padding: 1.5rem;
+    font-family: var(--font); font-size: 1.6rem; font-weight: 400;
+    letter-spacing: .025em; color: var(--color-foreground); line-height: 1.5;
+    font-feature-settings: normal; }
+  .field input:focus, .field textarea:focus { outline: none; border-color: var(--color-foreground); }
+  .field.is-focus input { border-color: var(--color-foreground); }
+  .field.is-error input { border-color: var(--error); }
+  .field .msg { margin-top: .8rem; font-size: 1.3rem; letter-spacing: var(--ls-caption); color: var(--error); }
+  .field .hint { margin-top: .8rem; font-size: 1.3rem; letter-spacing: var(--ls-caption); color: var(--text-muted); }
+
+  /* ===== Elevation ===== */
+  .elev { padding: 2.4rem; box-shadow: none; }
+  .e-media { border: 1px solid var(--border-media); }
+  .e-card  { border: 1px solid var(--border-card); }
+  .e-rule  { border: 1px solid var(--border); }
+  .elev-name { font-size: 1.4rem; font-weight: var(--w-medium); letter-spacing: var(--ls-body); }
+
+  /* ===== Spacing bars ===== */
+  .sp-row { display: flex; align-items: center; gap: 1.6rem; margin-bottom: .8rem; }
+  .sp-bar { background: var(--kincha); height: 14px; }
+  .sp-label { font-family: var(--font-mono); font-size: 1.1rem; letter-spacing: normal;
+    color: var(--text-muted); white-space: nowrap; }
+
+  .footer { border-top: 1px solid var(--border); padding: 8rem 0 2rem; margin-top: 8rem; }
+  .footer .copy { font-size: 1.2rem; font-weight: var(--w-light); letter-spacing: var(--ls-body);
+    color: var(--text-secondary); margin-top: 4rem; }
+</style>
+</head>
+<body>
+
+<div class="announce">lorem ipsum dolor sit amet consectetur adipiscing elit sed →</div>
+
+<header class="header">
+  <div class="container">
+    <div class="header-top">
+      <div class="logo">
+        <div class="logo-mark">lorem</div>
+        <div>
+          <div class="logo-jp">lorem ipsum dolor</div>
+          <div class="logo-en">NAKAMURA TOKICHI</div>
+        </div>
+      </div>
+      <div class="header-tools">
+        <div class="search"><span aria-hidden="true">⌕</span><input type="search" placeholder="商品を探す"></div>
+        <a href="#" class="icon-btn">lorem ipsum</a>
+        <a href="#" class="icon-btn">lorem</a>
+        <a href="#" class="icon-btn">global</a>
+      </div>
+    </div>
+    <nav class="gnav">
+      <a href="#">lorem ipsum</a><a href="#">lorem / lorem ipsum</a><a href="#">lorem ipsum</a>
+      <a href="#">lorem ipsum</a><a href="#">lorem ipsum</a><a href="#">lorem ipsum dolor</a>
+    </nav>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="hero-cap"><div class="ttl">lorem ipsum dolor, lorem ipsum</div></div>
+</div>
+
+<!-- ============ COLORS ============ -->
+<section class="section">
+  <div class="container">
+    <h2 class="sec-h sec-h-left">Colors</h2>
+    <p class="note">lorem<strong>lorem<code class="mono">#333333</code> lorem ipsum<code class="mono">#fffef8</code> lorem</strong>. lorem ipsum dolor sit amet consectetur.</p>
+
+    <div class="grid g4 gap-l" style="margin-top:2.4rem">
+      <div class="swatch"><div class="swatch-block" style="background:var(--color-foreground)"></div>
+        <div class="swatch-info"><div class="swatch-name">lorem / Sumi</div><div class="swatch-hex">#333333</div>
+        <div class="swatch-role">--color-foreground / --color-button. lorem / lorem ipsum / lorem ipsum</div></div></div>
+      <div class="swatch"><div class="swatch-block" style="background:var(--color-background-3)"></div>
+        <div class="swatch-info"><div class="swatch-name">lorem / Kinari</div><div class="swatch-hex">#fffef8</div>
+        <div class="swatch-role">scheme-3. lorem ipsum / lorem ipsum dolor</div></div></div>
+      <div class="swatch"><div class="swatch-block" style="background:var(--color-background);box-shadow:inset 0 0 0 1px #ddd"></div>
+        <div class="swatch-info"><div class="swatch-name">Paper</div><div class="swatch-hex">#ffffff</div>
+        <div class="swatch-role">scheme-1. lorem / lorem ipsum dolor</div></div></div>
+      <div class="swatch"><div class="swatch-block" style="background:var(--kincha)"></div>
+        <div class="swatch-info"><div class="swatch-name">lorem / Kincha</div><div class="swatch-hex">#c7b385</div>
+        <div class="swatch-role">lorem ipsum dolor sit. lorem ipsum dolor sit</div></div></div>
+      <div class="swatch"><div class="swatch-block" style="background:var(--text-secondary)"></div>
+        <div class="swatch-info"><div class="swatch-name">Text Secondary</div><div class="swatch-hex">rgba(51,51,51,.75)</div>
+        <div class="swatch-role">lorem ipsum dolor / lorem ipsum dolor / lorem ipsum dolor</div></div></div>
+      <div class="swatch"><div class="swatch-block" style="background:var(--nav-parent)"></div>
+        <div class="swatch-info"><div class="swatch-name">Nav Parent</div><div class="swatch-hex">#666666</div>
+        <div class="swatch-role">lorem ipsum dolor sit amet</div></div></div>
+      <div class="swatch"><div class="swatch-block" style="background:var(--panel)"></div>
+        <div class="swatch-info"><div class="swatch-name">Panel</div><div class="swatch-hex">#f8f8f8</div>
+        <div class="swatch-role">lorem ipsum dolor sit</div></div></div>
+      <div class="swatch"><div class="swatch-block" style="background:var(--border)"></div>
+        <div class="swatch-info"><div class="swatch-name">Border</div><div class="swatch-hex">#dddddd</div>
+        <div class="swatch-role">lorem ipsum. lorem ipsum rgba(51,51,51,.1), lorem ipsum .05</div></div></div>
+    </div>
+
+    <p class="note" style="margin-top:4rem"><strong>lorem ipsum dolor 3 lorem.</strong>1 lorem 3 lorem ipsum dolor(<code class="mono">#ffffff</code> ↔ <code class="mono">#fffef8</code>)lorem.</p>
+    <div class="grid g3 gap-l" style="margin-top:1.6rem">
+      <div class="swatch"><div class="swatch-block" style="background:#ffffff;box-shadow:inset 0 0 0 1px #ddd;display:flex;align-items:center;justify-content:center;color:#333">scheme-1</div>
+        <div class="swatch-info"><div class="swatch-hex">fg #333333 / bg #ffffff</div><div class="swatch-role">lorem. lorem / lorem ipsum</div></div></div>
+      <div class="swatch"><div class="swatch-block" style="background:#fffef8;box-shadow:inset 0 0 0 1px #ddd;display:flex;align-items:center;justify-content:center;color:#333">scheme-3</div>
+        <div class="swatch-info"><div class="swatch-hex">fg #333333 / bg #fffef8</div><div class="swatch-role">lorem ipsum / lorem ipsum</div></div></div>
+      <div class="swatch"><div class="swatch-block" style="background:#000000;display:flex;align-items:center;justify-content:center;color:#fff">scheme-4</div>
+        <div class="swatch-info"><div class="swatch-hex">fg #ffffff / bg #000000</div><div class="swatch-role">lorem ipsum dolor(lorem ipsum)</div></div></div>
+    </div>
+
+    <p class="note" style="margin-top:4rem"><strong>lorem ipsum dolor sit(<code class="mono">#0f571e</code> / <code class="mono">#72a95a</code>)lorem<code class="mono">#222222</code> lorem Shopify lorem ipsum dolor</strong>lorem, lorem ipsum dolor sit. “lorem ipsum dolor sit amet”lorem ipsum, lorem ipsum<code class="mono">#333333</code> lorem.</p>
+  </div>
+</section>
+
+<!-- ============ TYPOGRAPHY ============ -->
+<section class="section">
+  <div class="container">
+    <h2 class="sec-h sec-h-left">Typography</h2>
+    <p class="note"><strong>lorem Light(300) lorem.</strong>lorem ipsum dolor 300 / 500 lorem 2 lorem ipsum dolor. lorem ipsum dolor sit<strong>“lorem ＋ lorem”</strong>lorem. lorem ipsum<code class="mono">1.8</code>, lorem<code class="mono">1.3</code>。<code class="mono">font-feature-settings</code> lorem<code class="mono">normal</code>(palt lorem ipsum).<code class="mono">1rem = 10px</code>。</p>
+
+    <div class="type-row"><div class="type-meta">28px / w300 / lh 1.3<br><strong>ls 14px = 0.5em</strong></div>
+      <div class="t-sec">lorem ipsum dolor</div></div>
+    <div class="type-row"><div class="type-meta">18px / w300 / lh 1.3<br><strong>ls 18px = 1.0em</strong></div>
+      <div class="t-sub">lorem ipsum</div></div>
+    <div class="type-row"><div class="type-meta">28px / w300 / lh 1.8<br>ls 4.2px = 0.15em<br>(lorem ipsum dolor)</div>
+      <div class="t-sec2">lorem ipsum dolor</div></div>
+    <div class="type-row"><div class="type-meta">24px / w300 / lh 1.3<br>ls 0.6px</div>
+      <div class="t-lg">I n s t a g r a m</div></div>
+    <div class="type-row"><div class="type-meta">16px / w300 / lh 1.3<br>ls 0.6px</div>
+      <div class="t-pt">lorem ipsum dolor sit amet</div></div>
+    <div class="type-row"><div class="type-meta">15px / w300 / lh 1.8<br>ls 0.6px = 0.04em<br>(body lorem)</div>
+      <div class="t-body">lorem ipsum dolor sit amet consectetur adipiscing, lorem ipsum dolor sit amet consectetur. lorem, lorem ipsum dolor sit amet consectetur——lorem ipsum, lorem ipsum, lorem ipsum dolor, lorem ipsum dolor sit amet.</div></div>
+    <div class="type-row"><div class="type-meta">14px / w300 / lh 1.3<br>ls 2px = 0.143em</div>
+      <div class="t-nav">lorem ipsum</div></div>
+    <div class="type-row"><div class="type-meta">13px / w300 / lh 1.3<br>ls 1px = 0.077em</div>
+      <div class="t-cap">2026.07.30　lorem ipsum(lorem ipsum dolor)</div></div>
+    <div class="type-row"><div class="type-meta">16px / <strong>w500</strong> / lh 1.25<br>ls 0.6px</div>
+      <div class="t-med">lorem ipsum dolor sit</div></div>
+    <div class="type-row"><div class="type-meta">30px / w500 / lh 1.2<br>(lorem 700 lorem → lorem / 500)</div>
+      <div class="t-tel">0120-137-555</div></div>
+    <div class="type-row"><div class="type-meta">12px / w300 / lh 1.8<br>ls 0.6px</div>
+      <div class="t-legal">lorem ipsum dolor sit amet consectetur adipiscing.</div></div>
+
+    <p class="note" style="margin-top:2.4rem"><strong><code class="mono">0.5em</code> lorem ipsum dolor sit 1 lorem ipsum dolor sit amet.</strong>lorem ipsum dolor sit<code class="mono">margin-right: -0.5em</code>（<code class="mono">1.0em</code> lorem<code class="mono">-1em</code>)lorem ipsum. lorem ipsum dolor sit amet consectetur adipiscing.</p>
+  </div>
+</section>
+
+<!-- ============ PRODUCT ============ -->
+<section class="section kinari">
+  <div class="container">
+    <h2 class="sec-h">lorem ipsum dolor</h2>
+    <p class="note" style="text-align:center">lorem ipsum dolor<code class="mono">#fffef8</code>(scheme-3). lorem ipsum dolor / radius 0 / lorem / lorem ipsum dolor. lorem ipsum dolor sit 8px.</p>
+
+    <div class="grid g4" style="margin-top:3.2rem">
+      <a href="#" class="pcard"><div class="media"><span class="rank">1</span></div>
+        <div class="ttl">lorem ipsum dolor［lorem / lorem ipsum］</div><div class="price">￥3,240(lorem)</div></a>
+      <a href="#" class="pcard"><div class="media"><span class="rank">2</span></div>
+        <div class="ttl">lorem ipsum dolor sit／100g</div><div class="price">￥2,160(lorem)</div></a>
+      <a href="#" class="pcard"><div class="media"><span class="rank">3</span></div>
+        <div class="ttl">lorem ipsum dolor sit amet</div><div class="price">￥1,296(lorem)</div></a>
+      <a href="#" class="pcard"><div class="media"><span class="rank">4</span></div>
+        <div class="ttl">lorem ipsum dolor sit amet</div><div class="price">￥1,080(lorem)</div></a>
+    </div>
+
+    <div style="text-align:center;margin-top:3.2rem">
+      <a href="#" class="btn btn-wide">lorem ipsum dolor</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ READING ============ -->
+<section class="section">
+  <div class="container narrow">
+    <h2 class="sec-h">lorem ipsum dolor</h2>
+    <p class="sub-h" style="margin-bottom:3.2rem">lorem ipsum</p>
+    <p class="t-body">lorem ipsum dolor, lorem ipsum dolor sit amet consectetur adipiscing. lorem ipsum dolor sit amet consectetur adipiscing, lorem ipsum dolor sit amet consectetur, lorem ipsum dolor sit amet consectetur adipiscing.</p>
+    <p class="t-body" style="margin-top:2.4rem">lorem ipsum dolor sit, lorem ipsum dolor sit amet consectetur adipiscing. lorem ipsum dolor sit, lorem ipsum, lorem ipsum dolor. lorem ipsum dolor, lorem ipsum dolor, lorem ipsum dolor sit amet. lorem ipsum dolor sit amet consectetur, lorem ipsum dolor sit amet.</p>
+    <p class="t-body" style="margin-top:2.4rem">lorem ipsum dolor, lorem ipsum dolor sit amet. lorem ipsum, lorem ipsum dolor sit amet consectetur. lorem, lorem ipsum dolor sit amet consectetur.</p>
+    <div class="btn-row" style="margin-top:3.2rem">
+      <a href="#" class="btn btn-primary">lorem ipsum</a>
+      <a href="#" class="btn btn-secondary">lorem ipsum dolor</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ BUTTONS ============ -->
+<section class="section">
+  <div class="container">
+    <h2 class="sec-h sec-h-left">Buttons</h2>
+    <p class="note"><strong>radius lorem 0</strong>（<code class="mono">--buttons-radius: 0px</code>）、<strong>lorem</strong>（<code class="mono">--buttons-shadow-opacity: 0.0</code>). lorem ipsum 300.</p>
+    <div class="btn-row" style="margin-top:2.4rem">
+      <button class="btn btn-primary">lorem ipsum dolor</button>
+      <button class="btn btn-secondary">lorem ipsum dolor</button>
+      <button class="btn btn-wide">lorem ipsum dolor</button>
+      <button class="btn btn-primary" disabled>lorem ipsum</button>
+    </div>
+
+    <p class="note" style="margin-top:3.2rem">lorem ipsum(scheme-4 lorem).</p>
+    <div style="background-image:repeating-linear-gradient(120deg,#6d5636 0 26px,#5c4729 26px 30px);padding:3.2rem;margin-top:1.2rem">
+      <a href="#" class="btn btn-inverse">lorem ipsum →</a>
+    </div>
+
+    <p class="note" style="margin-top:3.2rem"><strong>lorem ipsum dolor sit 3 lorem.</strong>lorem ipsum dolor(<code class="mono">100px</code>) / lorem ipsum dolor(<code class="mono">50%</code>) / lorem ipsum dolor(<code class="mono">40px</code>）。</p>
+    <div class="badge-row" style="margin-top:1.6rem">
+      <span class="rank">1</span>
+      <button class="vpill" aria-pressed="true">100g</button>
+      <button class="vpill">200g</button>
+      <button class="vpill">lorem</button>
+      <div class="search" style="min-width:220px"><span aria-hidden="true">⌕</span><input type="search" placeholder="商品を探す"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ NEWS ============ -->
+<section class="section">
+  <div class="container narrow">
+    <h2 class="sec-h sec-h-left">lorem ipsum</h2>
+    <nav class="news" style="margin-top:2.4rem">
+      <a href="#"><div class="date">2026.07.28</div><div class="ttl">lorem ipsum dolor sit amet consectetur</div></a>
+      <a href="#"><div class="date">2026.07.14</div><div class="ttl">“lorem ipsum”lorem ipsum lorem ipsum dolor sit amet</div></a>
+      <a href="#"><div class="date">2026.06.30</div><div class="ttl">lorem ipsum　lorem ipsum dolor sit amet consectetur</div></a>
+    </nav>
+  </div>
+</section>
+
+<!-- ============ FORMS ============ -->
+<section class="section">
+  <div class="container narrow">
+    <h2 class="sec-h sec-h-left">Forms</h2>
+    <div class="grid g3 gap-l">
+      <div>
+        <p class="note" style="margin:0 0 1.2rem">Default</p>
+        <div class="field"><label for="t1">lorem</label><input id="t1" type="text" value="葛原 健太">
+          <div class="hint">lorem ipsum dolor sit</div></div>
+      </div>
+      <div>
+        <p class="note" style="margin:0 0 1.2rem">Focus</p>
+        <div class="field is-focus"><label for="t2">lorem</label><input id="t2" type="email" value="hello@example.com">
+          <div class="hint">lorem ipsum dolor(radius 0 / lorem)</div></div>
+      </div>
+      <div>
+        <p class="note" style="margin:0 0 1.2rem">Error</p>
+        <div class="field is-error"><label for="t3">lorem ipsum</label><input id="t3" type="text" value="611-00">
+          <div class="msg">lorem ipsum 7 lorem ipsum dolor sit</div></div>
+      </div>
+    </div>
+    <p class="note">lorem ipsum<code class="mono">16px / w400</code>(iOS lorem ipsum dolor), lorem<code class="mono">1px solid rgba(51,51,51,.55)</code>、radius <code class="mono">0</code>. lorem ipsum<code class="mono">16px / w300 / rgba(51,51,51,.75) / ls 1px</code>。</p>
+  </div>
+</section>
+
+<!-- ============ ELEVATION ============ -->
+<section class="section">
+  <div class="container">
+    <h2 class="sec-h sec-h-left">Elevation</h2>
+    <p class="note"><strong>lorem ipsum dolor sit amet consectetur</strong>（<code class="mono">--buttons- / --inputs- / --media- / --product-card- / --popup- / --drawer- / --variant-pills-shadow-opacity</code> lorem ipsum<code class="mono">0.0</code>). lorem ipsum dolor sit amet consectetur.</p>
+    <div class="grid g4 gap-l" style="margin-top:2.4rem">
+      <div class="elev e-media"><div class="elev-name">media</div><div class="note mono">1px rgba(51,51,51,.05)</div></div>
+      <div class="elev e-card"><div class="elev-name">card / popup</div><div class="note mono">1px rgba(51,51,51,.1)</div></div>
+      <div class="elev e-rule"><div class="elev-name">rule</div><div class="note mono">1px #dddddd</div></div>
+      <div class="elev" style="background:var(--color-background-3);border:1px solid var(--border-media)">
+        <div class="elev-name">lorem ipsum</div><div class="note mono">#ffffff ↔ #fffef8</div></div>
+    </div>
+    <p class="note">lorem ipsum dolor sit amet(<code class="mono">0 0 25px rgba(0,0,0,.2)</code> lorem)lorem ipsum dolor sit amet consectetur. lorem ipsum dolor sit.</p>
+  </div>
+</section>
+
+<!-- ============ LAYOUT ============ -->
+<section class="section">
+  <div class="container">
+    <h2 class="sec-h sec-h-left">Layout</h2>
+    <p class="note">lorem ipsum<code class="mono">--page-width: 130rem</code> = <strong>1300px</strong>。<strong>lorem ipsum dolor sit 0</strong>（<code class="mono">--spacing-sections-desktop: 0px</code>)lorem, lorem ipsum dolor sit amet consectetur.</p>
+    <div style="margin-top:2.4rem">
+      <div class="sp-row"><div class="sp-bar" style="width:4px"></div><span class="sp-label">4px — lorem ipsum(lorem ipsum)</span></div>
+      <div class="sp-row"><div class="sp-bar" style="width:8px"></div><span class="sp-label">8px — lorem ipsum(lorem ipsum dolor)</span></div>
+      <div class="sp-row"><div class="sp-bar" style="width:10px"></div><span class="sp-label">10px — lorem ipsum dolor</span></div>
+      <div class="sp-row"><div class="sp-bar" style="width:15px"></div><span class="sp-label">15px — lorem</span></div>
+      <div class="sp-row"><div class="sp-bar" style="width:20px"></div><span class="sp-label">20px — lorem ipsum dolor</span></div>
+      <div class="sp-row"><div class="sp-bar" style="width:40px"></div><span class="sp-label">40px — lorem ipsum dolor</span></div>
+      <div class="sp-row"><div class="sp-bar" style="width:72px"></div><span class="sp-label">72px — lorem ipsum dolor</span></div>
+      <div class="sp-row"><div class="sp-bar" style="width:120px"></div><span class="sp-label">120px — lorem ipsum dolor</span></div>
+    </div>
+
+    <p class="note" style="margin-top:4rem">lorem.<strong>lorem 0</strong>. lorem<code class="mono">100px</code>(lorem)/<code class="mono">50%</code>(lorem ipsum)/<code class="mono">40px</code>(lorem ipsum dolor / lorem).</p>
+    <div class="btn-row" style="margin-top:1.2rem">
+      <div style="width:96px;height:56px;background:var(--overlay-light);border:1px solid var(--border-card);border-radius:0"></div>
+      <div style="width:120px;height:40px;background:#fff;border:1px solid var(--border-input);border-radius:40px"></div>
+      <div style="width:180px;height:48px;background:#fff;border:1px solid var(--border-input);border-radius:100px"></div>
+      <div style="width:40px;height:40px;background:var(--kincha);border-radius:50%"></div>
+    </div>
+
+    <p class="note" style="margin-top:4rem">lorem ipsum dolor sit Shopify Dawn lorem<code class="mono">min-width: 750px / 990px</code> lorem. lorem ipsum(<code class="mono">768 / 960 / 600 / 480 / 400px</code>)lorem ipsum dolor, lorem ipsum 750 / 990 lorem ipsum dolor. h1 lorem<code class="mono">clamp(56px, 14vw, 72px)</code> lorem ipsum, lorem ipsum. lorem 15px lorem ipsum.</p>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="t-med">lorem ipsum dolor</div>
+    <p class="t-body" style="margin-top:1.2rem">〒611-0021　lorem ipsum dolor sit amet consectetur<br>0120-137-555</p>
+    <div class="copy">lorem ipsum dolor sit amet consectetur adipiscing.<br>© NAKAMURA TOKICHI HONTEN</div>
+  </div>
+</footer>
+
+</body>
+</html>

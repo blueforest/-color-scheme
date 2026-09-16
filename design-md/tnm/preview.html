@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design System Preview: lorem ipsum dolor(Tokyo National Museum)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* === Colors: CSS 変数は実サイトに 0 個。すべて computed style の実測値。2026-09-02 === */
+    --charcoal:   #2b2b2b;  /* 基幹色。本文の文字色（933要素で最多）・濃色パネル・主要ボタン */
+    --black:      #000000;  /* 「予告」バッジ・白ボタンの上の文字。#2b2b2b と使い分ける */
+    --green:      #1b854d;  /* TNM Green。チケット・通知など行動導線の専用色 */
+    --link:       #2869dd;  /* 本文中のテキストリンク（137要素）。ボタンには使わない */
+
+    /* 開館カレンダー専用の状態色 */
+    --cal-night:  #93278f;  /* 夜間開館日（☽） */
+    --cal-closed: #666666;  /* 休館日（×） */
+
+    --danger:     #990000;  /* 来館案内の注意書き。深い赤 */
+
+    --bg:         #ffffff;  /* ページ背景。body に明示指定 */
+    --on-dark:    #ffffff;  /* 濃色パネルの上（808要素） */
+    --divider:    #4d4d4d;  /* 濃色パネル内の罫線 */
+    --line:       #d5d5d5;  /* 白地の上の淡い罫線（preview 用の派生値） */
+    --muted:      #767676;  /* 補助テキスト（preview 用の派生値） */
+
+    /* === Fonts: サイト全体でこの 1 本だけ。見出し用・本文用の使い分けが存在しない。
+           欧文優先型で、Helvetica Neue → Arial を先頭に置く。 === */
+    --font: "Helvetica Neue", Arial, "Noto Sans JP",
+            "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+    --font-mono: SFMono-Regular, Consolas, Menlo, Courier, monospace;
+
+    /* === Radius: 可視要素で 0 以外は SNS アイコンの 50% と Language の 3px、
+           ページネーションの 2px だけ === */
+    --r-none: 0;
+    --r-page: 2px;
+    --r-lang: 3px;
+    --r-circle: 50%;
+
+    /* === Spacing === */
+    --sp-xs: 5px; --sp-s: 8px; --sp-m: 16px; --sp-l: 30px; --sp-xl: 50px;
+    --container: 1280px;
+
+    --transition: .25s ease;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  /* root は 10px。1.6rem = 16px として組む */
+  html { font-size: 10px; }
+
+  body {
+    background: var(--bg);
+    color: var(--charcoal);
+    font-family: var(--font);
+    font-size: 16px;
+    font-weight: 500;               /* 本文のウェイトは 400 ではなく 500 */
+    line-height: 2;                 /* 16px / 32px。見出しでも 2.0 が既定 */
+    letter-spacing: 1px;            /* em ではなく px 固定。全要素で 1 値のみ */
+    font-feature-settings: "palt";  /* body に全体適用（実測 2,024 中 1,929 要素） */
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* HEADER */
+  .header { border-bottom: 1px solid var(--line); }
+  .header-util { display: flex; justify-content: flex-end; align-items: center; gap: 22px; max-width: var(--container); margin: 0 auto; padding: 10px 24px 0; }
+  .header-util a { font-size: 14px; font-weight: 700; line-height: normal; letter-spacing: 1px; color: var(--charcoal); text-decoration: none; }
+  .header-main { display: flex; align-items: center; gap: 36px; max-width: var(--container); margin: 0 auto; padding: 10px 24px 16px; }
+  .header-logo { font-size: 24px; font-weight: 700; line-height: 1.5; letter-spacing: 1px; color: var(--charcoal); text-decoration: none; border: 2px solid var(--charcoal); padding: 6px 12px; }
+  .header-logo small { display: block; font-size: 11px; font-weight: 500; letter-spacing: .5px; }
+  .header-nav { display: flex; gap: 26px; margin-left: auto; }
+  .header-nav a { font-size: 16px; font-weight: 700; line-height: 1.6; letter-spacing: 1px; color: var(--charcoal); text-decoration: none; }
+
+  /* HERO */
+  .hero { height: 320px; background: linear-gradient(165deg, #7d9ec4 0%, #a9bfd4 40%, #6f7f6a 100%); }
+
+  /* SECTIONS */
+  .section { padding: 64px 24px; max-width: var(--container); margin: 0 auto; }
+  .section-alt { background: #f4f4f4; }
+  .section-alt .section-inner { padding: 64px 24px; max-width: var(--container); margin: 0 auto; }
+  .section-label { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0; color: var(--muted); margin-bottom: 8px; }
+  .section-title { font-size: 40px; font-weight: 700; line-height: 2; letter-spacing: 1px; margin-bottom: 8px; }
+  .section-lead { font-size: 16px; font-weight: 500; line-height: 2; letter-spacing: 1px; margin-bottom: 36px; }
+  .note { font-size: 14px; font-weight: 500; line-height: 2; letter-spacing: 1px; color: var(--muted); margin-top: 16px; }
+  code { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0; background: #f0f0f0; border: 1px solid var(--line); padding: 1px 5px; }
+
+  /* COLORS */
+  .color-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 12px; }
+  .swatch { background: var(--bg); border: 1px solid var(--line); border-radius: var(--r-none); }
+  .swatch-chip { height: 72px; }
+  .swatch-body { padding: 10px 12px 14px; }
+  .swatch-name { font-size: 14px; font-weight: 700; line-height: 1.6; letter-spacing: 1px; }
+  .swatch-hex { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0; color: #7d7d7d; }
+  .swatch-use { font-size: 11px; font-weight: 500; line-height: 1.7; letter-spacing: .5px; color: #8b8b8b; margin-top: 5px; }
+  .warn { border-left: 4px solid var(--green); border-top: 1px solid var(--line); border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 16px 18px; margin-top: 24px; font-size: 14px; line-height: 2; letter-spacing: 1px; }
+
+  /* CALENDAR */
+  .cal { max-width: 384px; border: 1px solid var(--line); margin-top: 26px; }
+  .cal-head { background: var(--charcoal); color: #fff; font-size: 20px; font-weight: 700; line-height: 2; letter-spacing: 1px; padding: 12px 16px; text-align: center; }
+  .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); }
+  .cal-grid div { text-align: center; font-size: 14px; font-weight: 500; line-height: 1.6; letter-spacing: 1px; padding: 10px 0; }
+  .cal-grid .dow { font-weight: 700; border-bottom: 1px solid var(--line); }
+  .cal-grid .open { background: #fff; }
+  .cal-grid .night { background: var(--cal-night); color: #fff; }
+  .cal-grid .closed { background: var(--cal-closed); color: #fff; }
+  .cal-grid i { display: block; font-style: normal; font-size: 11px; }
+  .cal-legend { background: var(--charcoal); color: #fff; font-size: 14px; line-height: 2; letter-spacing: 1px; padding: 14px 16px; }
+
+  /* TYPOGRAPHY */
+  .type-row { display: grid; grid-template-columns: 250px 1fr; gap: 24px; padding: 20px 0; border-bottom: 1px solid var(--line); align-items: baseline; }
+  .type-meta { font-family: var(--font-mono); font-size: 11px; line-height: 1.8; letter-spacing: 0; color: #8b8b8b; }
+  .t-disp { font-size: 50px; font-weight: 700; line-height: 2; letter-spacing: 1px; }
+  .t-h1   { font-size: 44px; font-weight: 700; line-height: 1.5; letter-spacing: 1px; }
+  .t-h2   { font-size: 40px; font-weight: 700; line-height: 2; letter-spacing: 1px; }
+  .t-h2t  { font-size: 35px; font-weight: 700; line-height: 1.5; letter-spacing: 1px; }
+  .t-h3   { font-size: 24px; font-weight: 700; line-height: 1.5; letter-spacing: 1px; }
+  .t-h4   { font-size: 22px; font-weight: 700; line-height: 2; letter-spacing: 1px; }
+  .t-lead { font-size: 22px; font-weight: 500; line-height: 2; letter-spacing: 1px; }
+  .t-body { font-size: 16px; font-weight: 500; line-height: 2; letter-spacing: 1px; }
+  .t-comp { font-size: 16px; font-weight: 500; line-height: 1.5; letter-spacing: 1px; }
+  .t-nav  { font-size: 16px; font-weight: 700; line-height: 1.6; letter-spacing: 1px; }
+  .t-navl { font-size: 18px; font-weight: 700; line-height: 1.6; letter-spacing: 1px; }
+  .t-cap  { font-size: 14px; font-weight: 700; line-height: normal; letter-spacing: 1px; }
+  .t-link { font-size: 16px; font-weight: 500; line-height: 2; letter-spacing: 1px; color: var(--link); }
+  .no-palt { font-feature-settings: normal; }
+
+  /* ARTICLE */
+  .prose { max-width: 1070px; }
+  .prose p { margin-bottom: 26px; }
+  .prose h3 { font-size: 22px; font-weight: 700; line-height: 2; letter-spacing: 1px; margin: 34px 0 12px; }
+  .info-table { width: 100%; border-collapse: collapse; margin-top: 22px; }
+  .info-table th { font-size: 16px; font-weight: 700; line-height: 2; letter-spacing: 1px; color: #fff; background: var(--charcoal); text-align: left; padding: 12px 16px; border: 1px solid var(--charcoal); white-space: nowrap; vertical-align: top; width: 200px; }
+  .info-table td { font-size: 16px; font-weight: 500; line-height: 2; letter-spacing: 1px; padding: 12px 16px; border: 1px solid var(--line); }
+  .alert { color: var(--danger); font-size: 16px; font-weight: 500; line-height: 2; letter-spacing: 1px; margin-top: 20px; }
+
+  /* EXHIBIT LIST — 左に緑の縦罫 */
+  .exhibit { background: var(--charcoal); color: #fff; padding: 34px 40px; }
+  .exhibit-item { border-left: 4px solid var(--green); padding-left: 18px; margin-bottom: 28px; }
+  .exhibit-item b { display: block; font-size: 22px; font-weight: 700; line-height: 2; letter-spacing: 1px; }
+  .exhibit-item span { display: block; font-size: 16px; font-weight: 500; line-height: 2; letter-spacing: 1px; }
+  .exhibit-btns { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 26px; }
+
+  /* BUTTONS */
+  .btn-row { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; margin-bottom: 20px; }
+  .btn { display: inline-block; text-decoration: none; cursor: pointer; font-family: var(--font); letter-spacing: 1px; border-radius: var(--r-none); transition: background-color var(--transition), color var(--transition); }
+  .btn-solid   { background: var(--charcoal); color: #fff; border: 1px solid var(--charcoal); padding: 13.5px 22.5px; font-size: 18px; font-weight: 700; }
+  .btn-action  { background: var(--green); color: #fff; border: 1px solid var(--green); padding: 6.4px 56px 6.4px 16px; font-size: 16px; font-weight: 700; position: relative; }
+  .btn-action::after, .btn-outline::after { content: "›"; position: absolute; right: 16px; top: 50%; transform: translateY(-52%); font-size: 20px; }
+  .btn-outline { background: transparent; color: var(--charcoal); border: 1px solid var(--charcoal); padding: 6.4px 56px 6.4px 16px; font-size: 16px; font-weight: 700; position: relative; }
+  .btn-outline2{ background: transparent; color: var(--charcoal); border: 1px solid var(--charcoal); padding: 8px 16px; font-size: 16px; font-weight: 700; }
+  .btn-heavy   { background: transparent; color: var(--charcoal); border: 2px solid var(--charcoal); padding: 6.4px 52px; font-size: 16px; font-weight: 700; }
+  .btn-inverse { background: #fff; color: var(--black); border: 1px solid #fff; padding: 13.5px 22.5px; font-size: 18px; font-weight: 700; }
+  .btn-lang    { background: var(--charcoal); color: #fff; border: 1px solid var(--charcoal); border-radius: var(--r-lang); padding: 1.3px 6.5px; font-size: 13px; font-weight: 700; line-height: normal; letter-spacing: normal; }
+  .btn-card    { background: #fff; color: var(--charcoal); border: 1px solid var(--line); padding: 18.4px 12px 18.4px 36px; font-size: 24px; font-weight: 700; }
+
+  /* BADGES */
+  .badge { display: inline-block; color: #fff; border-radius: var(--r-none); letter-spacing: 1px; }
+  .badge-now  { background: var(--charcoal); padding: 10px 6px; font-size: 22px; font-weight: 700; }
+  .badge-pick { background: var(--green);    padding: 10px 6px; font-size: 22px; font-weight: 700; }
+  .badge-soon { background: var(--black);    padding: 6px 18px; font-size: 20px; font-weight: 700; }
+
+  /* PAGINATION */
+  .pager { display: flex; gap: 6px; margin-top: 24px; }
+  .pager a { border-radius: var(--r-page); padding: 4px 8px; font-size: 16px; font-weight: 500; letter-spacing: 1px; text-decoration: none; }
+  .pager a.on { background: var(--green); color: #fff; border: 1px solid var(--green); }
+  .pager a.off { background: #fff; color: #333; border: 1px solid var(--charcoal); }
+
+  /* CARDS */
+  .card-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-m); }
+  .card { background: #fff; border: 1px solid var(--line); border-radius: var(--r-none); box-shadow: none; }
+  .card-photo { height: 170px; background: linear-gradient(150deg, #b8bfae, #6d7566); }
+  .card-body { padding: 16px; }
+  .card-title { font-size: 20px; font-weight: 700; line-height: 1.5; letter-spacing: 1px; }
+  .card-text { font-size: 16px; font-weight: 500; line-height: 1.5; letter-spacing: 1px; margin-top: 6px; color: #4a4a4a; }
+
+  /* FORMS */
+  .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; }
+  .field label { display: block; font-size: 16px; font-weight: 700; letter-spacing: 1px; margin-bottom: 8px; }
+  .field input, .field select { width: 100%; background: #fff; color: var(--charcoal); border: 1px solid var(--charcoal); border-radius: var(--r-none); font-family: var(--font); font-size: 16px; font-weight: 500; line-height: 2; letter-spacing: 1px; padding: 8px 12px; }
+  .field.is-focus input { outline: 2px solid var(--green); outline-offset: 0; }
+  .field.is-error input { border-color: var(--danger); }
+  .field .msg  { font-size: 14px; line-height: 2; letter-spacing: 1px; color: var(--danger); margin-top: 5px; }
+  .field .hint { font-size: 14px; line-height: 2; letter-spacing: 1px; color: var(--muted); margin-top: 5px; }
+
+  /* ELEVATION */
+  .elev { background: #fff; border: 1px solid var(--line); padding: 20px; min-height: 120px; box-shadow: none; max-width: 420px; }
+  .elev b { display: block; font-size: 16px; font-weight: 700; line-height: 2; letter-spacing: 1px; }
+  .elev code { display: block; margin-top: 6px; font-size: 11px; line-height: 1.8; background: none; border: 0; padding: 0; color: #7d7d7d; }
+
+  /* LAYOUT */
+  .layout-demo { border: 1px dashed var(--charcoal); padding: 14px; }
+  .layout-bar { background: #f0f0f0; border: 1px solid var(--line); text-align: center; font-family: var(--font-mono); font-size: 12px; letter-spacing: 0; line-height: 3.4; color: #7d7d7d; }
+  .layout-split { display: grid; grid-template-columns: 2.4fr 1fr; gap: var(--sp-m); margin-top: 12px; }
+  .layout-split div { border: 1px solid var(--line); text-align: center; font-family: var(--font-mono); font-size: 12px; letter-spacing: 0; line-height: 5; color: #7d7d7d; }
+  .scale-table { width: 100%; border-collapse: collapse; font-size: 16px; font-weight: 500; line-height: 2; margin-top: 26px; }
+  .scale-table th, .scale-table td { border-bottom: 1px solid var(--line); padding: 10px 8px; text-align: left; letter-spacing: 1px; }
+  .scale-table th { font-weight: 700; font-size: 16px; }
+  .scale-table td:first-child { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0; }
+
+  /* FOOTER */
+  .footer { background: var(--charcoal); color: #fff; padding: 48px 24px 28px; margin-top: 64px; }
+  .footer-inner { max-width: var(--container); margin: 0 auto; }
+  .footer h2 { font-size: 20px; font-weight: 700; line-height: 2; letter-spacing: 1px; margin-bottom: 18px; }
+  .footer-nav { display: flex; flex-wrap: wrap; gap: 24px; margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid var(--divider); }
+  .footer-nav a { font-size: 16px; font-weight: 500; letter-spacing: 1px; color: #fff; text-decoration: none; }
+  .footer-sns { display: flex; gap: 10px; margin-bottom: 22px; }
+  .footer-sns i { width: 42px; height: 42px; border-radius: var(--r-circle); background: var(--divider); display: block; }
+  .footer-copy { font-size: 16px; font-weight: 500; line-height: 2; letter-spacing: 1px; color: #cfcfcf; }
+
+  @media (max-width: 768px) {
+    .type-row { grid-template-columns: 1fr; gap: 6px; }
+    .card-grid { grid-template-columns: 1fr; }
+    .layout-split { grid-template-columns: 1fr; }
+    .header-nav { display: none; }
+    .t-disp, .t-h1, .t-h2, .section-title { font-size: 24px; }
+    .t-h2t { font-size: 22px; }
+    .info-table th { width: auto; }
+  }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-util">
+    <a href="#">lorem ipsum dolor</a><a href="#">lorem ipsum</a><span class="btn btn-lang">Language</span>
+  </div>
+  <div class="header-main">
+    <a class="header-logo" href="#">lorem ipsum dolor<small>TOKYO NATIONAL MUSEUM</small></a>
+    <nav class="header-nav">
+      <a href="#">lorem / lorem</a><a href="#">lorem ipsum</a><a href="#">lorem</a><a href="#">lorem ipsum dolor</a><a href="#">lorem / lorem / lorem</a><a href="#">lorem ipsum dolor</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero"></section>
+
+<!-- 01 COLORS -->
+<section class="section" id="colors">
+  <div class="section-label">01 / Colors</div>
+  <h2 class="section-title">lorem ipsum dolor 2 lorem</h2>
+  <p class="section-lead">CSS lorem 0 lorem. lorem<code>#2b2b2b</code>, lorem ipsum<code>#1b854d</code>. lorem ipsum dolor sit<code>#2869dd</code> lorem, lorem ipsum dolor sit amet.</p>
+
+  <div class="color-grid">
+    <div class="swatch"><div class="swatch-chip" style="background:#2b2b2b"></div><div class="swatch-body"><div class="swatch-name">Charcoal</div><div class="swatch-hex">#2b2b2b</div><div class="swatch-use">lorem. lorem ipsum(933 lorem ipsum) / lorem ipsum / lorem ipsum</div></div></div>
+    <div class="swatch"><div class="swatch-chip" style="background:#1b854d"></div><div class="swatch-body"><div class="swatch-name">TNM Green</div><div class="swatch-hex">#1b854d</div><div class="swatch-use">lorem ipsum dolor / lorem ipsum / “lorem”lorem / lorem ipsum dolor</div></div></div>
+    <div class="swatch"><div class="swatch-chip" style="background:#000000"></div><div class="swatch-body"><div class="swatch-name">Black</div><div class="swatch-hex">#000000</div><div class="swatch-use">“lorem”lorem / lorem ipsum dolor sit(26 lorem)</div></div></div>
+    <div class="swatch"><div class="swatch-chip" style="background:#2869dd"></div><div class="swatch-body"><div class="swatch-name">Link Blue</div><div class="swatch-hex">#2869dd</div><div class="swatch-use">lorem ipsum dolor sit amet(137 lorem). lorem ipsum dolor sit</div></div></div>
+    <div class="swatch"><div class="swatch-chip" style="background:#93278f"></div><div class="swatch-body"><div class="swatch-name">Calendar Night</div><div class="swatch-hex">#93278f</div><div class="swatch-use">lorem ipsum dolor sit amet consectetur(☽)</div></div></div>
+    <div class="swatch"><div class="swatch-chip" style="background:#666666"></div><div class="swatch-body"><div class="swatch-name">Calendar Closed</div><div class="swatch-hex">#666666</div><div class="swatch-use">lorem ipsum dolor sit amet(×)</div></div></div>
+    <div class="swatch"><div class="swatch-chip" style="background:#990000"></div><div class="swatch-body"><div class="swatch-name">Danger</div><div class="swatch-hex">#990000</div><div class="swatch-use">lorem ipsum dolor sit. lorem ipsum dolor sit</div></div></div>
+    <div class="swatch"><div class="swatch-chip" style="background:#ffffff;border-bottom:1px solid #d5d5d5"></div><div class="swatch-body"><div class="swatch-name">Background</div><div class="swatch-hex">#ffffff</div><div class="swatch-use">lorem ipsum. body lorem ipsum</div></div></div>
+    <div class="swatch"><div class="swatch-chip" style="background:#4d4d4d"></div><div class="swatch-body"><div class="swatch-name">Divider</div><div class="swatch-hex">#4d4d4d</div><div class="swatch-use">lorem ipsum dolor sit</div></div></div>
+  </div>
+
+  <h3 class="t-h3" style="margin-top:44px">lorem ipsum dolor — lorem ipsum dolor sit amet consectetur</h3>
+  <p class="note" style="margin-bottom:0">lorem<b>lorem ＋ lorem(○ ☽ ▲ ×)</b>lorem 2 lorem ipsum. lorem ipsum dolor sit amet consectetur.</p>
+  <div class="cal">
+    <div class="cal-head">lorem ipsum dolor sit amet consectetur</div>
+    <div class="cal-grid">
+      <div class="dow">lorem</div><div class="dow">lorem</div><div class="dow">lorem</div><div class="dow">lorem</div><div class="dow">lorem</div><div class="dow">lorem</div><div class="dow">lorem</div>
+      <div></div><div></div><div class="open"><i>○</i>1</div><div class="open"><i>○</i>2</div><div class="open"><i>○</i>3</div><div class="night"><i>☽</i>4</div><div class="night"><i>☽</i>5</div>
+      <div class="open"><i>○</i>6</div><div class="closed"><i>×</i>7</div><div class="open"><i>○</i>8</div><div class="open"><i>○</i>9</div><div class="open"><i>○</i>10</div><div class="night"><i>☽</i>11</div><div class="night"><i>☽</i>12</div>
+      <div class="open"><i>○</i>13</div><div class="closed"><i>×</i>14</div><div class="open"><i>○</i>15</div><div class="open"><i>○</i>16</div><div class="open"><i>○</i>17</div><div class="night"><i>☽</i>18</div><div class="night"><i>☽</i>19</div>
+    </div>
+    <div class="cal-legend">○ lorem ／ ☽ lorem ipsum(20 lorem)<br>▲ lorem ipsum ／ × lorem</div>
+  </div>
+</section>
+
+<!-- 02 TYPOGRAPHY -->
+<section class="section-alt" id="typography">
+<div class="section-inner">
+  <div class="section-label">02 / Typography</div>
+  <h2 class="section-title">palt ＋ letter-spacing: 1px</h2>
+  <p class="section-lead"><code>font-family</code> lorem ipsum 1 lorem. lorem ipsum / lorem ipsum dolor sit amet consectetur. lorem ipsum dolor sit amet consectetur.</p>
+
+  <div class="type-row"><div class="type-meta">Display<br>50px / 700<br>lh <b>2.0</b> (100px) / ls 1px</div><div class="t-disp">lorem ipsum dolor</div></div>
+  <div class="type-row"><div class="type-meta">Heading 1(lorem)<br>44px / 700<br>lh 1.5 (66px) / ls 1px</div><div class="t-h1">lorem ipsum dolor</div></div>
+  <div class="type-row"><div class="type-meta">Heading 2<br>40px / 700<br>lh <b>2.0</b> (80px) / ls 1px</div><div class="t-h2">lorem / lorem / lorem ipsum</div></div>
+  <div class="type-row"><div class="type-meta">Heading 2(lorem)<br>35px / 700<br>lh 1.5 (52.5px) / ls 1px</div><div class="t-h2t">lorem / lorem</div></div>
+  <div class="type-row"><div class="type-meta">Heading 3<br>24px / 700<br>lh 1.5 (36px) / ls 1px</div><div class="t-h3">lorem ipsum dolor</div></div>
+  <div class="type-row"><div class="type-meta">Heading 4 / th<br>22px / 700<br>lh <b>2.0</b> (44px) / ls 1px</div><div class="t-h4">lorem ipsum dolor sit</div></div>
+  <div class="type-row"><div class="type-meta">Lead<br>22px / 500<br>lh 2.0 (44px) / ls 1px</div><div class="t-lead">lorem ipsum dolor sit amet / lorem ipsum</div></div>
+  <div class="type-row"><div class="type-meta">Body(lorem)<br>16px / <b>500</b><br>lh <b>2.0</b> (32px) / ls 1px<br>lorem 152 lorem ipsum</div><div class="t-body">lorem, lorem ipsum dolor sit amet consectetur adipiscing elit, lorem ipsum dolor sit amet consectetur, lorem ipsum dolor sit amet consectetur adipiscing. lorem ipsum dolor 400 lorem ipsum 500 lorem, lorem ipsum dolor sit amet consectetur.</div></div>
+  <div class="type-row"><div class="type-meta">Body(lorem)<br>16px / 500<br>lh 1.5 (24px) / ls 1px<br>lorem ipsum. lorem 150 lorem</div><div class="t-comp">lorem ／ lorem ／ lorem ／ lorem ／ lorem ipsum dolor ／ lorem ipsum</div></div>
+  <div class="type-row"><div class="type-meta">Nav<br>18px / 700<br>lh 1.6 (28.8px) / ls 1px</div><div class="t-navl">lorem / lorem</div></div>
+  <div class="type-row"><div class="type-meta">Nav(lorem)<br>16px / 700<br>lh 1.6 (25.6px) / ls 1px</div><div class="t-nav">lorem ipsum dolor</div></div>
+  <div class="type-row"><div class="type-meta">Caption<br>14px / 700<br>lh normal / ls 1px</div><div class="t-cap">lorem ipsum dolor</div></div>
+  <div class="type-row"><div class="type-meta">Text Link<br>16px / 500<br>lh 2.0 / ls 1px / #2869dd</div><div class="t-link">e lorem ipsum dolor sit amet</div></div>
+
+  <p class="note"><b>lorem<code>px</code> lorem ipsum dolor sit.</b> 16px lorem ipsum 0.0625em, 40px lorem ipsum 0.025em lorem.<b>lorem ipsum dolor sit amet consectetur adipiscing</b>lorem, lorem ipsum dolor, lorem ipsum dolor sit.<code>0.06em</code> lorem ipsum<code>em</code> lorem ipsum dolor sit amet consectetur adipiscing,<b>lorem<code>1px</code> lorem ipsum.</b></p>
+
+  <h3 class="t-h3" style="margin-top:40px">palt lorem</h3>
+  <div class="type-row"><div class="type-meta">palt lorem(lorem ipsum dolor)<br><code>font-feature-settings: "palt"</code></div><div class="t-h4">“lorem ipsum dolor”(lorem), 9 lorem 30 lorem–17 lorem 00 lorem</div></div>
+  <div class="type-row"><div class="type-meta">palt lorem(lorem)<br><code>font-feature-settings: normal</code></div><div class="t-h4 no-palt">“lorem ipsum dolor”(lorem), 9 lorem 30 lorem–17 lorem 00 lorem</div></div>
+  <p class="note"><code>palt</code> lorem / lorem ipsum dolor sit amet, lorem ipsum dolor<code>1px</code> lorem ipsum.<b>lorem ipsum dolor sit.</b> <code>palt</code> lorem ipsum dolor sit amet consectetur,<code>letter-spacing</code> lorem ipsum dolor sit amet consectetur.</p>
+</div>
+</section>
+
+<!-- 03 EXHIBIT -->
+<section class="section" id="article">
+  <div class="section-label">03 / Exhibition</div>
+  <h2 class="section-title">lorem ipsum dolor</h2>
+  <p class="section-lead">lorem ipsum dolor, lorem<code>#1b854d</code> lorem ipsum dolor sit amet consectetur.</p>
+
+  <div class="exhibit">
+    <div class="exhibit-item"><b>lorem ipsum dolor sit</b><span>9 lorem 30 lorem–17 lorem 00 lorem(lorem 16 lorem 30 lorem)</span></div>
+    <div class="exhibit-item"><b>lorem ipsum dolor 1250 lorem lorem“lorem ipsum dolor”</b><span>9 lorem 30 lorem–17 lorem 00 lorem(lorem 16 lorem 30 lorem)</span></div>
+    <div class="exhibit-btns">
+      <a class="btn btn-inverse" href="#">lorem ipsum</a>
+      <a class="btn btn-inverse" href="#">lorem / lorem ipsum dolor</a>
+    </div>
+  </div>
+
+  <div class="prose" style="margin-top:44px">
+    <h3>lorem ipsum</h3>
+    <table class="info-table">
+      <tr><th>lorem</th><td>1,000 lorem(lorem 800 lorem)</td></tr>
+      <tr><th>lorem</th><td>500 lorem(lorem 400 lorem)</td></tr>
+      <tr><th>lorem ipsum dolor sit 18 lorem, lorem 70 lorem</th><td>lorem(lorem ipsum dolor sit amet consectetur adipiscing)</td></tr>
+      <tr><th>lorem ipsum</th><td>9 lorem 30 lorem–17 lorem 00 lorem(lorem ipsum / lorem ipsum dolor sit amet 30 lorem ipsum)</td></tr>
+    </table>
+    <p class="alert">※ lorem ipsum dolor, lorem ipsum dolor sit amet consectetur. lorem ipsum dolor sit amet consectetur adipiscing.</p>
+    <p class="note">lorem<code>th</code> lorem<code>#2b2b2b</code> lorem ipsum dolor(16px / 700). lorem ipsum<code>#990000</code>。</p>
+    <div class="pager">
+      <a class="pager on" href="#">1</a><a class="pager off" href="#">2</a><a class="pager off" href="#">3</a><a class="pager off" href="#">lorem</a>
+    </div>
+  </div>
+</section>
+
+<!-- 04 BUTTONS -->
+<section class="section-alt" id="buttons">
+<div class="section-inner">
+  <div class="section-label">04 / Buttons</div>
+  <h2 class="section-title">lorem ipsum. lorem ipsum 2 lorem</h2>
+  <p class="section-lead"><code>padding</code> lorem<code>56px</code> lorem ipsum, lorem<code>›</code> lorem ipsum dolor sit.<b>lorem ipsum dolor sit amet consectetur.</b></p>
+
+  <div class="btn-row">
+    <a class="btn btn-solid" href="#">lorem ipsum dolor</a>
+    <a class="btn btn-action" href="#">lorem ipsum dolor sit lorem ipsum dolor</a>
+    <a class="btn btn-outline" href="#">lorem ipsum dolor sit amet consectetur</a>
+    <a class="btn btn-outline2" href="#">lorem ipsum dolor</a>
+  </div>
+  <div class="btn-row">
+    <a class="btn btn-heavy" href="#">lorem</a>
+    <a class="btn btn-heavy" href="#">English</a>
+    <span class="btn btn-lang">Language</span>
+    <a class="btn btn-card" href="#">lorem / lorem ipsum dolor</a>
+  </div>
+
+  <h3 class="t-h3" style="margin-top:36px">Badges</h3>
+  <div class="btn-row">
+    <span class="badge badge-now">lorem</span>
+    <span class="badge badge-pick">lorem</span>
+    <span class="badge badge-soon">lorem</span>
+  </div>
+  <p class="note"><b>lorem<code>#1b854d</code> lorem ipsum success lorem ipsum.</b> lorem ipsum dolor / lorem ipsum / “lorem”lorem ipsum<b>lorem ipsum dolor</b>lorem ipsum. lorem ipsum dolor sit amet<code>#2b2b2b</code>。</p>
+</div>
+</section>
+
+<!-- 05 CARDS -->
+<section class="section" id="cards">
+  <div class="section-label">05 / Cards</div>
+  <h2 class="section-title">Cards</h2>
+  <p class="section-lead">lorem ipsum, lorem. 1px lorem ipsum dolor sit.</p>
+  <div class="card-grid">
+    <div class="card"><div class="card-photo"></div><div class="card-body"><div class="card-title">lorem ipsum</div><p class="card-text">lorem / lorem ipsum, lorem ipsum dolor sit amet consectetur</p></div></div>
+    <div class="card"><div class="card-photo"></div><div class="card-body"><div class="card-title">lorem</div><p class="card-text">lorem ipsum dolor sit amet consectetur</p></div></div>
+    <div class="card"><div class="card-photo"></div><div class="card-body"><div class="card-title">lorem ipsum dolor</div><p class="card-text">lorem ipsum dolor sit amet consectetur</p></div></div>
+  </div>
+</section>
+
+<!-- 06 FORMS -->
+<section class="section-alt" id="forms">
+<div class="section-inner">
+  <div class="section-label">06 / Forms</div>
+  <h2 class="section-title">Forms</h2>
+  <p class="section-lead">lorem ipsum dolor. lorem<code>1px solid #2b2b2b</code>、<code>font-size</code> lorem 16px lorem ipsum dolor(iOS lorem ipsum dolor).</p>
+  <div class="form-grid">
+    <div class="field"><label>lorem ipsum</label><input type="text" value="埴輪"><p class="hint">lorem / lorem ipsum dolor sit amet</p></div>
+    <div class="field is-focus"><label>lorem(lorem ipsum)</label><input type="text" value="古墳時代"><p class="hint">lorem ipsum dolor sit #1b854d</p></div>
+    <div class="field is-error"><label>lorem(lorem)</label><input type="text" value="20xx"><p class="msg">lorem ipsum dolor sit amet consectetur</p></div>
+    <div class="field"><label>lorem</label><select><option>lorem</option><option>lorem</option><option>lorem</option><option>lorem ipsum dolor</option></select><p class="hint">lorem ipsum dolor / lorem ipsum</p></div>
+  </div>
+</div>
+</section>
+
+<!-- 07 ELEVATION -->
+<section class="section" id="elevation">
+  <div class="section-label">07 / Elevation</div>
+  <h2 class="section-title">Depth &amp; Elevation</h2>
+  <p class="section-lead">lorem ipsum<code>box-shadow</code> lorem<b>lorem 0 lorem</b>. lorem ipsum“lorem / lorem ipsum / lorem”lorem 3 lorem 1px lorem ipsum dolor sit.</p>
+  <div class="elev"><b>Level 0 — lorem(lorem ipsum dolor)</b><code>box-shadow: none</code></div>
+  <p class="note">lorem ipsum dolor sit amet consectetur, lorem ipsum dolor sit amet consectetur.</p>
+</section>
+
+<!-- 08 LAYOUT -->
+<section class="section-alt" id="layout">
+<div class="section-inner">
+  <div class="section-label">08 / Layout</div>
+  <h2 class="section-title">Layout</h2>
+  <p class="section-lead">lorem ipsum 1280px. lorem ipsum“lorem ipsum”＋lorem“lorem ipsum”lorem 2 lorem.</p>
+  <div class="layout-demo">
+    <div class="layout-bar">max-width: 1336px(lorem ipsum dolor)</div>
+    <div class="layout-bar" style="margin-top:12px;width:96%;margin-left:auto;margin-right:auto">max-width: 1280px(lorem ipsum dolor)</div>
+    <div class="layout-split"><div>lorem ipsum / lorem ipsum</div><div>lorem ipsum</div></div>
+  </div>
+  <table class="scale-table">
+    <tr><th>Token</th><th>Value</th><th>lorem</th></tr>
+    <tr><td>XS</td><td>5px</td><td>lorem ipsum</td></tr>
+    <tr><td>S</td><td>8px</td><td>lorem ipsum</td></tr>
+    <tr><td>M</td><td>16px</td><td><b>lorem. lorem ipsum / lorem ipsum gutter(22 lorem)</b></td></tr>
+    <tr><td>L</td><td>30px</td><td>lorem ipsum dolor</td></tr>
+    <tr><td>XL</td><td>50px</td><td>lorem ipsum dolor</td></tr>
+  </table>
+  <table class="scale-table">
+    <tr><th>Breakpoint</th><th>Width</th><th>lorem</th></tr>
+    <tr><td><b>lorem</b></td><td><b>≤ 768px</b></td><td><b>2 lorem ipsum dolor sit(57 lorem)</b></td></tr>
+    <tr><td>Narrow</td><td>≤ 1120px / 1200px</td><td>lorem ipsum dolor sit</td></tr>
+    <tr><td>Desktop</td><td>&gt; 1280px</td><td>lorem ipsum 1280px lorem ipsum</td></tr>
+  </table>
+  <table class="scale-table">
+    <tr><th>Radius</th><th>Value</th><th>lorem</th></tr>
+    <tr><td>lorem</td><td>0</td><td>lorem / lorem / lorem / lorem ipsum dolor</td></tr>
+    <tr><td>lorem ipsum dolor</td><td>2px</td><td>lorem ipsum dolor</td></tr>
+    <tr><td>Language</td><td>3px</td><td>1 lorem</td></tr>
+    <tr><td>SNS lorem ipsum</td><td>50%</td><td>8 lorem</td></tr>
+  </table>
+</div>
+</section>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <h2>lorem ipsum dolor</h2>
+    <nav class="footer-nav">
+      <a href="#">lorem / lorem</a><a href="#">lorem ipsum</a><a href="#">lorem</a><a href="#">lorem ipsum dolor</a><a href="#">lorem / lorem / lorem</a><a href="#">lorem ipsum dolor</a><a href="#">lorem ipsum dolor</a>
+    </nav>
+    <div class="footer-sns"><i></i><i></i><i></i><i></i></div>
+    <p class="footer-copy">lorem preview lorem DESIGN.md lorem ipsum dolor sit amet consectetur. lorem ipsum dolor sit amet consectetur.</p>
+  </div>
+</footer>
+
+</body>
+</html>

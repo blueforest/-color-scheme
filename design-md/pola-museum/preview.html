@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design System Preview: lorem ipsum dolor POLA MUSEUM OF ART</title>
+<!--
+  ■ フォントの代替について
+
+  原典の 3 書体はすべて Adobe Fonts（ドメインライセンス）のため、
+  ローカルでは表示できない。Google Fonts で最も近いものに差し替えている。
+
+    原典                                          代替（このプレビュー）
+    ─────────────────────────────────────────────────────────────────────
+    太ゴ B101 Pr6N (a-otf-futo-go-b101-pr6n)  →  Zen Kaku Gothic New 700
+      本文・見出し。モリサワ／写研由来の太ゴシック            字面幅が太ゴに近い。
+      B101 は書体自体が太く、weight 400 でも太く出る          weight を 700 に上げないと
+                                                              太ゴにならない点に注意
+    中ゴシック BBB Pr6N (a-otf-gothic-bbb-pr6n) →  Noto Sans JP 400
+      セクション見出し・キャプション。                        標準ゴシックとして最も素直
+      日本の DTP の標準ゴシック
+    Futura PT (futura-pt)                      →  Jost 400 / 600
+      ロゴタイプ・欧文ラベル。                                Futura を範にした
+      ジオメトリックサンセリフ                                ジオメトリックサンセリフ
+
+  ※ 原典では和文の font-weight が全域 400。太ゴ B101 が書体として既に太いため。
+     代替では Zen Kaku Gothic New の 700 を当てて、その太さを再現している。
+     Adobe Fonts が使えない環境で 400 のまま実装すると、別物のように軽くなる。
+
+  ■ 原典の組版設定
+
+    font-feature-settings: normal    全域。palt は使わない
+                                     （太ゴ B101 / 中ゴ BBB はもともと字面が詰まっており、
+                                       字間は「開ける」方向で設計されている）
+    letter-spacing: 1.5px            px 固定。em ではない
+                                     → 24px の本文で 0.0625em、
+                                       11px のキャプションでは 0.136em に膨らむ
+                                     欧文（Futura PT）だけ 4px = 0.167em と 3 倍近く広い
+    line-height: 40px                px 固定。font-size 側（20px / 24px）を動かすことで
+                                     行間比を変える。ベースラインが 40px グリッドに乗る
+    font-weight                      和文 400 のみ／欧文 600。太さでヒエラルキーを作らない
+
+  ■ 形
+
+    border-radius: 0     全要素。作品画像にも角丸を付けない
+    box-shadow: none     全要素。奥行きという概念を持たない
+    色は 5 つだけ        #000000 / #333333 / #f9f9f9 / #e6e6e6 / #043d8a
+
+  ■ CSS Custom Properties
+
+    原典には 1 つも定義されていない（旧来型の WordPress テーマ）。
+    以下の :root は、実測値をこちらでトークン化したもの。
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Noto+Sans+JP:wght@400;500&family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* ===== Color（実測 5 色）===== */
+    --museum-blue: #043d8a;   /* ブランド色。文字・アイコン専用。面を塗らない */
+    --ink:         #000000;   /* 純黒。薄めない */
+    --ink-sub:     #333333;
+    --paper:       #f9f9f9;   /* ページ地色。純白ではない */
+    --surface:     #e6e6e6;   /* 面付きナビブロック */
+    --on-blue:     #f9f9f9;   /* 濃紺の上の文字。白ではなく地色と同じ値 */
+
+    /* ===== Font =====
+       原典: a-otf-futo-go-b101-pr6n / a-otf-gothic-bbb-pr6n / futura-pt
+       代替: Zen Kaku Gothic New / Noto Sans JP / Jost                      */
+    --font-futo: "Zen Kaku Gothic New", 游ゴシック体, "Yu Gothic", YuGothic,
+                 "Hiragino Kaku Gothic ProN", Osaka, "ＭＳ Ｐゴシック", sans-serif;
+    --font-bbb:  "Noto Sans JP", 游ゴシック体, "Yu Gothic", YuGothic,
+                 "Hiragino Kaku Gothic ProN", Osaka, "ＭＳ Ｐゴシック", sans-serif;
+    --font-en:   Jost, sans-serif;
+
+    /* 太ゴ B101 の太さを代替書体で再現するためのウェイト */
+    --w-futo: 700;   /* 原典は 400（書体自体が太い） */
+    --w-bbb:  400;
+    --w-en:   600;
+
+    /* ===== Type scale（実測）===== */
+    --fs-logo:      35.3px;
+    --fs-display-en: 30px;  --ls-display-en: 1.4px;   /* 0.047em */
+    --fs-label-en:   24px;  --ls-label-en:   4px;     /* 0.167em ← 和文の 3 倍近く */
+    --fs-nav-en:     16px;
+
+    --fs-heading:  24px;   /* 見出し */
+    --fs-body:     24px;   /* 本文。大きい */
+    --fs-lead:     20px;
+    --fs-sechead:  18px;   /* セクション見出し（中ゴ BBB） */
+    --fs-small:    15px;
+    --fs-caption:  11px;   /* 作品キャプション（中ゴ BBB） */
+
+    --lh-40: 40px;         /* 本文・見出し・リードが共有する行送り */
+    --lh-sechead: 34px;
+    --lh-caption: 20px;
+    --lh-tight:   1.0;     /* 欧文は行送り 1.0 */
+
+    --ls-base: 1.5px;      /* px 固定。em にしない */
+    --ls-wide: 3.8px;      /* 見出し的に組むリード */
+    --ls-small: 1px;
+
+    /* ===== Shape ===== */
+    --radius: 0px;         /* 全要素 */
+    --rule: 2px;           /* ボタンの罫 */
+
+    /* ===== Layout ===== */
+    --container: 850px;    /* CSS 中 2795 箇所 */
+    --rhythm: 40px;        /* 縦の余白は 40 の倍数で取る（本文の行送りと一致） */
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; border-radius: 0; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-futo);
+    font-size: var(--fs-body);
+    font-weight: var(--w-futo);
+    line-height: var(--lh-40);
+    letter-spacing: var(--ls-base);
+    font-feature-settings: normal;     /* palt を足さない */
+    -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+  }
+
+  .container { max-width: var(--container); margin: 0 auto; padding: 0 24px; }
+  .en { font-family: var(--font-en); font-weight: var(--w-en); letter-spacing: var(--ls-label-en); }
+  .bbb { font-family: var(--font-bbb); font-weight: var(--w-bbb); }
+
+  /* ===== Header ===== */
+  .header { padding: 28px 0; }
+  .header-inner { display: flex; align-items: center; justify-content: space-between;
+    gap: 24px; flex-wrap: wrap; }
+  .logo { font-family: var(--font-en); font-weight: 600; font-size: 26px;
+    letter-spacing: 1.4px; color: var(--ink); line-height: var(--lh-tight); }
+  .header-utils { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+  .park { display: flex; align-items: center; gap: 8px; color: var(--museum-blue);
+    font-size: var(--fs-small); line-height: var(--lh-tight); letter-spacing: var(--ls-small); }
+  .park-mark { width: 22px; height: 22px; background: var(--museum-blue); color: var(--paper);
+    border-radius: 50%; display: grid; place-items: center;
+    font-family: var(--font-en); font-weight: 600; font-size: 14px; letter-spacing: 0; }
+  .ticket { font-family: var(--font-en); font-weight: 600; font-size: 20px;
+    letter-spacing: 2px; line-height: var(--lh-tight); color: var(--ink);
+    border-bottom: var(--rule) solid var(--ink); padding-bottom: 4px; text-decoration: none; }
+
+  /* ===== 額縁ヒーロー =====
+     四辺を Futura PT のロゴタイプが取り囲む、原典トップページの構成 */
+  .frame { position: relative; padding: 64px 72px; margin-bottom: var(--rhythm); }
+  .frame-top, .frame-bottom { position: absolute; left: 72px; right: 72px;
+    font-family: var(--font-en); font-weight: 600; font-size: var(--fs-display-en);
+    letter-spacing: var(--ls-display-en); line-height: var(--lh-tight);
+    display: flex; justify-content: space-between; }
+  .frame-top { top: 10px; }
+  .frame-bottom { bottom: 10px; transform: scale(-1, -1); }
+  .frame-left, .frame-right { position: absolute; top: 72px; bottom: 72px; width: 30px;
+    font-family: var(--font-en); font-weight: 600; font-size: var(--fs-display-en);
+    letter-spacing: var(--ls-display-en); line-height: var(--lh-tight);
+    display: flex; align-items: center; }
+  .frame-left { left: 14px; }
+  .frame-right { right: 14px; }
+  .frame-left span  { transform: rotate(180deg); writing-mode: vertical-rl; }
+  .frame-right span { writing-mode: vertical-rl; }
+  .outline { color: transparent; -webkit-text-stroke: 1px var(--ink); }
+  .frame-art { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+  .frame-art div { aspect-ratio: 4 / 5; }
+
+  /* ===== Section ===== */
+  .section { padding: var(--rhythm) 0 calc(var(--rhythm) * 2); }
+  .sec-label { display: flex; align-items: baseline; gap: 20px; flex-wrap: wrap;
+    margin-bottom: var(--rhythm); }
+  .sec-label .lbl-en { font-family: var(--font-en); font-weight: var(--w-en);
+    font-size: var(--fs-label-en); letter-spacing: var(--ls-label-en);
+    line-height: var(--lh-tight); }
+  .sec-label .lbl-ja { font-family: var(--font-bbb); font-weight: var(--w-bbb);
+    font-size: var(--fs-sechead); line-height: var(--lh-sechead);
+    letter-spacing: var(--ls-base); }
+  .note { font-family: var(--font-bbb); font-weight: var(--w-bbb);
+    font-size: var(--fs-caption); line-height: var(--lh-caption);
+    letter-spacing: var(--ls-base); color: var(--ink-sub); margin-top: 16px; }
+  .mono { font-family: SFMono-Regular, Consolas, Menlo, monospace;
+    font-size: 12px; letter-spacing: 0; }
+
+  /* ===== Grid ===== */
+  .grid { display: grid; gap: 24px; }
+  .g2 { grid-template-columns: repeat(2, 1fr); }
+  .g3 { grid-template-columns: repeat(3, 1fr); }
+  .g5 { grid-template-columns: repeat(5, 1fr); }
+
+  /* ===== Swatch ===== */
+  .swatch-block { height: 88px; }
+  .swatch-name { font-family: var(--font-bbb); font-weight: 500; font-size: 13px;
+    line-height: 1.6; letter-spacing: var(--ls-base); margin-top: 8px; }
+  .swatch-hex { font-family: SFMono-Regular, Consolas, Menlo, monospace; font-size: 11px;
+    letter-spacing: 0; color: var(--ink-sub); }
+  .swatch-role { font-family: var(--font-bbb); font-weight: 400; font-size: var(--fs-caption);
+    line-height: var(--lh-caption); letter-spacing: var(--ls-base); color: var(--ink-sub);
+    margin-top: 2px; }
+
+  /* ===== Typography specimen ===== */
+  .type-row { display: grid; grid-template-columns: 210px 1fr; gap: 28px;
+    padding: 20px 0; border-top: 1px solid var(--surface); align-items: baseline; }
+  .type-meta { font-family: SFMono-Regular, Consolas, Menlo, monospace; font-size: 11px;
+    line-height: 1.7; letter-spacing: 0; color: var(--ink-sub); }
+  .t-display-en { font-family: var(--font-en); font-weight: var(--w-en);
+    font-size: var(--fs-display-en); letter-spacing: var(--ls-display-en); line-height: var(--lh-tight); }
+  .t-label-en { font-family: var(--font-en); font-weight: var(--w-en);
+    font-size: var(--fs-label-en); letter-spacing: var(--ls-label-en); line-height: var(--lh-tight); }
+  .t-heading { font-size: var(--fs-heading); line-height: var(--lh-40); letter-spacing: var(--ls-base); }
+  .t-body    { font-size: var(--fs-body);    line-height: var(--lh-40); letter-spacing: var(--ls-base); }
+  .t-lead    { font-size: var(--fs-lead);    line-height: var(--lh-40); letter-spacing: var(--ls-base); }
+  .t-lead-wide { font-size: var(--fs-lead);  line-height: var(--lh-40); letter-spacing: var(--ls-wide); }
+  .t-sechead { font-family: var(--font-bbb); font-weight: var(--w-bbb);
+    font-size: var(--fs-sechead); line-height: var(--lh-sechead); letter-spacing: var(--ls-base); }
+  .t-small   { font-size: var(--fs-small); line-height: var(--lh-tight); letter-spacing: var(--ls-small); }
+  .t-caption { font-family: var(--font-bbb); font-weight: var(--w-bbb);
+    font-size: var(--fs-caption); line-height: var(--lh-caption); letter-spacing: var(--ls-base); }
+
+  /* ===== Buttons（サイト唯一のボタン形）===== */
+  .btn { display: inline-block; background: transparent; color: var(--ink);
+    border: var(--rule) solid var(--ink); border-radius: var(--radius);
+    padding: 10px 7px 11px 10px;      /* 上 10 / 下 11 の非対称は原典どおり */
+    font-family: var(--font-futo); font-weight: var(--w-futo);
+    font-size: var(--fs-small); line-height: var(--lh-tight);
+    letter-spacing: var(--ls-small); text-decoration: none; cursor: pointer; }
+  .btn:hover { background: var(--ink); color: var(--paper); }
+  .btn:focus-visible { outline: var(--rule) solid var(--museum-blue); outline-offset: 3px; }
+  .btn-blue { background: var(--museum-blue); color: var(--on-blue); border-color: var(--museum-blue); }
+  .btn-blue:hover { background: var(--ink); border-color: var(--ink); }
+  .btn-touch { padding: 12px 14px; }   /* 44px を確保する実装向けの調整版 */
+  .btn-row { display: flex; gap: 16px; flex-wrap: wrap; align-items: center; }
+
+  /* ===== Surface block（面付きナビ）===== */
+  .surface-block { background: var(--surface); padding: 28px 24px; text-decoration: none;
+    color: var(--ink); display: block; }
+  .surface-block:hover { background: var(--ink); color: var(--paper); }
+  .surface-block .en-s { font-family: var(--font-en); font-weight: var(--w-en);
+    font-size: 14px; letter-spacing: 2px; line-height: var(--lh-tight); display: block; }
+  .surface-block .ja-s { font-size: var(--fs-lead); line-height: var(--lh-40);
+    letter-spacing: var(--ls-base); display: block; margin-top: 8px; }
+
+  /* ===== Work（作品。カード部品を作らない）===== */
+  .work img, .work .ph { display: block; width: 100%; aspect-ratio: 4 / 3; border-radius: 0; }
+  .work-title { font-size: var(--fs-lead); line-height: var(--lh-40);
+    letter-spacing: var(--ls-base); margin-top: 12px; }
+  .work-cap { font-family: var(--font-bbb); font-weight: var(--w-bbb);
+    font-size: var(--fs-caption); line-height: var(--lh-caption);
+    letter-spacing: var(--ls-base); color: var(--ink-sub); }
+
+  /* ===== Forms ===== */
+  .field label { display: block; font-family: var(--font-bbb); font-weight: 500;
+    font-size: 13px; line-height: 1.8; letter-spacing: var(--ls-base); }
+  .field input { width: 100%; background: #ffffff; color: var(--ink);
+    border: 1px solid var(--ink); border-radius: var(--radius); padding: 12px 14px;
+    font-family: var(--font-futo); font-weight: 400; font-size: 16px; line-height: 1.5;
+    letter-spacing: var(--ls-small); }
+  .field input::placeholder { color: var(--ink-sub); opacity: .6; }
+  .field .hint, .field .msg { font-family: var(--font-bbb); font-weight: 400;
+    font-size: var(--fs-caption); line-height: var(--lh-caption);
+    letter-spacing: var(--ls-base); color: var(--ink-sub); }
+  .field.is-focus input { outline: var(--rule) solid var(--museum-blue); outline-offset: 2px; }
+  .field.is-error input { border-width: var(--rule); }
+  .field.is-error .msg { color: var(--ink); border-left: var(--rule) solid var(--ink);
+    padding-left: 8px; margin-top: 6px; }
+
+  /* ===== Elevation ===== */
+  .elev { padding: 24px; min-height: 116px; }
+  .elev-paper { background: var(--paper); border: 1px solid var(--surface); }
+  .elev-surface { background: var(--surface); }
+  .elev-rule { background: var(--paper); border: var(--rule) solid var(--ink); }
+  .elev-name { font-size: var(--fs-lead); line-height: var(--lh-40); letter-spacing: var(--ls-base); }
+
+  /* ===== Rhythm demo ===== */
+  .rhythm-demo { position: relative; padding: 0; }
+  .rhythm-demo .lines { position: absolute; inset: 0;
+    background: repeating-linear-gradient(to bottom,
+      rgba(4,61,138,.14) 0, rgba(4,61,138,.14) 1px, transparent 1px, transparent 40px); }
+  .rhythm-demo .txt { position: relative; }
+
+  .sp-row { display: flex; align-items: center; gap: 16px; margin-bottom: 10px; }
+  .sp-bar { height: 12px; background: var(--ink); }
+  .sp-label { font-family: SFMono-Regular, Consolas, Menlo, monospace; font-size: 11px;
+    letter-spacing: 0; color: var(--ink-sub); }
+
+  /* ===== Footer ===== */
+  .footer { border-top: var(--rule) solid var(--ink); padding: var(--rhythm) 0; }
+  .footer .mark { font-family: var(--font-en); font-weight: 600; font-size: var(--fs-label-en);
+    letter-spacing: var(--ls-label-en); line-height: var(--lh-tight); }
+  .footer .copy { font-family: var(--font-bbb); font-weight: 400; font-size: var(--fs-caption);
+    line-height: var(--lh-caption); letter-spacing: var(--ls-base);
+    color: var(--ink-sub); margin-top: 16px; }
+
+  @media all and (max-width: 850px) {
+    :root { --fs-body: 17px; --fs-heading: 19px; --fs-lead: 16px;
+            --fs-label-en: 18px; --ls-label-en: 3px; --lh-40: 30px; }
+    .g3, .g5 { grid-template-columns: repeat(2, 1fr); }
+    .type-row { grid-template-columns: 1fr; gap: 8px; }
+    .frame { padding: 44px 44px; }
+    .frame-top, .frame-bottom { left: 44px; right: 44px; font-size: 18px; }
+    .frame-left, .frame-right { top: 44px; bottom: 44px; font-size: 18px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="container header-inner">
+    <div class="header-utils">
+      <span class="park"><span class="park-mark">P</span>lorem 113 lorem</span>
+      <a href="#" class="ticket">TICKET</a>
+    </div>
+    <div class="logo">POLA MUSEUM OF ART</div>
+  </div>
+</header>
+
+<!-- ============ 額縁ヒーロー ============ -->
+<div class="container">
+  <div class="frame">
+    <div class="frame-top"><span>POLA MUSEUM</span><span>OF ART</span></div>
+    <div class="frame-bottom"><span class="outline">POLA MUSEUM</span><span class="outline">OF ART</span></div>
+    <div class="frame-left"><span class="outline">OF ART</span></div>
+    <div class="frame-right"><span>OF ART</span></div>
+    <div class="frame-art">
+      <div style="background:linear-gradient(170deg,#b9c7cf 0%,#8fa88c 42%,#c8a86a 74%,#9c6f4a 100%)"></div>
+      <div style="background:linear-gradient(200deg,#2f4a2c 0%,#5b7a4a 46%,#8fa06b 78%,#d5d8cc 100%)"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ COLORS ============ -->
+<section class="section">
+  <div class="container">
+    <div class="sec-label"><span class="lbl-en">Colors</span><span class="lbl-ja">lorem ipsum dolor</span></div>
+
+    <div class="grid g5">
+      <div><div class="swatch-block" style="background:var(--ink)"></div>
+        <div class="swatch-name">Ink</div><div class="swatch-hex">#000000</div>
+        <div class="swatch-role">lorem / lorem.<strong>lorem ipsum dolor sit</strong></div></div>
+      <div><div class="swatch-block" style="background:var(--ink-sub)"></div>
+        <div class="swatch-name">Ink Sub</div><div class="swatch-hex">#333333</div>
+        <div class="swatch-role">lorem ipsum dolor</div></div>
+      <div><div class="swatch-block" style="background:var(--paper);box-shadow:inset 0 0 0 1px var(--surface)"></div>
+        <div class="swatch-name">Paper</div><div class="swatch-hex">#f9f9f9</div>
+        <div class="swatch-role">lorem ipsum. lorem ipsum dolor</div></div>
+      <div><div class="swatch-block" style="background:var(--surface)"></div>
+        <div class="swatch-name">Surface</div><div class="swatch-hex">#e6e6e6</div>
+        <div class="swatch-role">lorem ipsum dolor sit</div></div>
+      <div><div class="swatch-block" style="background:var(--museum-blue)"></div>
+        <div class="swatch-name">Museum Blue</div><div class="swatch-hex">#043d8a</div>
+        <div class="swatch-role">lorem ipsum.<strong>lorem ipsum dolor sit</strong>. lorem ipsum dolor</div></div>
+    </div>
+
+    <p class="note"><strong>lorem ipsum dolor sit amet consectetur 5 lorem.</strong>lorem ipsum dolor sit amet consectetur. lorem ipsum dolor(lorem / lorem / lorem)lorem ipsum dolor sit——lorem ipsum<code class="mono">#043d8a</code> lorem“lorem / lorem”lorem ipsum dolor, lorem ipsum dolor sit amet consectetur.</p>
+    <p class="note">lorem ipsum dolor<code class="mono">#ffffff</code> lorem ipsum<strong>lorem ipsum<code class="mono">#f9f9f9</code></strong> lorem. lorem 1 lorem ipsum dolor sit amet consectetur.</p>
+  </div>
+</section>
+
+<!-- ============ TYPOGRAPHY ============ -->
+<section class="section">
+  <div class="container">
+    <div class="sec-label"><span class="lbl-en">Typography</span><span class="lbl-ja">lorem ipsum dolor</span></div>
+    <p class="note"><strong><code class="mono">letter-spacing</code> lorem<code class="mono">1.5px</code> lorem px lorem, em lorem ipsum.</strong>lorem(24px)lorem 0.0625em lorem, lorem ipsum dolor(11px)lorem ipsum dolor<strong>0.136em</strong> lorem ipsum——<strong>lorem ipsum dolor sit amet</strong>。<code class="mono">line-height</code> lorem<code class="mono">40px</code> lorem px lorem, font-size lorem ipsum dolor sit amet consectetur. lorem<code class="mono">font-weight</code> lorem 400(lorem B101 lorem ipsum dolor sit amet).</p>
+
+    <div class="type-row"><div class="type-meta">Display (EN) / Futura PT<br>30px w600<br>lh 30px (1.0)<br>ls 1.4px = 0.047em</div>
+      <div class="t-display-en">POLA MUSEUM OF ART</div></div>
+    <div class="type-row"><div class="type-meta">Section Label (EN)<br>24px w600<br>lh 24px (1.0)<br>ls <strong>4px = 0.167em</strong></div>
+      <div class="t-label-en">EXHIBITION</div></div>
+    <div class="type-row"><div class="type-meta">Heading / lorem B101<br>24px w400<br>lh 40px (1.667)<br>ls 1.5px = 0.0625em</div>
+      <div class="t-heading">lorem ipsum dolor sit</div></div>
+    <div class="type-row"><div class="type-meta">Body / lorem B101<br><strong>24px</strong> w400<br>lh 40px (1.667)<br>ls 1.5px = 0.0625em</div>
+      <div class="t-body">lorem ipsum dolor, lorem / lorem ipsum dolor sit amet. lorem ipsum dolor sit amet consectetur, lorem ipsum dolor sit amet consectetur adipiscing elit sed.</div></div>
+    <div class="type-row"><div class="type-meta">Lead / lorem B101<br>20px w400<br>lh 40px (<strong>2.0</strong>)<br>ls 1.5px = 0.075em</div>
+      <div class="t-lead">lorem ipsum dolor sit amet. lorem 40px lorem ipsum, 24px lorem 20px lorem ipsum dolor.</div></div>
+    <div class="type-row"><div class="type-meta">Lead(lorem)<br>20px w400<br>lh 40px (2.0)<br>ls <strong>3.8px = 0.19em</strong></div>
+      <div class="t-lead-wide">lorem ipsum dolor sit amet</div></div>
+    <div class="type-row"><div class="type-meta">Section Head / lorem BBB<br>18px w400<br>lh 34px (1.889)<br>ls 1.5px = 0.083em</div>
+      <div class="t-sechead">lorem ipsum dolor sit</div></div>
+    <div class="type-row"><div class="type-meta">Small / lorem B101<br>15px w400<br>lh 15px (1.0)<br>ls 0.8〜1px</div>
+      <div class="t-small">lorem ipsum dolor sit</div></div>
+    <div class="type-row"><div class="type-meta">Caption / lorem BBB<br>11px w400<br>lh 20px (1.818)<br>ls <strong>1.5px = 0.136em</strong></div>
+      <div class="t-caption">lorem ipsum / lorem《lorem ipsum dolor sit amet》1884 lorem lorem / lorem ipsum lorem ipsum dolor</div></div>
+
+    <p class="note" style="margin-top:24px"><strong>lorem 2 lorem ipsum dolor sit.</strong>lorem ipsum dolor sit B101, lorem ipsum dolor sit amet consectetur adipiscing BBB——<strong>lorem“lorem”lorem ipsum“lorem ipsum”</strong>lorem, lorem ipsum dolor sit amet.</p>
+    <p class="note"><strong>lorem ipsum dolor 3 lorem ipsum dolor</strong>(lorem 0.0625em lorem ipsum 0.167em). lorem ipsum dolor sit amet. lorem<code class="mono">line-height</code> lorem ipsum<code class="mono">1.0</code> lorem, lorem ipsum dolor sit amet——lorem ipsum dolor sit amet consectetur adipiscing.</p>
+  </div>
+</section>
+
+<!-- ============ RHYTHM ============ -->
+<section class="section">
+  <div class="container">
+    <div class="sec-label"><span class="lbl-en">Rhythm</span><span class="lbl-ja">lorem ipsum</span></div>
+    <p class="note"><code class="mono">line-height: 40px</code> lorem ipsum<code class="mono">font-size</code> lorem ipsum dolor,<strong>20px lorem ipsum 24px lorem ipsum dolor sit amet consectetur</strong>. lorem ipsum 40 lorem ipsum dolor, 2 lorem ipsum dolor sit amet.</p>
+    <div class="rhythm-demo" style="margin-top:24px">
+      <div class="lines"></div>
+      <div class="txt">
+        <p class="t-lead">lorem 40px lorem ipsum, 20px lorem ipsum dolor.</p>
+        <p class="t-body">lorem 24px lorem ipsum, lorem ipsum dolor 40px lorem ipsum dolor sit amet. lorem ipsum dolor sit amet, lorem ipsum dolor sit. lorem ipsum 40px lorem ipsum dolor.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ EXHIBITION ============ -->
+<section class="section">
+  <div class="container">
+    <div class="sec-label"><span class="lbl-en">Exhibition</span><span class="lbl-ja">lorem</span></div>
+    <p class="t-body">lorem ipsum, lorem ipsum dolor“lorem ipsum dolor sit amet”lorem ipsum dolor. lorem ipsum, lorem ipsum, lorem, lorem ipsum, lorem ipsum, lorem ipsum——lorem ipsum dolor sit amet, lorem ipsum dolor sit amet consectetur adipiscing.</p>
+    <p class="t-body" style="margin-top:var(--rhythm)">lorem ipsum dolor sit amet consectetur adipiscing. lorem ipsum dolor sit, lorem ipsum dolor.</p>
+
+    <div class="grid g3" style="margin-top:var(--rhythm)">
+      <div class="work">
+        <div class="ph" style="background:linear-gradient(165deg,#b6c6d2 0%,#93ad8d 40%,#c9a96b 72%,#8f6544 100%)"></div>
+        <div class="work-title">lorem ipsum</div>
+        <div class="work-cap">lorem ipsum / lorem 1899 lorem<br>lorem / lorem ipsum</div>
+      </div>
+      <div class="work">
+        <div class="ph" style="background:linear-gradient(200deg,#33482c 0%,#5f7d4d 44%,#93a46f 76%,#d7dacd 100%)"></div>
+        <div class="work-title">lorem ipsum</div>
+        <div class="work-cap">lorem / lorem ipsum dolor<br>lorem ipsum</div>
+      </div>
+      <div class="work">
+        <div class="ph" style="background:linear-gradient(140deg,#d8d3c6 0%,#b9ae97 45%,#8d8069 78%,#4f4638 100%)"></div>
+        <div class="work-title">lorem ipsum</div>
+        <div class="work-cap">lorem ipsum dolor<br>lorem ipsum</div>
+      </div>
+    </div>
+    <p class="note"><strong>lorem ipsum dolor sit amet consectetur.</strong>lorem“lorem ipsum”＋“lorem ipsum dolor sit”lorem ipsum. lorem<code class="mono">border-radius</code> lorem ipsum(lorem ipsum dolor sit).</p>
+  </div>
+</section>
+
+<!-- ============ BUTTONS ============ -->
+<section class="section">
+  <div class="container">
+    <div class="sec-label"><span class="lbl-en">Buttons</span><span class="lbl-ja">lorem</span></div>
+    <p class="note"><strong>lorem ipsum dolor 1 lorem ipsum dolor.</strong><code class="mono">transparent + border 2px solid #000000 + radius 0</code>. padding lorem<code class="mono">10px 7px 11px 10px</code> lorem ipsum dolor sit amet,<strong>lorem ipsum dolor sit amet consectetur 1px lorem</strong>lorem ipsum dolor.</p>
+
+    <div class="btn-row" style="margin-top:24px">
+      <a href="#" class="btn">lorem ipsum dolor sit</a>
+      <a href="#" class="btn">lorem ipsum dolor</a>
+      <a href="#" class="btn btn-blue">TOP</a>
+    </div>
+
+    <div class="btn-row" style="margin-top:24px">
+      <a href="#" class="btn btn-touch">lorem padding lorem 12px lorem ipsum dolor</a>
+    </div>
+    <p class="note">lorem padding lorem<code class="mono">15px + 10px + 11px + 2px × 2 = 40px</code> lorem<strong>44px lorem ipsum dolor sit amet</strong>. lorem ipsum dolor<code class="mono">12px</code> lorem ipsum 45px lorem ipsum.</p>
+
+    <div class="grid g3" style="margin-top:var(--rhythm)">
+      <a href="#" class="surface-block"><span class="en-s">COLLECTION</span><span class="ja-s">lorem ipsum dolor</span></a>
+      <a href="#" class="surface-block"><span class="en-s">VISIT</span><span class="ja-s">lorem ipsum</span></a>
+      <a href="#" class="surface-block"><span class="en-s">ABOUT</span><span class="ja-s">lorem ipsum dolor</span></a>
+    </div>
+    <p class="note">lorem ipsum dolor sit<code class="mono">#e6e6e6</code> ／ <code class="mono">radius 0</code> ／ lorem.</p>
+  </div>
+</section>
+
+<!-- ============ FORMS ============ -->
+<section class="section">
+  <div class="container">
+    <div class="sec-label"><span class="lbl-en">Forms</span><span class="lbl-ja">lorem ipsum</span></div>
+    <p class="note">lorem ipsum dolor sit amet consectetur adipiscing. lorem<strong>lorem ipsum dolor sit amet consectetur(lorem 0 / lorem / lorem ipsum)lorem ipsum dolor sit amet</strong>。</p>
+    <div class="grid g3" style="margin-top:24px">
+      <div>
+        <p class="note" style="margin:0 0 10px">Default</p>
+        <div class="field">
+          <label for="f1">lorem</label>
+          <input id="f1" type="text" value="葛原 健太">
+          <div class="hint">lorem ipsum dolor sit.</div>
+        </div>
+      </div>
+      <div>
+        <p class="note" style="margin:0 0 10px">Focus</p>
+        <div class="field is-focus">
+          <label for="f2">lorem ipsum dolor</label>
+          <input id="f2" type="email" value="hello@example.com">
+          <div class="hint">outline 2px solid #043d8a / offset 2px</div>
+        </div>
+      </div>
+      <div>
+        <p class="note" style="margin:0 0 10px">Error</p>
+        <div class="field is-error">
+          <label for="f3">lorem ipsum dolor</label>
+          <input id="f3" type="text" value="2026/13/01">
+          <div class="msg">lorem ipsum dolor sit amet consectetur.</div>
+        </div>
+      </div>
+    </div>
+    <p class="note"><strong>lorem ipsum dolor sit</strong>(lorem ipsum dolor sit amet). lorem 2px lorem ipsum, lorem ipsum dolor<code class="mono">2px solid #000000</code> lorem ipsum dolor. lorem ipsum dolor<code class="mono">16px</code>(iOS lorem ipsum dolor).</p>
+  </div>
+</section>
+
+<!-- ============ ELEVATION ============ -->
+<section class="section">
+  <div class="container">
+    <div class="sec-label"><span class="lbl-en">Elevation</span><span class="lbl-ja">lorem</span></div>
+    <p class="note"><strong>lorem 1 lorem ipsum dolor sit. lorem ipsum<code class="mono">box-shadow: none</code> lorem<code class="mono">border-radius: 0</code>。</strong>lorem ipsum dolor sit amet,<code class="mono">#f9f9f9</code>(lorem)lorem<code class="mono">#e6e6e6</code>(lorem)lorem 2 lorem“lorem ipsum”lorem ipsum“lorem”lorem ipsum. lorem ipsum dolor sit amet, lorem ipsum<code class="mono">2px solid #000000</code> lorem ipsum.</p>
+    <div class="grid g3" style="margin-top:20px">
+      <div class="elev elev-paper"><div class="elev-name">lorem(#f9f9f9)</div>
+        <div class="note" style="margin-top:4px">lorem ipsum dolor</div></div>
+      <div class="elev elev-surface"><div class="elev-name">lorem(#e6e6e6)</div>
+        <div class="note" style="margin-top:4px">lorem. lorem ipsum dolor sit</div></div>
+      <div class="elev elev-rule"><div class="elev-name">lorem(2px)</div>
+        <div class="note" style="margin-top:4px">lorem ipsum dolor</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ LAYOUT ============ -->
+<section class="section">
+  <div class="container">
+    <div class="sec-label"><span class="lbl-en">Layout</span><span class="lbl-ja">lorem ipsum</span></div>
+    <p class="note">lorem ipsum dolor sit amet. lorem ipsum dolor sit<strong><code class="mono">40px</code>(lorem ipsum dolor sit)</strong>。</p>
+    <div style="margin-top:18px">
+      <div class="sp-row"><div class="sp-bar" style="width:7px"></div><span class="sp-label">7px — lorem ipsum padding</span></div>
+      <div class="sp-row"><div class="sp-bar" style="width:10px"></div><span class="sp-label">10px — lorem ipsum / lorem padding</span></div>
+      <div class="sp-row"><div class="sp-bar" style="width:11px"></div><span class="sp-label">11px — lorem ipsum padding(lorem ipsum dolor)</span></div>
+      <div class="sp-row"><div class="sp-bar" style="width:35px"></div><span class="sp-label">35px — lorem ipsum dolor sit</span></div>
+      <div class="sp-row"><div class="sp-bar" style="width:40px"></div><span class="sp-label">40px — lorem ipsum dolor(lorem ipsum dolor)</span></div>
+      <div class="sp-row"><div class="sp-bar" style="width:80px"></div><span class="sp-label">80px — 40 × 2</span></div>
+    </div>
+
+    <p class="note" style="margin-top:28px">lorem<strong>lorem<code class="mono">0px</code></strong>. lorem ipsum dolor sit.</p>
+    <div class="btn-row" style="margin-top:12px">
+      <div style="width:120px;height:64px;background:var(--surface)"></div>
+      <div style="width:120px;height:64px;background:transparent;border:2px solid var(--ink)"></div>
+    </div>
+
+    <p class="note" style="margin-top:28px">lorem ipsum<code class="mono">850px</code>(CSS lorem<strong>2795 lorem</strong>lorem ipsum dolor sit amet consectetur). lorem ipsum dolor sit<code class="mono">max-width: 850px</code> lorem ipsum, lorem<code class="mono">700 / 640 / 379 / 370px</code>. lorem ipsum dolor<strong><code class="mono">min-width: 1590px</code> lorem<code class="mono">min-width: 2120px</code> lorem ipsum dolor 2 lorem ipsum</strong>——lorem ipsum dolor sit amet consectetur adipiscing elit,<strong>lorem ipsum dolor sit amet consectetur</strong>。</p>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="mark">POLA MUSEUM OF ART</div>
+    <p class="t-sechead" style="margin-top:16px">lorem ipsum dolor sit amet consectetur 1285</p>
+    <div class="copy">© Pola Museum of Art</div>
+  </div>
+</footer>
+
+</body>
+</html>

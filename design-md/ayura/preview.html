@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design System Preview: lorem ipsum(AYURA)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&family=Noto+Serif+JP:wght@400;500;600&family=Noto+Sans+JP:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* === Colors: computed style 実測値（2026-08-23） === */
+    --bg:            #f8f5f5;  /* 地。下層ページは全面（商品一覧で 9/9 サンプル一致） */
+    --surface-warm:  #f5f1f0;  /* メールマガジン登録ブロック */
+    --white:         #ffffff;
+    --ink:           #3c3c3c;  /* 既定の文字色。見出しも本文もこの 1 色 */
+    --muted:         #87877d;  /* 補足・バッジ文字・カート個数の面（黄緑に振れたグレー） */
+    --muted-alt:     #878782;  /* 送料無料バー・丸ボタンの枠 */
+    --border:        #c8c8c8;  /* CTA の枠・バッジの枠・区切り線。最重要の線色 */
+
+    /* === Fonts 実測値 === */
+    /* ヒラギノ角ゴ ProN は macOS 同梱。他環境では游ゴシック → Noto Sans JP に落ちる */
+    --font-base: "Hiragino Kaku Gothic ProN", "Hiragino Kaku Gothic Pro",
+                 游ゴシック体, YuGothic, "游ゴシック Medium", "Yu Gothic Medium",
+                 游ゴシック, "Yu Gothic", "Noto Sans JP", sans-serif;
+    /* 欧文見出しは Poppins を先頭に足し、和文チェーンはそのまま後ろに残す */
+    --font-en:   Poppins, "Hiragino Kaku Gothic ProN", "Hiragino Kaku Gothic Pro",
+                 游ゴシック体, YuGothic, "游ゴシック Medium", "Yu Gothic Medium",
+                 游ゴシック, "Yu Gothic", "Noto Sans JP", sans-serif;
+    --font-en-only: Poppins, sans-serif;
+    --font-serif:   "Noto Serif JP", serif;   /* リード文（惹句）だけ明朝 */
+    --font-mono:    SFMono-Regular, Consolas, Menlo, Courier, monospace;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { font-size: 16px; }
+
+  body {
+    background: var(--bg);          /* 地は白ではない */
+    color: var(--ink);
+    font-family: var(--font-base);
+    font-size: 1rem; font-weight: 400;
+    line-height: 1.8;               /* 段落組みの推奨値（サイトのラベルは 1.0） */
+    letter-spacing: 0.04em;         /* 和文は 0.04em */
+    font-feature-settings: normal;  /* palt は使わない */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* HEADER */
+  .header { background: var(--white); display: flex; align-items: center; justify-content: space-between; padding: 1.25rem 2rem; }
+  .header-left { display: flex; align-items: center; gap: 1rem; }
+  .icon-circle { display: inline-flex; align-items: center; justify-content: center; width: 1.5rem; height: 1.5rem; border: 1px solid var(--muted-alt); border-radius: 50%; font-size: 0.7rem; }
+  .count-badge { display: inline-flex; align-items: center; justify-content: center; width: 1.05rem; height: 1.05rem; background: var(--muted); color: var(--white); border: 1px solid var(--white); border-radius: 50%; font-family: var(--font-en-only); font-size: 0.625rem; line-height: 1; }
+  .brand { font-family: var(--font-en-only); font-size: 1.5rem; font-weight: 400; letter-spacing: 0.3em; color: var(--ink); }
+  .header-right { display: flex; gap: 1.25rem; align-items: center; font-size: 0.8125rem; }
+
+  /* HERO */
+  .hero { padding: 3.5rem 2rem; text-align: center; background: var(--white); }
+  .hero-lead { font-family: var(--font-serif); font-size: 1.375rem; font-weight: 500; line-height: 1.35; letter-spacing: 0.015em; color: var(--ink); }
+  .hero-sub { font-size: 0.875rem; line-height: 1.8; letter-spacing: 0.04em; color: var(--muted); margin-top: 1rem; }
+  .hero-badge { margin-top: 1.25rem; }
+
+  /* SECTIONS */
+  .section { padding: 3.5rem 2rem; max-width: 1100px; margin: 0 auto; }
+  .section-white { background: var(--white); }
+  .section-label { font-family: var(--font-en-only); font-size: 0.6875rem; letter-spacing: 0.2em; color: var(--muted); margin-bottom: 0.5rem; }
+  /* Poppins の見出しは字間 0.155em — 和文の約 4 倍 */
+  .section-title { font-family: var(--font-en); font-size: 1.5rem; font-weight: 400; line-height: 1; letter-spacing: 0.155em; color: var(--ink); margin-bottom: 2rem; }
+
+  /* COLORS */
+  .color-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 0.75rem; margin-bottom: 1.5rem; }
+  .color-swatch { border: 1px solid var(--border); background: var(--white); }
+  .color-swatch-block { height: 4.5rem; width: 100%; }
+  .color-swatch-info { padding: 0.7rem 0.85rem; }
+  .color-swatch-name { font-size: 0.8125rem; line-height: 1.4; margin-bottom: 0.2rem; }
+  .color-swatch-hex { font-family: var(--font-mono); font-size: 0.75rem; color: var(--muted); letter-spacing: 0; }
+  .color-swatch-role { font-size: 0.6875rem; color: var(--muted); margin-top: 0.3rem; line-height: 1.6; }
+  .color-group-label { font-family: var(--font-en); font-size: 0.875rem; letter-spacing: 0.155em; color: var(--ink); margin: 2rem 0 0.75rem; }
+
+  /* TYPOGRAPHY */
+  .type-sample { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border); }
+  .type-sample:last-child { border-bottom: none; }
+  .type-meta { font-family: var(--font-mono); font-size: 0.75rem; color: var(--muted); margin-top: 0.6rem; line-height: 1.7; letter-spacing: 0; }
+  .t-sec-en   { font-family: var(--font-en); font-size: 1.5rem;   font-weight: 400; line-height: 1;    letter-spacing: 0.155em; }
+  .t-sec-en-s { font-family: var(--font-en); font-size: 1.375rem; font-weight: 400; line-height: 1;    letter-spacing: 0.155em; }
+  .t-lead     { font-family: var(--font-serif); font-size: 1.375rem; font-weight: 500; line-height: 1.35; letter-spacing: 0.015em; }
+  .t-head     { font-size: 1.75rem;  font-weight: 600; line-height: 1;   letter-spacing: 0.04em; }
+  .t-label-en { font-family: var(--font-en-only); font-size: 1.125rem; font-weight: 400; line-height: 1; letter-spacing: 0.029em; }
+  .t-body     { font-size: 1rem;      font-weight: 400; line-height: 1.8; letter-spacing: 0.04em; }
+  .t-nav-b    { font-size: 0.875rem;  font-weight: 700; line-height: 1;   letter-spacing: 0.046em; }
+  .t-nav      { font-size: 0.875rem;  font-weight: 400; line-height: 1;   letter-spacing: 0.04em; }
+  .t-caption  { font-size: 0.8125rem; font-weight: 400; line-height: 1;   letter-spacing: 0.04em; }
+  .t-small    { font-size: 0.75rem;   font-weight: 400; line-height: 1;   letter-spacing: 0.04em; }
+
+  /* BUTTONS — このサイトに塗りボタンは存在しない */
+  .button-row { display: flex; gap: 1.25rem; flex-wrap: wrap; align-items: flex-start; }
+  .button-item { text-align: center; }
+  .button-label { font-size: 0.6875rem; color: var(--muted); margin-top: 0.6rem; line-height: 1.6; }
+  .btn-pill { display: inline-block; background: var(--white); color: var(--ink); border: 1px solid var(--border); border-radius: 25px; padding: 17px 40px; font-family: var(--font-base); font-size: 0.875rem; letter-spacing: 0.04em; text-decoration: none; cursor: pointer; }
+  .btn-pill-en { display: inline-block; background: var(--white); color: var(--ink); border: 1px solid var(--border); border-radius: 25px; padding: 17px 48px; font-family: var(--font-en-only); font-size: 1rem; letter-spacing: 0.155em; text-decoration: none; cursor: pointer; }
+  .btn-pill:hover, .btn-pill-en:hover { border-color: var(--muted-alt); }
+  .btn-pill:focus-visible, .btn-pill-en:focus-visible { outline: 1px solid var(--ink); outline-offset: 2px; }
+
+  .on-dark { background: var(--muted-alt); padding: 2rem; margin-top: 1.5rem; }
+  .btn-ghost { display: inline-block; background: transparent; color: var(--white); border: 1px solid var(--white); border-radius: 15px; padding: 7.5px 15px; font-size: 0.8125rem; letter-spacing: 0.04em; text-decoration: none; }
+  .on-dark .button-label { color: #ffffff; }
+
+  .notice-bar { background: rgba(135,135,130,0.9); color: var(--white); padding: 0.75rem 50px 0.75rem 15px; font-size: 0.875rem; letter-spacing: 0.04em; border-radius: 0; display: inline-block; }
+
+  /* BADGES — CTA が pill なのに対し、バッジは角丸ゼロ */
+  .badge { display: inline-block; background: var(--white); color: var(--muted); border: 1px solid var(--border); border-radius: 0; padding: 4.5px 6.13px; font-size: 0.6875rem; letter-spacing: 0.04em; }
+
+  /* DOTS */
+  .dots { display: flex; gap: 0.75rem; align-items: center; }
+  .dot { width: 0.5rem; height: 0.5rem; border-radius: 50%; background: var(--border); }
+  .dot.is-current { background: var(--ink); }
+
+  /* CARDS */
+  .card-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .card { background: var(--white); border-radius: 0; box-shadow: none; }
+  .card-media { background: var(--bg); aspect-ratio: 4 / 3; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; color: var(--muted); }
+  .card-body { padding: 1.25rem; }
+  .card-badges { margin-bottom: 0.75rem; display: flex; gap: 0.4rem; }
+  .card-title { font-size: 1rem; line-height: 1.6; letter-spacing: 0.04em; color: var(--ink); }
+  .card-text { font-size: 0.8125rem; line-height: 1.8; letter-spacing: 0.04em; color: var(--muted); margin-top: 0.6rem; }
+
+  /* CATEGORY LINKS */
+  .cat-row { display: flex; gap: 2rem; flex-wrap: wrap; justify-content: center; }
+  .cat-link { font-size: 0.875rem; letter-spacing: 0.04em; color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--border); padding-bottom: 0.4rem; }
+  .cat-link:hover { border-color: var(--ink); }
+
+  /* FORMS */
+  .form-row { margin-bottom: 1.75rem; max-width: 30rem; }
+  .form-label { display: block; font-size: 0.875rem; letter-spacing: 0.04em; margin-bottom: 0.5rem; }
+  .form-input { width: 100%; background: var(--white); border: 1px solid var(--border); border-radius: 2px; padding: 0.75rem 1rem; font-family: var(--font-base); font-size: 0.875rem; color: var(--ink); letter-spacing: 0.04em; }
+  .form-input::placeholder { color: var(--border); }
+  .form-input:focus { outline: none; border-color: var(--ink); }
+  .form-input.is-focus { border-color: var(--ink); }
+  .form-input.is-error { border-color: #a33; }
+  .form-error { font-size: 0.75rem; color: #a33; margin-top: 0.4rem; letter-spacing: 0.04em; }
+  .form-hint { font-size: 0.75rem; color: var(--muted); margin-top: 0.4rem; letter-spacing: 0.04em; }
+
+  /* ELEVATION / SURFACES */
+  .elev-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+  .elev-item { background: var(--white); border: 1px solid var(--border); padding: 1.5rem; box-shadow: none; }
+  .elev-name { font-size: 0.875rem; margin-bottom: 0.3rem; }
+  .elev-code { font-family: var(--font-mono); font-size: 0.6875rem; color: var(--muted); letter-spacing: 0; line-height: 1.6; }
+  .surface-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+  .surface-item { padding: 1.75rem 1.25rem; font-size: 0.8125rem; letter-spacing: 0.04em; border: 1px solid var(--border); }
+
+  /* LAYOUT */
+  .layout-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; background: var(--white); }
+  .layout-table th, .layout-table td { border: 1px solid var(--border); padding: 0.75rem 1rem; text-align: left; letter-spacing: 0.04em; }
+  .layout-table th { background: var(--bg); font-weight: 400; }
+  .layout-table td.mono { font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0; }
+
+  .note { background: var(--surface-warm); border-left: 2px solid var(--muted); padding: 1.25rem 1.5rem; font-size: 0.875rem; line-height: 1.9; letter-spacing: 0.04em; margin-top: 2rem; }
+  .note strong { font-weight: 700; }
+  .note code { font-family: var(--font-mono); font-size: 0.8125rem; letter-spacing: 0; }
+
+  /* FOOTER */
+  .footer { background: var(--white); padding: 4.5rem 2rem 3rem; text-align: center; }
+  .footer-title { font-family: var(--font-en); font-size: 1.375rem; letter-spacing: 0.155em; color: var(--ink); }
+  .footer-text { font-size: 0.8125rem; line-height: 1.9; letter-spacing: 0.04em; color: var(--muted); margin-top: 1rem; }
+  .footer-actions { margin-top: 1.75rem; }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-left">
+    <span class="icon-circle">◍</span>
+    <span class="count-badge">0</span>
+  </div>
+  <div class="brand">AYURA</div>
+  <div class="header-right">
+    <span class="icon-circle">⌕</span>
+    <span class="t-nav">MENU</span>
+  </div>
+</header>
+
+<section class="hero">
+  <p class="hero-lead">lorem ipsum, lorem. lorem ipsum dolor.</p>
+  <p class="hero-sub">lorem ipsum dolor sit amet“lorem ipsum dolor”lorem</p>
+  <div class="hero-badge"><span class="badge">NEW</span></div>
+  <div class="dots" style="justify-content:center;margin-top:2rem">
+    <span class="dot is-current"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span>
+  </div>
+</section>
+
+<!-- CATEGORY -->
+<section class="section section-white" style="max-width:none;padding-top:2rem;padding-bottom:2rem">
+  <div class="cat-row">
+    <a class="cat-link" href="#colors">lorem ipsum</a>
+    <a class="cat-link" href="#typography">lorem ipsum</a>
+    <a class="cat-link" href="#buttons">lorem ipsum</a>
+    <a class="cat-link" href="#cards">lorem</a>
+    <a class="cat-link" href="#forms">lorem / lorem</a>
+    <a class="cat-link" href="#elevation">lorem ipsum dolor</a>
+    <a class="cat-link" href="#layout">lorem ipsum dolor</a>
+  </div>
+</section>
+
+<!-- COLORS -->
+<section class="section" id="colors">
+  <p class="section-label">01</p>
+  <h2 class="section-title">COLORS</h2>
+
+  <p class="color-group-label">Base(lorem)</p>
+  <div class="color-grid">
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#f8f5f5"></div><div class="color-swatch-info"><div class="color-swatch-name">Page Background</div><div class="color-swatch-hex">#f8f5f5</div><div class="color-swatch-role">lorem. lorem ipsum dolor sit amet. lorem ipsum dolor sit amet</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#f5f1f0"></div><div class="color-swatch-info"><div class="color-swatch-name">Surface Warm</div><div class="color-swatch-hex">#f5f1f0</div><div class="color-swatch-role">lorem ipsum dolor sit amet consectetur. lorem ipsum dolor</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#ffffff;border-bottom:1px solid #c8c8c8"></div><div class="color-swatch-info"><div class="color-swatch-name">Surface White</div><div class="color-swatch-hex">#ffffff</div><div class="color-swatch-role">lorem ipsum / lorem ipsum / lorem ipsum</div></div></div>
+  </div>
+
+  <p class="color-group-label">Neutral</p>
+  <div class="color-grid">
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#3c3c3c"></div><div class="color-swatch-info"><div class="color-swatch-name">Text Primary</div><div class="color-swatch-hex">#3c3c3c</div><div class="color-swatch-role">lorem ipsum. lorem ipsum dolor sit 1 lorem. lorem ipsum dolor</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#87877d"></div><div class="color-swatch-info"><div class="color-swatch-name">Text Secondary</div><div class="color-swatch-hex">#87877d</div><div class="color-swatch-role">lorem / lorem ipsum. lorem ipsum dolor sit</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#878782"></div><div class="color-swatch-info"><div class="color-swatch-name">Secondary Alt</div><div class="color-swatch-hex">#878782</div><div class="color-swatch-role">lorem ipsum dolor / lorem ipsum dolor</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#c8c8c8"></div><div class="color-swatch-info"><div class="color-swatch-name">Border</div><div class="color-swatch-hex">#c8c8c8</div><div class="color-swatch-role"><strong>CTA lorem ipsum dolor sit</strong>. lorem ipsum CTA lorem ipsum</div></div></div>
+  </div>
+
+  <div class="note">
+    <strong>lorem ipsum dolor.</strong> <code>html</code> / <code>body</code> lorem ipsum dolor, lorem ipsum dolor sit amet consectetur. lorem ipsum dolor sit amet consectetur adipiscing,<strong>lorem ipsum dolor sit amet consectetur<code>#f8f5f5</code></strong>(12 lorem ipsum dolor 9/9 lorem).
+</div>
+</section>
+
+<!-- TYPOGRAPHY -->
+<section class="section section-white" id="typography" style="max-width:none">
+<div style="max-width:1100px;margin:0 auto">
+  <p class="section-label">02</p>
+  <h2 class="section-title">TYPOGRAPHY</h2>
+
+  <div class="type-sample">
+    <div class="t-sec-en">TOPICS</div>
+    <div class="type-meta">Section (lorem) / Poppins 24px w400 / lh 1.0 /<strong>ls 0.155em (3.72px)</strong> — lorem ipsum 4 lorem</div>
+  </div>
+  <div class="type-sample">
+    <div class="t-sec-en-s">Recommend</div>
+    <div class="type-meta">Section (lorem / lorem) / Poppins 22px w400 / lh 1.0 / ls 0.155em (3.41px)</div>
+  </div>
+  <div class="type-sample">
+    <div class="t-lead">lorem ipsum, lorem. lorem ipsum dolor.</div>
+    <div class="type-meta">Lead(lorem)/<strong>"Noto Serif JP", serif</strong> 22px w500 / lh 1.35 (29.6px) / ls 0.015em — lorem ipsum dolor</div>
+  </div>
+  <div class="type-sample">
+    <div class="t-head">lorem ipsum, lorem ipsum</div>
+    <div class="type-meta">Heading(lorem)/ 28px<strong>w600</strong> / lh 1.0 / ls 0.04em — lorem semibold</div>
+  </div>
+  <div class="type-sample">
+    <div class="t-label-en">Mail Magazine</div>
+    <div class="type-meta">Label (lorem) / Poppins 18px w400 / lh 1.0 / ls 0.029em</div>
+  </div>
+  <div class="type-sample">
+    <div class="t-body">lorem ipsum dolor, lorem ipsum dolor sit amet. lorem ipsum, lorem ipsum dolor sit amet consectetur, lorem ipsum dolor sit amet consectetur, lorem ipsum dolor sit amet consectetur adipiscing elit.</div>
+    <div class="type-meta">Body / lorem 16px w400 / lh<strong>1.8(lorem ipsum dolor)</strong> / ls 0.04em<br>※ lorem ipsum dolor / lorem ipsum lh 1.0(1 lorem ipsum)</div>
+  </div>
+  <div class="type-sample">
+    <div class="t-nav-b">lorem ipsum</div>
+    <div class="type-meta">Nav Item(lorem)/ 14px<strong>w700</strong> / lh 1.0 / ls 0.046em — lorem ipsum dolor</div>
+  </div>
+  <div class="type-sample">
+    <div class="t-nav">lorem ipsum dolor sit</div>
+    <div class="type-meta">Nav / Label / 14px w400 / lh 1.0 / ls 0.04em</div>
+  </div>
+  <div class="type-sample">
+    <div class="t-caption">lorem ipsum dolor</div>
+    <div class="type-meta">Caption / 13px w400 / lh 1.0 / ls 0.04em</div>
+  </div>
+  <div class="type-sample">
+    <div class="t-small">※ lorem ipsum dolor, lorem ipsum dolor sit amet consectetur</div>
+    <div class="type-meta">Caption(lorem)/ 12px w400 / lh 1.0 / ls 0.04em</div>
+  </div>
+
+  <div class="note">
+    <strong><code>line-height: 1.0</code> lorem 1 lorem ipsum.</strong> lorem ipsum<code>line-height</code> lorem<code>font-size</code> lorem ipsum dolor sit amet consectetur, lorem 1 lorem ipsum dolor / lorem / lorem ipsum dolor. lorem ipsum dolor<strong>1.7–1.8 lorem ipsum</strong>。<br>
+    <strong>lorem 2 lorem.</strong> lorem<code>0.04em</code>, Poppins lorem ipsum dolor<code>0.155em</code>. lorem ipsum.
+</div>
+</div>
+</section>
+
+<!-- BUTTONS -->
+<section class="section" id="buttons">
+  <p class="section-label">03</p>
+  <h2 class="section-title">BUTTONS</h2>
+
+  <div class="button-row">
+    <div class="button-item"><a class="btn-pill-en" href="#buttons">View More</a><div class="button-label">Primary(lorem)<br>lorem / 1px #c8c8c8 / radius 25px<br>ls 0.155em</div></div>
+    <div class="button-item"><a class="btn-pill" href="#buttons">lorem ipsum dolor sit amet consectetur</a><div class="button-label">Primary(lorem)<br>lorem / 1px #c8c8c8 / radius 25px</div></div>
+    <div class="button-item"><a class="btn-pill" href="#buttons">lorem ipsum dolor</a><div class="button-label">lorem</div></div>
+  </div>
+
+  <div class="on-dark">
+    <div class="button-row">
+      <div class="button-item"><a class="btn-ghost" href="#buttons">lorem ipsum dolor sit amet</a><div class="button-label">Secondary(lorem ipsum)<br>lorem / 1px #ffffff / radius 15px</div></div>
+    </div>
+  </div>
+
+  <p class="color-group-label">Notification Bar</p>
+  <div class="notice-bar">lorem 5,500 lorem ipsum dolor sit!!</div>
+
+  <p class="color-group-label">Badges</p>
+  <div class="button-row">
+    <div class="button-item"><span class="badge">NEW</span><div class="button-label">lorem / 1px #c8c8c8<br><strong>radius 0px</strong></div></div>
+    <div class="button-item"><span class="badge">lorem ipsum dolor</span><div class="button-label">lorem #87877d / 11px</div></div>
+  </div>
+
+  <p class="color-group-label">Circle(lorem ipsum / lorem / lorem)</p>
+  <div class="button-row" style="align-items:center">
+    <div class="button-item"><span class="icon-circle">⌕</span><div class="button-label">lorem ipsum<br>1px #878782 / 50%</div></div>
+    <div class="button-item"><span class="count-badge">3</span><div class="button-label">lorem ipsum<br>#87877d / Poppins 10px</div></div>
+    <div class="button-item"><span class="dots"><span class="dot is-current"></span><span class="dot"></span><span class="dot"></span></span><div class="button-label">lorem ipsum dolor<br>#3c3c3c / #c8c8c8</div></div>
+  </div>
+
+  <div class="note">
+    <strong>lorem ipsum dolor sit amet 1 lorem ipsum dolor.</strong> lorem ipsum dolor sit ＋<code>1px solid #c8c8c8</code> ＋ <code>border-radius: 25px</code> lorem pill. lorem ipsum dolor sit amet consectetur,<strong>lorem ipsum dolor sit amet consectetur</strong>。<br>
+ lorem ipsum,<strong>lorem ipsum dolor<code>border-radius: 0px</code></strong>. pill lorem ipsum dolor sit amet consectetur.
+</div>
+</section>
+
+<!-- PRODUCT / CARDS -->
+<section class="section section-white" id="cards" style="max-width:none">
+<div style="max-width:1100px;margin:0 auto">
+  <p class="section-label">04</p>
+  <h2 class="section-title">PRODUCT</h2>
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-media">product image</div>
+      <div class="card-body">
+        <div class="card-badges"><span class="badge">NEW</span></div>
+        <div class="card-title">lorem ipsum dolor lorem ipsum dolor sit II</div>
+        <div class="card-text">lorem ipsum dolor sit, lorem ipsum dolor sit amet consectetur adipiscing.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-media">product image</div>
+      <div class="card-body">
+        <div class="card-badges"><span class="badge">lorem ipsum dolor</span></div>
+        <div class="card-title">lorem ipsum dolor sitα</div>
+        <div class="card-text">lorem ipsum dolor sit amet consectetur. lorem ipsum dolor sit amet consectetur adipiscing.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-media">product image</div>
+      <div class="card-body">
+        <div class="card-badges"><span class="badge">lorem</span></div>
+        <div class="card-title">lorem ipsum dolor sit amet lorem ipsum</div>
+        <div class="card-text">lorem ipsum dolor sit amet consectetur. lorem ipsum dolor sit amet.</div>
+      </div>
+    </div>
+  </div>
+  <div style="text-align:center;margin-top:2.5rem"><a class="btn-pill-en" href="#cards">View More</a></div>
+</div>
+</section>
+
+<!-- FORMS -->
+<section class="section" id="forms">
+  <p class="section-label">05</p>
+  <h2 class="section-title">FORMS</h2>
+  <div class="form-row">
+    <label class="form-label" for="f1">lorem ipsum dolor</label>
+    <input class="form-input" id="f1" type="email" placeholder="ayura@example.com">
+    <div class="form-hint">lorem ipsum dolor sit amet consectetur</div>
+  </div>
+  <div class="form-row">
+    <label class="form-label" for="f2">lorem ipsum dolor(lorem ipsum)</label>
+    <input class="form-input is-focus" id="f2" type="email" value="ayura@example.com">
+    <div class="form-hint">lorem #3c3c3c lorem ipsum</div>
+  </div>
+  <div class="form-row">
+    <label class="form-label" for="f3">lorem ipsum dolor(lorem)</label>
+    <input class="form-input is-error" id="f3" type="email" value="ayura@">
+    <div class="form-error">lorem ipsum dolor sit amet consectetur adipiscing</div>
+  </div>
+</section>
+
+<!-- ELEVATION -->
+<section class="section section-white" id="elevation" style="max-width:none">
+<div style="max-width:1100px;margin:0 auto">
+  <p class="section-label">06</p>
+  <h2 class="section-title">ELEVATION</h2>
+  <div class="elev-grid">
+    <div class="elev-item"><div class="elev-name">Level 0 — lorem</div><div class="elev-code">box-shadow: none;</div><div class="button-label" style="text-align:left">lorem ipsum dolor sit amet consectetur</div></div>
+    <div class="elev-item"><div class="elev-name">lorem ipsum / lorem ipsum</div><div class="elev-code">box-shadow: none;</div><div class="button-label" style="text-align:left">lorem ipsum dolor sit amet consectetur</div></div>
+    <div class="elev-item"><div class="elev-name">lorem ipsum dolor</div><div class="elev-code">lorem + 1px solid #c8c8c8</div><div class="button-label" style="text-align:left">#ffffff / #f8f5f5 / #f5f1f0 lorem 3 lorem</div></div>
+  </div>
+  <p class="color-group-label">Surfaces</p>
+  <div class="surface-grid">
+    <div class="surface-item" style="background:#ffffff">#ffffff — lorem ipsum</div>
+    <div class="surface-item" style="background:#f8f5f5">#f8f5f5 — lorem</div>
+    <div class="surface-item" style="background:#f5f1f0">#f5f1f0 — lorem ipsum dolor</div>
+  </div>
+</div>
+</section>
+
+<!-- LAYOUT -->
+<section class="section" id="layout">
+  <p class="section-label">07</p>
+  <h2 class="section-title">LAYOUT</h2>
+  <table class="layout-table">
+    <tr><th style="width:24%">lorem</th><th style="width:26%">lorem</th><th>lorem</th></tr>
+    <tr><td>Root font-size</td><td class="mono">16px</td><td>375px–1920px lorem</td></tr>
+    <tr><td>Body font-size</td><td class="mono">16px</td><td>lorem ipsum dolor sit amet consectetur</td></tr>
+    <tr><td>Container</td><td class="mono">max-width lorem</td><td><strong>% lorem width lorem</strong></td></tr>
+    <tr><td>Grid gap</td><td class="mono">18px</td><td>lorem ipsum dolor 3–4 lorem</td></tr>
+    <tr><td>Breakpoints</td><td class="mono">641 / 767 / 1024 / 1068 / 1176px</td><td>media query lorem ipsum</td></tr>
+    <tr><td>Border radius</td><td class="mono">25px / 15px / 50% / 0px</td><td>CTA lorem pill, lorem ipsum dolor, lorem ipsum dolor</td></tr>
+    <tr><td>Box shadow</td><td class="mono">none</td><td>lorem ipsum</td></tr>
+    <tr><td>font-feature-settings</td><td class="mono">normal</td><td><strong>palt lorem ipsum</strong>. lorem ipsum letter-spacing lorem</td></tr>
+  </table>
+
+  <div class="note">
+    <strong><code>rgb(0, 0, 238)</code> lorem ipsum dolor sit.</strong> lorem ipsum<code>&lt;a&gt;</code> lorem UA lorem ipsum dolor sit amet, lorem ipsum<strong>lorem<code>&lt;img&gt;</code> lorem ipsum dolor sit amet</strong>lorem ipsum dolor sit amet consectetur. lorem ipsum dolor sit amet consectetur adipiscing.<br>
+ lorem ipsum<strong><code>&lt;a&gt;</code> lorem ipsum dolor sit amet consectetur<code>color</code> lorem ipsum</strong>. lorem ipsum UA lorem ipsum.
+</div>
+</section>
+
+<footer class="footer">
+  <div class="footer-title">AYURA</div>
+  <p class="footer-text">lorem ipsum dolor sit amet consectetur.<br>lorem ipsum dolor, lorem ipsum dolor sit amet consectetur.</p>
+  <div class="footer-actions"><a class="btn-pill-en" href="#colors">Mail Magazine</a></div>
+</footer>
+
+</body>
+</html>

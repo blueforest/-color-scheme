@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design System Preview: nosh(lorem ipsum)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* === Colors ===
+       実サイトは 180 個の CSS 変数を持つが、宣言と実装がずれている箇所がある。
+       採用するのは常に実測値。2026-09-02 */
+    --green:        #63a351;  /* 実質の主色。CTA の面・見出し・ラベル。可視 70要素（変数化されていない） */
+    --green-price:  #52a530;  /* --service-color-primary。可視 22要素。割引価格の表示のみ */
+    --green-focus:  #39bf00;  /* --alias-color-border-primary-highlight。入力欄フォーカスの枠のみ */
+    --green-dark:   #3e8a1f;  /* --service-color-primary-dark。ホバー */
+    --green-light:  #e2f3db;  /* --service-color-primary-light */
+    --green-pale:   #e1f0cc;  /* --alias-color-background-accent-default */
+
+    /* Sub brand */
+    --club:         #1f3d06;  /* --alias-color-noshClub-default */
+    --club-text:    #335f06;  /* --alias-color-noshClub-text-default */
+    --gift:         #0b7043;  /* --alias-color-noshGift-default */
+    --premium-text: #94651b;  /* --alias-color-noshPremiumMenu-text-default */
+    --premium-bd:   #af9546;  /* --alias-color-noshPremiumMenu-border-default */
+    --premium-bg:   #fcf8f4;  /* --alias-color-noshPremiumMenu-background-default */
+    --quick:        #ffd24d;  /* --alias-color-noshQuickDelivery-default */
+
+    /* Ranking */
+    --rank1: #d4b932; --rank2: #94a1a9; --rank3: #d29c4b; --rank-other: #195c32;
+
+    /* Semantic */
+    --warning:      #d80000;  --warning-pale: #fae9eb;
+    --error:        #e86767;  --error-light:  #ffe7e7;
+    --caution:      #ffd24d;  --caution-pale: #fffff4;
+    --notice:       #afcbd6;  --notice-pale:  #fafbfc;
+    --sale:         #ff4000;  /* トークン化されていないが実装で使用 */
+    --star:         #ffd937;  /* --alias-color-menuStar-active-default */
+
+    /* Neutral */
+    --text:         #333333;  /* --alias-color-text-primary-default。実測 5,375 要素 */
+    --text-rating:  #2a2929;  /* --alias-color-menuRating-text-default（381要素） */
+    --text-2:       #818181;  /* --service-color-text-secondary */
+    --text-3:       #bdbdbd;  /* --service-color-text-tertiary */
+    --placeholder:  #999999;
+    --bg:           #fdfcfa;  /* --alias-color-background-tertiary-default。純白ではない生成り */
+    --surface:      #ffffff;
+    --surface-alt:  #f5f7f8;  /* --alias-color-background-secondary-default */
+    --disable:      #f1f1f1;  /* --service-color-disable */
+    --border:       #dddddd;  /* --alias-color-border-primary-default。実装で使われるのはこちら */
+
+    /* === Fonts: 同じ2書体の「順序違い」を役割で使い分ける === */
+    --font-ja: "Noto Sans JP", Roboto, sans-serif;  /* 文章・見出し・ナビ */
+    --font-en: Roboto, "Noto Sans JP", sans-serif;  /* 価格・数値・評価 */
+    --font-mono: SFMono-Regular, Consolas, Menlo, Courier, monospace;
+
+    /* === Radius === */
+    --r-pill:   9999px;  /* CTA。実装には 1440px も混在するが 9999px に統一する */
+    --r-card:   8px;     /* カード。実測 259 要素で最頻 */
+    --r-tab:    5px;
+    --r-chip:   4px;
+    --r-input:  3px;
+    --r-circle: 50%;
+
+    /* === Shadow: 可視要素で 3 件のみ === */
+    --shadow-1: 0 4px 4px rgba(0, 0, 0, .25);
+
+    /* === Spacing: --service-size-0〜10（4px 基準） === */
+    --sp-0: 4px;  --sp-1: 8px;  --sp-2: 16px; --sp-3: 24px; --sp-4: 32px;
+    --sp-5: 48px; --sp-6: 64px; --sp-7: 96px; --sp-8: 128px;
+
+    --container: 1280px;
+    --container-lp: 840px;  /* --alias-size-lp-width-max-default */
+    --header-h: 90px;       /* --n-c-header-height */
+
+    --transition: .2s ease;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  /* root は 10px。1.4rem = 14px として組む */
+  html { font-size: 10px; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-ja);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.8;              /* 実装値。トークンの 1.7 ではない */
+    letter-spacing: .3px;          /* 実装値。トークンの 0.04em (=.56px) ではない */
+    font-feature-settings: normal; /* palt は実測 0 件 */
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* HEADER */
+  .header { background: var(--surface); border-bottom: 1px solid var(--border); }
+  .header-inner { display: flex; align-items: center; gap: 28px; max-width: var(--container); margin: 0 auto; padding: 0 24px; height: var(--header-h); }
+  .header-logo { font-family: var(--font-ja); font-size: 28px; font-weight: 500; line-height: 1.8; letter-spacing: .3px; color: var(--green-price); text-decoration: none; }
+  .header-nav { display: flex; gap: 26px; margin-left: auto; }
+  .header-nav a { font-size: 16px; font-weight: 400; line-height: 1.8; letter-spacing: .3px; color: var(--text); text-decoration: none; }
+
+  /* HERO */
+  .hero { position: relative; height: 380px; background: linear-gradient(155deg, #7b4a2e 0%, #4a2c1a 55%, #21120a 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 26px; }
+  .hero h1 { font-size: 40px; font-weight: 700; line-height: 1.7; letter-spacing: .3px; color: #fff; text-align: center; }
+  .hero-stats { display: flex; gap: 16px; }
+  .hero-stat { border: 1px solid rgba(255,255,255,.7); padding: 12px 22px; text-align: center; color: #fff; }
+  .hero-stat b { font-family: var(--font-en); font-size: 28px; font-weight: 700; line-height: 1; letter-spacing: .56px; display: block; }
+  .hero-stat span { font-size: 12px; font-weight: 500; line-height: 1.6; letter-spacing: .3px; }
+
+  /* SECTIONS */
+  .section { padding: 64px 24px; max-width: var(--container); margin: 0 auto; }
+  .section-alt { background: var(--surface-alt); }
+  .section-alt .section-inner { padding: 64px 24px; max-width: var(--container); margin: 0 auto; }
+  .section-label { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0; color: var(--text-2); margin-bottom: 6px; text-align: center; }
+  .eyebrow { font-size: 16px; font-weight: 700; line-height: 1.8; letter-spacing: .3px; color: var(--green); text-align: center; }
+  .section-title { font-size: 28px; font-weight: 700; line-height: 1.5; letter-spacing: .3px; text-align: center; margin-bottom: 10px; }
+  .section-lead { font-size: 16px; font-weight: 500; line-height: 1.6; letter-spacing: .3px; text-align: center; margin-bottom: 38px; }
+  .note { font-size: 12px; font-weight: 500; line-height: 1.6; letter-spacing: .3px; color: var(--text-2); margin-top: 16px; }
+  code { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0; background: var(--disable); border: 1px solid var(--border); border-radius: var(--r-chip); padding: 1px 5px; }
+
+  /* COLORS */
+  .color-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 12px; }
+  .swatch { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-card); overflow: hidden; }
+  .swatch-chip { height: 72px; }
+  .swatch-body { padding: 10px 12px 14px; }
+  .swatch-name { font-size: 14px; font-weight: 700; line-height: 1.5; letter-spacing: .3px; }
+  .swatch-hex { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0; color: var(--text-2); }
+  .swatch-use { font-size: 11px; font-weight: 500; line-height: 1.6; letter-spacing: .3px; color: var(--text-2); margin-top: 5px; }
+  .warn { border-left: 4px solid var(--green); border-top: 1px solid var(--border); border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); border-radius: var(--r-card); background: var(--surface); padding: 16px 18px; margin-top: 24px; font-size: 14px; line-height: 1.8; letter-spacing: .3px; }
+  .decl-table { width: 100%; border-collapse: collapse; font-size: 14px; line-height: 1.8; letter-spacing: .3px; margin-top: 20px; background: var(--surface); }
+  .decl-table th, .decl-table td { border-bottom: 1px solid var(--border); padding: 10px 12px; text-align: left; }
+  .decl-table th { font-weight: 700; color: var(--green); }
+  .decl-table td:first-child, .decl-table td:nth-child(2) { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0; }
+
+  /* TYPOGRAPHY */
+  .type-row { display: grid; grid-template-columns: 250px 1fr; gap: 24px; padding: 20px 0; border-bottom: 1px solid var(--border); align-items: baseline; }
+  .type-meta { font-family: var(--font-mono); font-size: 11px; line-height: 1.8; letter-spacing: 0; color: var(--text-2); }
+  .t-disp  { font-family: var(--font-en); font-size: 56px; font-weight: 700; line-height: 1; letter-spacing: .3px; }
+  .t-h1    { font-size: 40px; font-weight: 700; line-height: 1.7; letter-spacing: .3px; }
+  .t-h1s   { font-size: 28px; font-weight: 500; line-height: 1.8; letter-spacing: .3px; }
+  .t-h2    { font-size: 28px; font-weight: 700; line-height: 1.5; letter-spacing: .3px; }
+  .t-h2s   { font-size: 24px; font-weight: 700; line-height: 1.6; letter-spacing: .3px; }
+  .t-eyeb  { font-size: 16px; font-weight: 700; line-height: 1.8; letter-spacing: .3px; color: var(--green); }
+  .t-h3    { font-size: 18px; font-weight: 700; line-height: 1.6; letter-spacing: .3px; }
+  .t-h4    { font-size: 16px; font-weight: 700; line-height: 1; letter-spacing: .3px; }
+  .t-lead  { font-size: 16px; font-weight: 500; line-height: 1.6; letter-spacing: .3px; }
+  .t-body  { font-size: 14px; font-weight: 500; line-height: 1.8; letter-spacing: .3px; }
+  .t-card  { font-size: 14px; font-weight: 500; line-height: 1.2; letter-spacing: .3px; }
+  .t-cap   { font-size: 12px; font-weight: 500; line-height: 1.6; letter-spacing: .3px; }
+  .t-micro { font-size: 10px; font-weight: 700; line-height: 1.8; letter-spacing: .3px; color: var(--green); }
+  .t-num   { font-family: var(--font-en); font-size: 14px; font-weight: 700; line-height: 1.8; letter-spacing: .56px; color: var(--text-rating); }
+
+  /* MENU CARDS */
+  .card-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--sp-2); }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-card); overflow: hidden; box-shadow: none; position: relative; }
+  .card-photo { height: 130px; background: linear-gradient(150deg, #d8c9a8, #9d8964); }
+  .card-rank { position: absolute; top: 0; left: 0; color: #fff; border-radius: 0; padding: 4px 8px; font-size: 14px; font-weight: 500; letter-spacing: .3px; }
+  .card-body { padding: 12px; }
+  .card-title { font-size: 14px; font-weight: 500; line-height: 1.2; letter-spacing: .3px; }
+  .card-meta { display: flex; gap: 8px; align-items: center; margin-top: 10px; }
+  .card-price { font-family: var(--font-en); font-size: 14px; font-weight: 700; letter-spacing: .56px; color: var(--green-price); }
+  .card-star { font-family: var(--font-en); font-size: 12px; font-weight: 500; letter-spacing: .56px; color: var(--text-rating); }
+  .card-star i { color: var(--star); font-style: normal; }
+  .chip-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+
+  /* CHIPS & BADGES */
+  .chip       { background: var(--disable); color: var(--green); border-radius: var(--r-chip); padding: 4px 8px; font-size: 12px; font-weight: 500; letter-spacing: .3px; }
+  .chip-pill  { background: var(--disable); color: var(--text-rating); border-radius: var(--r-pill); padding: 8px 12px; font-size: 12px; font-weight: 500; letter-spacing: .3px; }
+  .badge-sale { background: var(--sale); color: #fff; border-radius: 25px; padding: 3px 8px; font-size: 12px; font-weight: 400; letter-spacing: .3px; }
+  .badge-prem { background: var(--surface); color: var(--premium-text); border: 1px solid var(--premium-bd); border-radius: var(--r-chip); padding: 8px; font-size: 12px; font-weight: 500; letter-spacing: .3px; }
+  .badge-club { background: var(--club); color: #fff; border-radius: var(--r-chip); padding: 4px 8px; font-size: 12px; font-weight: 500; letter-spacing: .3px; }
+  .badge-quick{ background: var(--quick); color: var(--text); border-radius: var(--r-chip); padding: 4px 8px; font-size: 12px; font-weight: 500; letter-spacing: .3px; }
+
+  /* BUTTONS */
+  .btn-row { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; justify-content: center; margin-bottom: 20px; }
+  .btn { display: inline-block; text-decoration: none; cursor: pointer; font-family: var(--font-ja); letter-spacing: .3px; transition: background-color var(--transition), color var(--transition); }
+  .btn-primary  { background: var(--green); color: #fff; border: 1px solid var(--green); border-radius: var(--r-pill); padding: 16px 24px; font-size: 16px; font-weight: 500; }
+  .btn-primary:hover { background: var(--green-dark); border-color: var(--green-dark); }
+  .btn-primary-sm { background: var(--green); color: #fff; border: 1px solid var(--green); border-radius: var(--r-pill); padding: 8px 14px; font-size: 16px; font-weight: 700; }
+  .btn-secondary{ background: var(--surface); color: var(--green); border: 1px solid var(--green); border-radius: var(--r-pill); padding: 16px 40px; font-size: 18px; font-weight: 700; }
+  .btn-ghost    { background: transparent; color: var(--green); border: 1px solid var(--green); border-radius: var(--r-pill); padding: 8px 16px; font-size: 12px; font-weight: 400; }
+  .btn-tab-on   { background: var(--green); color: #fff; border: 0; border-radius: var(--r-tab); padding: 10px 15px; font-size: 16px; font-weight: 700; }
+  .btn-tab-off  { background: var(--text-3); color: #fff; border: 0; border-radius: var(--r-tab); padding: 10px 15px; font-size: 16px; font-weight: 700; }
+  .on-photo { background: linear-gradient(150deg, #6b4632, #2b1a10); padding: 40px; display: flex; gap: 16px; justify-content: center; margin-top: 26px; border-radius: var(--r-card); }
+  .btn-onphoto { background: rgba(0,0,0,.5); color: #fff; border: 1px solid #fff; border-radius: var(--r-pill); padding: 12px 36px; font-size: 20px; font-weight: 700; }
+
+  /* FORMS */
+  .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; }
+  .field label { display: block; font-size: 14px; font-weight: 700; letter-spacing: .3px; margin-bottom: 8px; }
+  .field input, .field select { width: 100%; background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: var(--r-input); font-family: var(--font-ja); font-size: 16px; line-height: 1.5; letter-spacing: .3px; padding: 10px; height: 40px; }
+  .field input::placeholder { color: var(--placeholder); }
+  .field.is-focus input { border-color: var(--green-focus); outline: none; }
+  .field.is-error input { border-color: var(--warning); }
+  .field .msg  { font-size: 12px; line-height: 1.6; letter-spacing: .3px; color: var(--warning); margin-top: 5px; }
+  .field .hint { font-size: 12px; line-height: 1.6; letter-spacing: .3px; color: var(--text-2); margin-top: 5px; }
+  .semantic { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 26px; }
+  .semantic div { padding: 12px 16px; font-size: 14px; line-height: 1.6; letter-spacing: .3px; border-radius: var(--r-card); }
+
+  /* ELEVATION */
+  .elev-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+  .elev { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-card); padding: 20px; min-height: 120px; }
+  .elev-0 { box-shadow: none; }
+  .elev-1 { box-shadow: var(--shadow-1); }
+  .elev b { display: block; font-size: 14px; font-weight: 700; line-height: 1.8; letter-spacing: .3px; }
+  .elev code { display: block; margin-top: 6px; font-size: 11px; line-height: 1.8; background: none; border: 0; padding: 0; color: var(--text-2); }
+
+  /* LAYOUT */
+  .layout-demo { border: 1px dashed var(--border); border-radius: var(--r-card); padding: 14px; background: var(--surface); }
+  .layout-bar { background: var(--disable); border: 1px solid var(--border); border-radius: var(--r-chip); text-align: center; font-family: var(--font-mono); font-size: 12px; letter-spacing: 0; line-height: 3.4; color: var(--text-2); }
+  .layout-split { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--sp-2); margin-top: 12px; }
+  .layout-split div { border: 1px solid var(--border); border-radius: var(--r-card); text-align: center; font-family: var(--font-mono); font-size: 12px; letter-spacing: 0; line-height: 5; color: var(--text-2); }
+  .scale-table { width: 100%; border-collapse: collapse; font-size: 14px; line-height: 1.8; letter-spacing: .3px; margin-top: 26px; background: var(--surface); }
+  .scale-table th, .scale-table td { border-bottom: 1px solid var(--border); padding: 10px 12px; text-align: left; }
+  .scale-table th { font-weight: 700; color: var(--green); }
+  .scale-table td:first-child { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0; }
+  .sp-bar { background: var(--green-pale); border: 1px solid var(--green); border-radius: 2px; display: inline-block; height: 12px; }
+
+  /* FOOTER */
+  .footer { background: var(--surface); border-top: 1px solid var(--border); padding: 48px 24px 28px; margin-top: 64px; }
+  .footer-inner { max-width: var(--container); margin: 0 auto; }
+  .footer .ttl { font-size: 28px; font-weight: 500; letter-spacing: .3px; color: var(--green-price); margin-bottom: 18px; }
+  .footer-nav { display: flex; flex-wrap: wrap; gap: 24px; margin-bottom: 22px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
+  .footer-nav a { font-size: 12px; font-weight: 700; letter-spacing: .3px; color: var(--text); text-decoration: none; }
+  .footer-copy { font-size: 12px; line-height: 1.6; letter-spacing: .3px; color: var(--text-2); }
+
+  @media (max-width: 767px) {
+    .type-row { grid-template-columns: 1fr; gap: 6px; }
+    .card-grid, .layout-split, .semantic { grid-template-columns: 1fr 1fr; }
+    .elev-grid { grid-template-columns: 1fr; }
+    .header-nav { display: none; }
+    .t-disp { font-size: 32px; }
+    .t-h1, .hero h1 { font-size: 24px; }
+    .section-title { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-inner">
+    <a class="header-logo" href="#">nosh</a>
+    <nav class="header-nav">
+      <a href="#">lorem ipsum</a><a href="#">lorem ipsum dolor</a><a href="#">nosh club</a><a href="#">FAQ</a><a href="#">lorem ipsum</a>
+    </nav>
+    <a class="btn btn-primary-sm" href="#">lorem ipsum dolor</a>
+  </div>
+</header>
+
+<section class="hero">
+  <h1>“lorem ipsum dolor”<br>lorem ipsum dolor sit</h1>
+  <a class="btn btn-onphoto" href="#">lorem ipsum dolor sit</a>
+  <div class="hero-stats">
+    <div class="hero-stat"><b>30</b><span>lorem ipsum dolor g lorem</span></div>
+    <div class="hero-stat"><b>0</b><span>lorem ipsum dolor lorem</span></div>
+    <div class="hero-stat"><b>100</b><span>lorem ipsum lorem ipsum</span></div>
+  </div>
+</section>
+
+<!-- 01 COLORS -->
+<section class="section" id="colors">
+  <div class="section-label">01 / Colors</div>
+  <p class="eyebrow">PALETTE</p>
+  <h2 class="section-title">lorem 3 lorem</h2>
+  <p class="section-lead">CTA lorem / lorem ipsum / lorem ipsum dolor sit.<b>lorem ipsum<code>--service-color-primary</code> lorem ipsum dolor.</b></p>
+
+  <div class="color-grid">
+    <div class="swatch"><div class="swatch-chip" style="background:#63a351"></div><div class="swatch-body"><div class="swatch-name">Brand Green(lorem)</div><div class="swatch-hex">#63a351</div><div class="swatch-use">CTA lorem / lorem / lorem. lorem 70 lorem.<b>lorem ipsum dolor sit</b></div></div></div>
+    <div class="swatch"><div class="swatch-chip" style="background:#52a530"></div><div class="swatch-body"><div class="swatch-name">Price Green</div><div class="swatch-hex">#52a530</div><div class="swatch-use">--service-color-primary. lorem 22 lorem.<b>lorem ipsum dolor sit</b></div></div></div>
+    <div class="swatch"><div class="swatch-chip" style="background:#39bf00"></div><div class="swatch-body"><div class="swatch-name">Focus Green</div><div class="swatch-hex">#39bf00</div><div class="swatch-use">--alias-color-border-primary-highlight. lorem ipsum dolor sit amet</div></div></div>
+    <div class="swatch"><div class="swatch-chip" style="background:#3e8a1f"></div><div class="swatch-body"><div class="swatch-name">Green Dark</div><div class="swatch-hex">#3e8a1f</div><div class="swatch-use">--service-color-primary-dark. lorem</div></div></div>
+    <div class="swatch"><div class="swatch-chip" style="background:#e2f3db"></div><div class="swatch-body"><div class="swatch-name">Green Light</div><div class="swatch-hex">#e2f3db</div><div class="swatch-use">--service-color-primary-light</div></div></div>
+    <div class="swatch"><div class="swatch-chip" style="background:#1f3d06"></div><div class="swatch-body"><div class="swatch-name">nosh club</div><div class="swatch-hex">#1f3d06</div><div class="swatch-use">--alias-color-noshClub-default. lorem #335f06</div></div></div>
+    <div class="swatch"><div class="swatch-chip" style="background:#0b7043"></div><div class="swatch-body"><div class="swatch-name">nosh Gift</div><div class="swatch-hex">#0b7043</div><div class="swatch-use">--alias-color-noshGift-default</div></div></div>
+    <div class="swatch"><div class="swatch-chip" style="background:#af9546"></div><div class="swatch-body"><div class="swatch-name">Premium Border</div><div class="swatch-hex">#af9546</div><div class="swatch-use">lorem #94651b / lorem #fcf8f4 lorem ipsum</div></div></div>
+    <div class="swatch"><div class="swatch-chip" style="background:#ff4000"></div><div class="swatch-body"><div class="swatch-name">Sale</div><div class="swatch-hex">#ff4000</div><div class="swatch-use">“lorem¥1,500OFF”lorem. lorem ipsum dolor sit amet</div></div></div>
+    <div class="swatch"><div class="swatch-chip" style="background:#fdfcfa;border-bottom:1px solid #dddddd"></div><div class="swatch-body"><div class="swatch-name">Background</div><div class="swatch-hex">#fdfcfa</div><div class="swatch-use"><b>lorem ipsum dolor sit.</b>body lorem</div></div></div>
+    <div class="swatch"><div class="swatch-chip" style="background:#333333"></div><div class="swatch-body"><div class="swatch-name">Text Primary</div><div class="swatch-hex">#333333</div><div class="swatch-use">--alias-color-text-primary-default. lorem 5,375 lorem</div></div></div>
+    <div class="swatch"><div class="swatch-chip" style="background:#dddddd"></div><div class="swatch-body"><div class="swatch-name">Border</div><div class="swatch-hex">#dddddd</div><div class="swatch-use">lorem / lorem ipsum. #dedede lorem ipsum dolor sit amet</div></div></div>
+  </div>
+
+  <h3 class="t-h2s" style="margin-top:44px">lorem ipsum dolor(lorem ipsum)</h3>
+  <div class="btn-row" style="justify-content:flex-start;margin-top:14px">
+    <span class="card-rank" style="position:static;background:#d4b932">lorem No.1</span>
+    <span class="card-rank" style="position:static;background:#94a1a9">lorem No.2</span>
+    <span class="card-rank" style="position:static;background:#d29c4b">lorem No.3</span>
+    <span class="card-rank" style="position:static;background:#195c32">lorem No.8</span>
+  </div>
+  <p class="note" style="text-align:left">lorem<code>#d4b932</code> / lorem<code>#94a1a9</code> / lorem<code>#d29c4b</code> / 4 lorem<code>#195c32</code>。<b>lorem ipsum dolor sit amet consectetur.</b></p>
+
+  <h3 class="t-h2s" style="margin-top:44px">lorem ≠ lorem</h3>
+  <table class="decl-table">
+    <tr><th>lorem ipsum</th><th>lorem</th><th>lorem</th></tr>
+    <tr><td>--service-color-primary</td><td>#52a530</td><td>CTA / lorem ipsum<b>#63a351</b>. #52a530 lorem ipsum dolor(22 lorem)</td></tr>
+    <tr><td>--service-size-lineheight-primary</td><td>1.7</td><td>lorem<b>1.8</b>(14px/25.2px, 16px/28.8px). 1.7 lorem ipsum dolor</td></tr>
+    <tr><td>--service-size-letterspacing-primary</td><td>0.04em</td><td>lorem<b>0.3px</b>(≒0.021em). 0.04em lorem ipsum dolor sit amet consectetur</td></tr>
+    <tr><td>--n-border-radius-max</td><td>100vmax</td><td><b>0 lorem</b>. lorem ipsum dolor 9999px / 1440px</td></tr>
+    <tr><td>--service-color-border-primary</td><td>#dedede</td><td>lorem ipsum dolor sit<b>#dddddd</b>(alias lorem)</td></tr>
+  </table>
+
+  <div class="warn"><b>lorem ipsum<code>line-height: 1.7</code> / <code>letter-spacing: 0.04em</code> lorem ipsum dolor, lorem ipsum dolor sit amet consectetur.</b> lorem ipsum<code>1.8</code> lorem<code>0.3px</code> lorem ipsum. lorem ipsum dolor, lorem ipsum<code>#52a530</code> lorem ipsum dolor<code>#63a351</code> lorem.</div>
+</section>
+
+<!-- 02 TYPOGRAPHY -->
+<section class="section-alt" id="typography">
+<div class="section-inner">
+  <div class="section-label">02 / Typography</div>
+  <p class="eyebrow">TYPOGRAPHY</p>
+  <h2 class="section-title">lorem 2 lorem, lorem ipsum dolor sit</h2>
+  <p class="section-lead">lorem<code>"Noto Sans JP", Roboto</code>, lorem ipsum dolor sit amet consectetur<code>Roboto, "Noto Sans JP"</code> lorem ipsum dolor.</p>
+
+  <div class="type-row"><div class="type-meta">Display<br><b>Roboto lorem</b> / 56px / 700<br>lh 1.0 / ls .3px</div><div class="t-disp">100+</div></div>
+  <div class="type-row"><div class="type-meta">Heading 1<br>Noto Sans JP lorem / 40px / 700<br>lh 1.7 (68px) / ls .3px</div><div class="t-h1">lorem ipsum dolor sit</div></div>
+  <div class="type-row"><div class="type-meta">Heading 1(lorem ipsum)<br>28px / 500<br>lh 1.8 (50.4px) / ls .3px</div><div class="t-h1s">lorem ipsum dolor sit</div></div>
+  <div class="type-row"><div class="type-meta">Heading 2<br>28px / 700<br>lh 1.5 (42px) / ls .3px</div><div class="t-h2">lorem ipsum ＝ lorem ipsum</div></div>
+  <div class="type-row"><div class="type-meta">Heading 2(lorem)<br>24px / 700<br>lh 1.6 (38.4px) / ls .3px</div><div class="t-h2s">lorem ipsum dolor</div></div>
+  <div class="type-row"><div class="type-meta">Eyebrow<br>16px / 700<br>lh 1.8 (28.8px) / ls .3px / #63a351</div><div class="t-eyeb">What’s nosh?</div></div>
+  <div class="type-row"><div class="type-meta">Heading 3<br>18px / 700<br>lh 1.6 (28.8px) / ls .3px</div><div class="t-h3">1 lorem ipsum dolor sit</div></div>
+  <div class="type-row"><div class="type-meta">Heading 4<br>16px / 700<br>lh 1.0 (16px) / ls .3px</div><div class="t-h4">lorem ipsum dolor</div></div>
+  <div class="type-row"><div class="type-meta">Lead<br>16px / 500<br>lh 1.6 (25.6px) / ls .3px</div><div class="t-lead">lorem ipsum dolor sit amet consectetur, lorem ipsum dolor sit amet consectetur</div></div>
+  <div class="type-row"><div class="type-meta"><b>Body(lorem ipsum dolor)</b><br>14px / 500<br>lh <b>1.8</b> (25.2px) / ls .3px<br>lorem 297 lorem</div><div class="t-body">lorem ipsum dolor sit, lorem ipsum dolor sit amet consectetur. lorem ipsum dolor sit, lorem ipsum dolor sit amet consectetur. lorem ipsum dolor sit amet consectetur. lorem ipsum dolor sit 1.8 lorem ipsum.</div></div>
+  <div class="type-row"><div class="type-meta"><b>Card Text(lorem ipsum)</b><br>14px / 500<br>lh <b>1.2</b> (16.8px) / ls .3px<br><b>lorem 513 lorem ipsum</b></div><div class="t-card">[8/21 lorem] lorem ipsum dolor sit amet consectetur</div></div>
+  <div class="type-row"><div class="type-meta">Number(lorem ipsum)<br><b>Roboto lorem</b> / 14px / 700<br>lh 1.8 / <b>ls .56px (=0.04em)</b></div><div class="t-num">¥1,000 ／ ★ 4.5 ／ 2026.09.02</div></div>
+  <div class="type-row"><div class="type-meta">Caption<br>12px / 500<br>lh 1.6 (19.2px) / ls .3px<br>lorem 171 lorem</div><div class="t-cap">※ lorem ipsum dolor sit. lorem ipsum dolor sit</div></div>
+  <div class="type-row"><div class="type-meta">Micro<br>10px / 700<br>lh 1.8 (18px) / ls .3px / #63a351</div><div class="t-micro">NEW</div></div>
+
+  <p class="note"><b>lorem ipsum dolor<code>line-height</code> lorem 1.8 lorem 1.2 lorem ipsum dolor.</b> lorem ipsum dolor 1.8, lorem ipsum dolor sit amet 1.2 lorem ipsum. lorem 2 lorem ipsum dolor nosh lorem ipsum dolor, lorem 1.8 lorem ipsum dolor sit amet consectetur.</p>
+  <p class="note"><code>palt</code> lorem<b>0 lorem</b>(DOM lorem 6,449 lorem).<b>lorem ipsum dolor sit amet consectetur, lorem ipsum 2 lorem ipsum dolor sit.</b></p>
+</div>
+</section>
+
+<!-- 03 MENU -->
+<section class="section" id="menu">
+  <div class="section-label">03 / Menu</div>
+  <p class="eyebrow">MENU</p>
+  <h2 class="section-title">lorem ipsum dolor sit</h2>
+  <p class="section-lead">lorem ipsum<code>border-radius: 8px</code>(lorem 259 lorem ipsum)＋<code>1px solid #dddddd</code>, lorem.</p>
+
+  <div class="btn-row" style="justify-content:flex-start;margin-bottom:24px">
+    <span class="btn btn-tab-on">lorem</span>
+    <span class="btn btn-tab-off">lorem</span>
+    <span class="btn btn-tab-off">lorem</span>
+    <span class="btn btn-tab-off">lorem ipsum</span>
+    <span class="chip-pill">1 lorem ipsum ¥599–</span>
+  </div>
+
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-photo"></div><span class="card-rank" style="background:#d4b932">lorem No.1</span>
+      <div class="card-body">
+        <div class="card-title">[8/21 lorem] lorem ipsum dolor sit amet</div>
+        <div class="card-meta"><span class="card-price">¥599</span><span class="card-star"><i>★</i> 4.6</span></div>
+        <div class="chip-row"><span class="chip">lorem 12.4g</span><span class="chip">lorem 2.0g</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-photo"></div><span class="card-rank" style="background:#94a1a9">lorem No.2</span>
+      <div class="card-body">
+        <div class="card-title">lorem ipsum dolor sit amet consectetur</div>
+        <div class="card-meta"><span class="card-price">¥599</span><span class="card-star"><i>★</i> 4.4</span></div>
+        <div class="chip-row"><span class="chip">lorem 15.1g</span><span class="chip">lorem 1.8g</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-photo"></div><span class="card-rank" style="background:#d29c4b">lorem No.3</span>
+      <div class="card-body">
+        <div class="card-title">lorem ipsum dolor sit amet consectetur</div>
+        <div class="card-meta"><span class="card-price">¥599</span><span class="card-star"><i>★</i> 4.3</span></div>
+        <div class="chip-row"><span class="chip">lorem 18.0g</span><span class="badge-prem">lorem ipsum</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-photo"></div><span class="card-rank" style="background:#195c32">lorem No.8</span>
+      <div class="card-body">
+        <div class="card-title">special lorem ipsum dolor sit amet</div>
+        <div class="card-meta"><span class="card-price">¥699</span><span class="card-star"><i>★</i> 4.2</span></div>
+        <div class="chip-row"><span class="badge-sale">lorem¥1,500OFF</span><span class="badge-quick">lorem ipsum</span></div>
+      </div>
+    </div>
+  </div>
+  <p class="note">lorem ipsum 2 lorem ipsum.<b>lorem ipsum</b>(lorem<code>#f1f1f1</code> / lorem<code>#63a351</code> / radius <code>4px</code>)lorem,<b>lorem ipsum</b>(lorem<code>#f1f1f1</code> / lorem<code>#2a2929</code> / radius <code>9999px</code>）。</p>
+</section>
+
+<!-- 04 BUTTONS -->
+<section class="section-alt" id="buttons">
+<div class="section-inner">
+  <div class="section-label">04 / Buttons</div>
+  <p class="eyebrow">BUTTONS</p>
+  <h2 class="section-title">CTA lorem ipsum dolor, lorem ipsum 8px</h2>
+  <p class="section-lead">lorem ipsum<code>9999px</code> lorem<code>1440px</code> lorem ipsum dolor,<b>lorem ipsum dolor<code>9999px</code> lorem ipsum</b>。</p>
+
+  <div class="btn-row">
+    <a class="btn btn-primary" href="#">lorem ipsum</a>
+    <a class="btn btn-primary-sm" href="#">lorem ipsum dolor</a>
+    <a class="btn btn-secondary" href="#">lorem / lorem ipsum dolor</a>
+    <a class="btn btn-ghost" href="#">lorem</a>
+    <a class="btn btn-ghost" href="#">lorem</a>
+  </div>
+  <div class="btn-row">
+    <span class="btn btn-tab-on">lorem</span>
+    <span class="btn btn-tab-off">lorem ipsum</span>
+    <span class="btn btn-tab-off">lorem ipsum</span>
+  </div>
+
+  <div class="on-photo">
+    <a class="btn btn-onphoto" href="#">lorem ipsum dolor sit</a>
+  </div>
+
+  <p class="note" style="text-align:center"><b>lorem ipsum dolor sit amet</b>（<code>border-radius: 5px</code>). CTA lorem ipsum dolor<code>8px</code> lorem ipsum dolor.</p>
+</div>
+</section>
+
+<!-- 05 FORMS -->
+<section class="section" id="forms">
+  <div class="section-label">05 / Forms</div>
+  <p class="eyebrow">FORM</p>
+  <h2 class="section-title">Forms</h2>
+  <p class="section-lead">lorem ipsum<code>border-radius: 3px</code>, lorem 40px,<code>font-size: 16px</code>。<b>lorem ipsum dolor sit<code>#39bf00</code> lorem ipsum dolor outline lorem ipsum.</b></p>
+  <div class="form-grid">
+    <div class="field"><label>lorem ipsum dolor</label><input type="text" placeholder="mail@example.com"><p class="hint">lorem ipsum dolor sit amet consectetur</p></div>
+    <div class="field is-focus"><label>lorem ipsum(lorem ipsum)</label><input type="text" value="••••••••"><p class="hint">lorem #39bf00 lorem ipsum</p></div>
+    <div class="field is-error"><label>lorem ipsum(lorem)</label><input type="text" value="1234"><p class="msg">lorem ipsum 7 lorem ipsum dolor sit</p></div>
+    <div class="field"><label>lorem ipsum</label><select><option>1 lorem 1 lorem</option><option>2 lorem 1 lorem</option><option>3 lorem 1 lorem</option></select><p class="hint">lorem ipsum dolor / lorem ipsum dolor</p></div>
+  </div>
+  <div class="semantic">
+    <div style="background:var(--warning-pale);color:var(--warning)">Warning — lorem ipsum dolor</div>
+    <div style="background:var(--error-light);color:var(--error)">Error — lorem ipsum dolor sit</div>
+    <div style="background:var(--caution-pale);color:#8a6d00;border:1px solid var(--caution)">Caution — lorem ipsum dolor sit amet</div>
+    <div style="background:var(--notice-pale);color:#4a6f7c;border:1px solid var(--notice)">Notice — lorem ipsum dolor sit amet</div>
+  </div>
+</section>
+
+<!-- 06 ELEVATION -->
+<section class="section-alt" id="elevation">
+<div class="section-inner">
+  <div class="section-label">06 / Elevation</div>
+  <p class="eyebrow">ELEVATION</p>
+  <h2 class="section-title">Depth &amp; Elevation</h2>
+  <p class="section-lead">lorem ipsum dolor sit amet 3 lorem. lorem ipsum“lorem ipsum / lorem ipsum / 1px lorem”lorem ipsum.</p>
+  <div class="elev-grid">
+    <div class="elev elev-0"><b>Level 0 — lorem(lorem)</b><code>box-shadow: none</code><br><span class="t-cap">lorem / lorem / lorem ipsum dolor sit</span></div>
+    <div class="elev elev-1"><b>Level 1 — lorem CTA lorem ipsum dolor</b><code>0 4px 4px rgba(0,0,0,.25)</code><br><span class="t-cap">lorem 3 lorem</span></div>
+  </div>
+  <p class="note"><b>lorem ipsum dolor sit amet.</b></p>
+</div>
+</section>
+
+<!-- 07 LAYOUT -->
+<section class="section" id="layout">
+  <div class="section-label">07 / Layout</div>
+  <p class="eyebrow">LAYOUT</p>
+  <h2 class="section-title">4px lorem ipsum dolor</h2>
+  <p class="section-lead">lorem<code>--service-size-0</code>〜<code>10</code>(4→256px)lorem ipsum.</p>
+  <div class="layout-demo">
+    <div class="layout-bar">max-width: 1280px(lorem ipsum)</div>
+    <div class="layout-bar" style="margin-top:12px;width:94%;margin-left:auto;margin-right:auto">max-width: 1200px（--alias-size-mypage-width-max-default）</div>
+    <div class="layout-bar" style="margin-top:12px;width:66%;margin-left:auto;margin-right:auto">max-width: 840px（--alias-size-lp-width-max-default）</div>
+    <div class="layout-split"><div>1 / 4</div><div>2 / 4</div><div>3 / 4</div><div>4 / 4</div></div>
+  </div>
+  <table class="scale-table">
+    <tr><th>Token</th><th>Value</th><th></th></tr>
+    <tr><td>--service-size-0</td><td>4px</td><td><span class="sp-bar" style="width:4px"></span></td></tr>
+    <tr><td>--service-size-1</td><td>8px</td><td><span class="sp-bar" style="width:8px"></span></td></tr>
+    <tr><td>--service-size-2</td><td>16px</td><td><span class="sp-bar" style="width:16px"></span></td></tr>
+    <tr><td>--service-size-3</td><td>24px</td><td><span class="sp-bar" style="width:24px"></span></td></tr>
+    <tr><td>--service-size-4</td><td>32px</td><td><span class="sp-bar" style="width:32px"></span></td></tr>
+    <tr><td>--service-size-5</td><td>48px</td><td><span class="sp-bar" style="width:48px"></span></td></tr>
+    <tr><td>--service-size-6</td><td>64px</td><td><span class="sp-bar" style="width:64px"></span></td></tr>
+    <tr><td>--service-size-7</td><td>96px</td><td><span class="sp-bar" style="width:96px"></span></td></tr>
+    <tr><td>--service-size-8</td><td>128px</td><td><span class="sp-bar" style="width:128px"></span></td></tr>
+  </table>
+  <table class="scale-table">
+    <tr><th>lorem ipsum</th><th>Value</th><th>lorem ipsum</th></tr>
+    <tr><td>lorem ipsum(LP)</td><td>90px</td><td>--n-c-header-height</td></tr>
+    <tr><td>lorem ipsum(lorem ipsum)</td><td>70px</td><td>--n-l-header-height</td></tr>
+    <tr><td>lorem ipsum</td><td>50px</td><td>--n-p-horizontal-banner-height</td></tr>
+    <tr><td>lorem ipsum</td><td>45px</td><td>--n-p-user-breadcrumb-height</td></tr>
+    <tr><td>lorem ipsum dolor</td><td>80px</td><td>--n-c-button-cart-submit-height</td></tr>
+  </table>
+  <table class="scale-table">
+    <tr><th>Breakpoint</th><th>Width</th><th>lorem / lorem</th></tr>
+    <tr><td>Mobile</td><td>&lt; 481px</td><td>lorem(lorem ipsum dolor)</td></tr>
+    <tr><td>Small</td><td>≥ 481px</td><td>95</td></tr>
+    <tr><td><b>Tablet</b></td><td><b>≥ 768px</b></td><td><b>1,628 — lorem ipsum dolor sit</b></td></tr>
+    <tr><td>Desktop</td><td>≥ 1024px</td><td>257 — 2–3 lorem ipsum</td></tr>
+    <tr><td>Wide</td><td>≥ 1180px</td><td>162</td></tr>
+    <tr><td>Extra Wide</td><td>≥ 1480px</td><td>30</td></tr>
+  </table>
+  <p class="note"><b><code>min-width</code> lorem ipsum dolor sit amet consectetur.</b> lorem ipsum<code>(any-hover: hover)</code>(61 lorem)lorem ipsum dolor sit amet consectetur, lorem ipsum dolor sit amet consectetur.</p>
+</section>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <p class="ttl">nosh</p>
+    <nav class="footer-nav">
+      <a href="#">lorem ipsum</a><a href="#">lorem ipsum dolor</a><a href="#">nosh club</a><a href="#">lorem ipsum</a><a href="#">lorem ipsum dolor</a><a href="#">lorem ipsum dolor</a><a href="#">FAQ</a><a href="#">lorem ipsum dolor</a>
+    </nav>
+    <p class="footer-copy">lorem preview lorem DESIGN.md lorem ipsum dolor sit amet consectetur. lorem ipsum dolor sit amet consectetur.</p>
+  </div>
+</footer>
+
+</body>
+</html>

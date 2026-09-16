@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design System Preview: PILOT(lorem ipsum)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* === Colors: 実測値 === */
+    --pilot-blue: #002f9e;
+    --pilot-blue-dark: #001e5a;
+    --text-primary: #000000;
+    --text-gray: #333333;
+    --white: #ffffff;
+    --surface-blue: #e9edf1;
+    --surface-light: #f6f7f9;
+    --catalog-blue: #d7e8f2;
+    --secondary-gray: #858585;
+    --category-bg: #f2f2f2;
+    --border: #d7d7d7;
+    --disabled: #999999;
+    --bg: #ffffff;
+    --error: #dc3545;
+
+    /* === Elevation === */
+    --elevation-0: none;
+    --elevation-1: 0 2px 8px rgba(0, 0, 0, 0.08);
+    --elevation-2: 0 4px 16px rgba(0, 0, 0, 0.12);
+
+    /* === Fonts === */
+    /* 実サイトは Noto Sans JP を使用 */
+    --font-base: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Hiragino Kaku Gothic Pro", sans-serif;
+
+    /* === Radius === */
+    /* PILOT はすべてのコンポーネントで radius: 0px（シャープな角） */
+    --radius: 0px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text-primary);
+    font-family: var(--font-base);
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* NAV */
+  .nav {
+    position: sticky; top: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 40px; height: 64px;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-brand {
+    font-size: 22px; font-weight: 500;
+    color: var(--pilot-blue); text-decoration: none;
+    letter-spacing: 0.2em;
+  }
+  .nav-links { display: flex; gap: 32px; list-style: none; }
+  .nav-links a {
+    font-size: 13px; font-weight: 500;
+    color: var(--text-primary); text-decoration: none;
+    letter-spacing: 0.1em;
+    transition: color 0.15s;
+  }
+  .nav-links a:hover { color: var(--pilot-blue); }
+  .nav-lang {
+    background: var(--secondary-gray); color: var(--white);
+    padding: 5px 14px; font-size: 12px; font-weight: 400;
+    letter-spacing: 0.05em; text-decoration: none; cursor: pointer;
+    border: none; border-radius: var(--radius);
+  }
+
+  /* SECTIONS */
+  .section { padding: 64px 96px; }
+  .section-alt { background: var(--surface-blue); }
+  .section-title {
+    font-size: 11px; font-weight: 400;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--secondary-gray);
+    margin-bottom: 40px;
+  }
+
+  /* COLORS */
+  .color-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 16px; margin-bottom: 48px; }
+  .color-card { overflow: hidden; border: 1px solid var(--border); }
+  .color-swatch { height: 80px; }
+  .color-info { padding: 10px 12px; background: var(--white); }
+  .color-name { font-size: 12px; font-weight: 500; color: var(--text-primary); margin-bottom: 2px; letter-spacing: 0.03em; }
+  .color-hex { font-size: 11px; color: var(--secondary-gray); }
+
+  /* TYPOGRAPHY */
+  .type-row { margin-bottom: 36px; padding-bottom: 36px; border-bottom: 1px solid var(--border); }
+  .type-row:last-child { border-bottom: none; }
+  .type-meta { font-size: 11px; color: var(--secondary-gray); margin-bottom: 10px; letter-spacing: 0.05em; }
+  .type-sample-h2 {
+    font-size: 24px; font-weight: 500; line-height: 1.0;
+    letter-spacing: 0.175em; color: var(--pilot-blue);
+    font-family: var(--font-base);
+  }
+  .type-sample-h3 {
+    font-size: 19px; font-weight: 500; line-height: 1.0;
+    letter-spacing: 0.15em; color: var(--pilot-blue);
+    font-family: var(--font-base);
+  }
+  .type-sample-body-md {
+    font-size: 17px; font-weight: 500; line-height: 1.33;
+    letter-spacing: 0.075em; color: var(--text-primary);
+    font-family: var(--font-base);
+  }
+  .type-sample-body {
+    font-size: 15px; font-weight: 400; line-height: 1.0;
+    letter-spacing: 0.075em; color: var(--text-primary);
+    font-family: var(--font-base);
+  }
+  .type-sample-desc {
+    font-size: 13px; font-weight: 400; line-height: 1.57;
+    color: var(--text-primary);
+    font-family: var(--font-base);
+  }
+  .type-sample-catalog {
+    font-size: 16px; font-weight: 400; line-height: 1.5;
+    color: var(--text-primary);
+    font-family: var(--font-base);
+  }
+
+  /* PRODUCT (writing instruments) */
+  .product-section { max-width: 760px; }
+  .product-lead {
+    font-size: 24px; font-weight: 500; line-height: 1.0;
+    letter-spacing: 0.175em; color: var(--pilot-blue);
+    margin-bottom: 32px;
+  }
+  .product-body {
+    font-size: 16px; font-weight: 400; line-height: 1.5;
+    color: var(--text-primary);
+    margin-bottom: 20px;
+  }
+  .product-body a { color: var(--pilot-blue); text-decoration: none; }
+  .product-body a:hover { text-decoration: underline; }
+  .product-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 40px; }
+  .product-item {
+    background: var(--white);
+    border: 1px solid var(--border);
+    padding: 24px 20px;
+    border-radius: var(--radius);
+  }
+  .product-item-label {
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.15em; color: var(--secondary-gray);
+    margin-bottom: 10px; text-transform: uppercase;
+  }
+  .product-item-name {
+    font-size: 17px; font-weight: 500;
+    letter-spacing: 0.075em; color: var(--pilot-blue);
+    margin-bottom: 8px;
+  }
+  .product-item-desc {
+    font-size: 13px; font-weight: 400; line-height: 1.57;
+    color: var(--text-gray);
+  }
+  .catalog-band {
+    background: var(--catalog-blue);
+    padding: 32px 0; margin-top: 40px;
+    border-radius: var(--radius);
+  }
+  .catalog-band-inner { padding: 0 24px; }
+  .catalog-band-title {
+    font-size: 19px; font-weight: 500;
+    letter-spacing: 0.15em; color: var(--pilot-blue);
+    margin-bottom: 16px;
+  }
+  .catalog-band-desc {
+    font-size: 16px; font-weight: 400; line-height: 1.5;
+    color: var(--text-primary);
+  }
+
+  /* BUTTONS */
+  .btn-grid { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; }
+  .btn-primary {
+    display: inline-flex; align-items: center;
+    background: var(--pilot-blue); color: var(--white);
+    padding: 12px 32px;
+    border-radius: var(--radius);
+    font-size: 15px; font-weight: 500; letter-spacing: 0.075em;
+    font-family: var(--font-base);
+    text-decoration: none; border: none; cursor: pointer;
+    transition: opacity 0.15s;
+  }
+  .btn-primary:hover { opacity: 0.85; }
+  .btn-outline {
+    display: inline-flex; align-items: center;
+    background: transparent; color: var(--pilot-blue);
+    padding: 11px 30px;
+    border-radius: var(--radius);
+    font-size: 15px; font-weight: 500; letter-spacing: 0.075em;
+    font-family: var(--font-base);
+    border: 1px solid var(--pilot-blue);
+    text-decoration: none; cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+  }
+  .btn-outline:hover { background: var(--pilot-blue); color: var(--white); }
+  .btn-lang {
+    display: inline-flex; align-items: center;
+    background: var(--secondary-gray); color: var(--white);
+    padding: 8px 16px;
+    border-radius: var(--radius);
+    font-size: 13px; font-weight: 400; letter-spacing: 0.05em;
+    font-family: var(--font-base);
+    border: none; cursor: pointer;
+    transition: opacity 0.15s;
+  }
+  .btn-lang:hover { opacity: 0.85; }
+  .btn-category {
+    display: inline-flex; align-items: center;
+    background: var(--category-bg); color: var(--text-primary);
+    padding: 10px 20px;
+    border-radius: var(--radius);
+    font-size: 13px; font-weight: 400; letter-spacing: 0.05em;
+    font-family: var(--font-base);
+    border: none; cursor: pointer;
+    transition: background 0.15s;
+  }
+  .btn-category:hover { background: var(--border); }
+  .btn-disabled {
+    display: inline-flex; align-items: center;
+    background: var(--disabled); color: var(--white);
+    padding: 12px 32px;
+    border-radius: var(--radius);
+    font-size: 15px; font-weight: 500; letter-spacing: 0.075em;
+    font-family: var(--font-base);
+    border: none; cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  /* CARDS */
+  .card-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--elevation-1);
+  }
+  .card-img {
+    height: 160px;
+    background: var(--surface-blue);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .card-img-label {
+    font-size: 13px; font-weight: 500;
+    letter-spacing: 0.15em; color: var(--pilot-blue);
+  }
+  .card-body { padding: 20px; }
+  .card-category {
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.15em; color: var(--secondary-gray);
+    text-transform: uppercase; margin-bottom: 8px;
+  }
+  .card-title {
+    font-size: 17px; font-weight: 500;
+    letter-spacing: 0.075em; color: var(--pilot-blue);
+    margin-bottom: 8px; line-height: 1.33;
+  }
+  .card-desc {
+    font-size: 13px; font-weight: 400; line-height: 1.57;
+    color: var(--text-gray);
+  }
+
+  /* FORMS */
+  .form-section { max-width: 480px; }
+  .form-group { margin-bottom: 24px; }
+  .form-label {
+    display: block; font-size: 12px; font-weight: 500;
+    color: var(--secondary-gray); margin-bottom: 8px;
+    letter-spacing: 0.1em;
+  }
+  .form-input {
+    width: 100%; padding: 12px 14px;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text-primary); font-family: var(--font-base);
+    font-size: 15px; font-weight: 400;
+    letter-spacing: 0.05em;
+    outline: none; transition: border-color 0.15s;
+  }
+  .form-input:focus { border-color: var(--pilot-blue); }
+  .form-input::placeholder { color: var(--disabled); }
+  .form-input.error { border-color: var(--error); }
+  .form-error { font-size: 12px; color: var(--error); margin-top: 6px; letter-spacing: 0.05em; }
+  .form-select {
+    width: 100%; padding: 12px 14px;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text-primary); font-family: var(--font-base);
+    font-size: 15px; font-weight: 400;
+    letter-spacing: 0.05em;
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+
+  /* ELEVATION */
+  .elevation-grid { display: flex; gap: 32px; flex-wrap: wrap; }
+  .elevation-box {
+    width: 180px; height: 100px;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; color: var(--secondary-gray);
+    letter-spacing: 0.05em;
+  }
+  .elev-0 { box-shadow: var(--elevation-0); }
+  .elev-1 { box-shadow: var(--elevation-1); border-color: transparent; }
+  .elev-2 { box-shadow: var(--elevation-2); border-color: transparent; }
+
+  /* LAYOUT */
+  .layout-demo { border: 1px solid var(--border); overflow: hidden; border-radius: var(--radius); }
+  .layout-header {
+    height: 64px; background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 24px;
+  }
+  .layout-header-brand { font-size: 16px; font-weight: 500; letter-spacing: 0.2em; color: var(--pilot-blue); }
+  .layout-header-nav { font-size: 12px; color: var(--secondary-gray); letter-spacing: 0.05em; }
+  .layout-hero {
+    height: 200px; background: var(--surface-blue);
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column; gap: 12px;
+  }
+  .layout-hero-text { font-size: 22px; font-weight: 500; letter-spacing: 0.175em; color: var(--pilot-blue); }
+  .layout-hero-sub { font-size: 13px; font-weight: 400; letter-spacing: 0.1em; color: var(--secondary-gray); }
+  .layout-content { padding: 24px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; background: var(--surface-light); }
+  .layout-card {
+    height: 80px; background: var(--white); border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; color: var(--secondary-gray); letter-spacing: 0.1em;
+  }
+  .layout-footer {
+    height: 52px; background: var(--pilot-blue);
+    border-top: none;
+    display: flex; align-items: center; padding: 0 24px;
+    font-size: 11px; color: rgba(255, 255, 255, 0.7); letter-spacing: 0.1em;
+  }
+
+  /* DIVIDER */
+  .section + .section { border-top: 1px solid var(--border); }
+</style>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="nav">
+  <a class="nav-brand" href="#">PILOT</a>
+  <ul class="nav-links">
+    <li><a href="#">lorem ipsum</a></li>
+    <li><a href="#">lorem ipsum</a></li>
+    <li><a href="#">lorem ipsum</a></li>
+    <li><a href="#">lorem ipsum</a></li>
+  </ul>
+  <button class="nav-lang">English</button>
+</nav>
+
+<!-- 1. Colors -->
+<section class="section">
+  <div class="section-title">1 — Colors</div>
+  <div class="color-grid">
+    <div class="color-card">
+      <div class="color-swatch" style="background: #002f9e;"></div>
+      <div class="color-info"><div class="color-name">PILOT Blue</div><div class="color-hex">#002f9e</div></div>
+    </div>
+    <div class="color-card">
+      <div class="color-swatch" style="background: #001e5a;"></div>
+      <div class="color-info"><div class="color-name">PILOT Blue Dark</div><div class="color-hex">#001e5a</div></div>
+    </div>
+    <div class="color-card">
+      <div class="color-swatch" style="background: #ffffff; border: 1px solid #d7d7d7;"></div>
+      <div class="color-info"><div class="color-name">White</div><div class="color-hex">#ffffff</div></div>
+    </div>
+    <div class="color-card">
+      <div class="color-swatch" style="background: #e9edf1;"></div>
+      <div class="color-info"><div class="color-name">Surface Blue</div><div class="color-hex">#e9edf1</div></div>
+    </div>
+    <div class="color-card">
+      <div class="color-swatch" style="background: #d7e8f2;"></div>
+      <div class="color-info"><div class="color-name">Catalog Blue</div><div class="color-hex">#d7e8f2</div></div>
+    </div>
+    <div class="color-card">
+      <div class="color-swatch" style="background: #f6f7f9;"></div>
+      <div class="color-info"><div class="color-name">Surface Light</div><div class="color-hex">#f6f7f9</div></div>
+    </div>
+    <div class="color-card">
+      <div class="color-swatch" style="background: #f2f2f2;"></div>
+      <div class="color-info"><div class="color-name">Category BG</div><div class="color-hex">#f2f2f2</div></div>
+    </div>
+    <div class="color-card">
+      <div class="color-swatch" style="background: #858585;"></div>
+      <div class="color-info"><div class="color-name">Secondary Gray</div><div class="color-hex">#858585</div></div>
+    </div>
+    <div class="color-card">
+      <div class="color-swatch" style="background: #333333;"></div>
+      <div class="color-info"><div class="color-name">Text Gray</div><div class="color-hex">#333333</div></div>
+    </div>
+    <div class="color-card">
+      <div class="color-swatch" style="background: #000000;"></div>
+      <div class="color-info"><div class="color-name">Text Primary</div><div class="color-hex">#000000</div></div>
+    </div>
+    <div class="color-card">
+      <div class="color-swatch" style="background: #d7d7d7;"></div>
+      <div class="color-info"><div class="color-name">Border</div><div class="color-hex">#d7d7d7</div></div>
+    </div>
+    <div class="color-card">
+      <div class="color-swatch" style="background: #dc3545;"></div>
+      <div class="color-info"><div class="color-name">Error</div><div class="color-hex">#dc3545</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 2. Typography -->
+<section class="section section-alt">
+  <div class="section-title">2 — Typography</div>
+
+  <div class="type-row">
+    <div class="type-meta">Section H2 — 24px / Weight 500 / Line Height 1.0 / Letter Spacing 0.175em / PILOT Blue</div>
+    <div class="type-sample-h2">lorem ipsum dolor, lorem ipsum dolor sit</div>
+  </div>
+
+  <div class="type-row">
+    <div class="type-meta">Nav H3 — 19px / Weight 500 / Line Height 1.0 / Letter Spacing 0.15em / PILOT Blue</div>
+    <div class="type-sample-h3">lorem ipsum — lorem / lorem ipsum / lorem ipsum dolor</div>
+  </div>
+
+  <div class="type-row">
+    <div class="type-meta">Body Medium — 17px / Weight 500 / Line Height 1.33 / Letter Spacing 0.075em</div>
+    <div class="type-sample-body-md">PILOT lorem 1918 lorem ipsum dolor, lorem ipsum dolor sit amet consectetur adipiscing elit sed do.</div>
+  </div>
+
+  <div class="type-row">
+    <div class="type-meta">Body Regular — 15px / Weight 400 / Line Height 1.0 / Letter Spacing 0.075em</div>
+    <div class="type-sample-body">lorem / lorem ipsum / lorem ipsum dolor / lorem ipsum / lorem ipsum</div>
+  </div>
+
+  <div class="type-row">
+    <div class="type-meta">Description — 13px / Weight 400 / Line Height 1.57</div>
+    <div class="type-sample-desc">lorem ipsum dolor sit amet consectetur, lorem 100 lorem ipsum dolor sit amet consectetur adipiscing. lorem ipsum dolor sit amet consectetur adipiscing, lorem ipsum dolor sit amet consectetur adipiscing.</div>
+  </div>
+
+  <div class="type-row">
+    <div class="type-meta">Catalog Body — 16px / Weight 400 / Line Height 1.5</div>
+    <div class="type-sample-catalog">lorem ipsum dolor / lorem, lorem ipsum 74, lorem ipsum dolor sit 912 lorem, lorem ipsum dolor sit amet consectetur adipiscing.</div>
+  </div>
+</section>
+
+<!-- 3. Product (Writing Instruments) -->
+<section class="section">
+  <div class="section-title">3 — Product</div>
+  <div class="product-section">
+    <div class="product-lead">lorem ipsum dolor sit amet</div>
+    <p class="product-body">lorem ipsum dolor sit, lorem ipsum dolor sit amet consectetur adipiscing. lorem ipsum dolor sit amet, lorem ipsum dolor sit, lorem ipsum dolor sit amet consectetur adipiscing.<a href="#">lorem ipsum 74</a>lorem ipsum dolor sit amet consectetur, lorem ipsum dolor sit, lorem ipsum dolor sit amet 1 lorem ipsum dolor.</p>
+    <p class="product-body">lorem ipsum dolor sit amet consectetur, lorem ipsum dolor sit amet consectetur adipiscing. lorem ipsum dolor sit, lorem ipsum PILOT lorem ipsum dolor sit.</p>
+  </div>
+
+  <div class="product-grid">
+    <div class="product-item">
+      <div class="product-item-label">Fountain Pen</div>
+      <div class="product-item-name">lorem ipsum 74</div>
+      <div class="product-item-desc">1974 lorem ipsum dolor sit. 14 lorem ipsum dolor sit amet consectetur adipiscing, lorem ipsum dolor sit amet consectetur adipiscing.</div>
+    </div>
+    <div class="product-item">
+      <div class="product-item-label">Fountain Pen</div>
+      <div class="product-item-name">lorem ipsum dolor lorem</div>
+      <div class="product-item-desc">lorem ipsum dolor sit. lorem ipsum dolor sit amet consectetur adipiscing elit sed, lorem ipsum dolor sit amet consectetur.</div>
+    </div>
+    <div class="product-item">
+      <div class="product-item-label">Ball Point</div>
+      <div class="product-item-name">lorem 1000</div>
+      <div class="product-item-desc">lorem ipsum dolor sit amet consectetur. lorem ipsum dolor sit amet, lorem ipsum dolor sit amet consectetur adipiscing elit sed.</div>
+    </div>
+  </div>
+
+  <div class="catalog-band">
+    <div class="catalog-band-inner">
+      <div class="catalog-band-title">lorem ipsum dolor</div>
+      <div class="catalog-band-desc">lorem / lorem ipsum / lorem ipsum dolor / lorem ipsum / lorem ipsum / lorem — lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 4. Buttons -->
+<section class="section section-alt">
+  <div class="section-title">4 — Buttons</div>
+  <div class="btn-grid">
+    <button class="btn-primary">lorem ipsum</button>
+    <button class="btn-outline">lorem ipsum dolor</button>
+    <button class="btn-lang">English</button>
+    <button class="btn-category">lorem</button>
+    <button class="btn-category">lorem ipsum</button>
+    <button class="btn-category">lorem ipsum dolor</button>
+    <button class="btn-disabled" disabled>lorem ipsum</button>
+  </div>
+</section>
+
+<!-- 5. Cards -->
+<section class="section">
+  <div class="section-title">5 — Cards</div>
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-img">
+        <span class="card-img-label">Fountain Pen</span>
+      </div>
+      <div class="card-body">
+        <div class="card-category">lorem</div>
+        <div class="card-title">lorem ipsum lorem ipsum 912</div>
+        <div class="card-desc">lorem ipsum dolor sit amet consectetur adipiscing elit. lorem ipsum dolor sit amet consectetur adipiscing.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-img">
+        <span class="card-img-label">Ball Point</span>
+      </div>
+      <div class="card-body">
+        <div class="card-category">lorem ipsum</div>
+        <div class="card-title">lorem 500</div>
+        <div class="card-desc">lorem ipsum dolor. lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-img">
+        <span class="card-img-label">Sharp Pencil</span>
+      </div>
+      <div class="card-body">
+        <div class="card-category">lorem ipsum dolor</div>
+        <div class="card-title">S20</div>
+        <div class="card-desc">lorem ipsum dolor sit amet consectetur adipiscing. lorem ipsum dolor sit amet consectetur, lorem ipsum dolor sit amet.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 6. Forms -->
+<section class="section section-alt">
+  <div class="section-title">6 — Forms</div>
+  <div class="form-section">
+    <div class="form-group">
+      <label class="form-label">Default — lorem ipsum</label>
+      <input class="form-input" type="text" placeholder="製品名・型番を入力">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Focus — lorem</label>
+      <input class="form-input" type="text" value="カスタム74" style="border-color: #002f9e;">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Error — lorem ipsum</label>
+      <input class="form-input error" type="text" value="">
+      <div class="form-error">lorem ipsum dolor sit amet</div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Select — lorem ipsum dolor</label>
+      <select class="form-select">
+        <option>lorem ipsum dolor</option>
+        <option>lorem</option>
+        <option>lorem ipsum</option>
+        <option>lorem ipsum dolor</option>
+        <option>lorem ipsum / lorem</option>
+      </select>
+    </div>
+  </div>
+</section>
+
+<!-- 7. Elevation -->
+<section class="section">
+  <div class="section-title">7 — Elevation</div>
+  <div class="elevation-grid">
+    <div class="elevation-box elev-0">Level 0 — Flat</div>
+    <div class="elevation-box elev-1">Level 1 — 0 2px 8px / 8%</div>
+    <div class="elevation-box elev-2">Level 2 — 0 4px 16px / 12%</div>
+  </div>
+</section>
+
+<!-- 8. Layout -->
+<section class="section section-alt">
+  <div class="section-title">8 — Layout</div>
+  <div class="layout-demo">
+    <div class="layout-header">
+      <span class="layout-header-brand">PILOT</span>
+      <span class="layout-header-nav">lorem ipsum / lorem ipsum / lorem ipsum</span>
+    </div>
+    <div class="layout-hero">
+      <span class="layout-hero-text">lorem ipsum dolor</span>
+      <span class="layout-hero-sub">Passion for Writing</span>
+    </div>
+    <div class="layout-content">
+      <div class="layout-card">lorem</div>
+      <div class="layout-card">lorem ipsum</div>
+      <div class="layout-card">lorem ipsum dolor</div>
+    </div>
+    <div class="layout-footer">© Pilot Corporation. All Rights Reserved.</div>
+  </div>
+</section>
+
+</body>
+</html>

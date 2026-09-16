@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design System Preview: lorem ipsum dolor MOT</title>
+<!--
+  NOTE: 原典の欧文は Graphik Web（Commercial Type）、和文見出しは
+  TazuganeGothicStdN-Bold（Morisawa 田中ゴシック StdN Bold）。
+  いずれも商用ライセンスフォントのため、ローカルの preview.html では表示できない。
+  ここでは欧文に "Inter"、和文見出しに "Zen Kaku Gothic New"(700)、
+  和文本文に "Noto Sans JP" を代替として使用している。
+  Zen Kaku Gothic New は Tazugane Gothic と同じヒューマニスト系ゴシックで、
+  ふところの広さと字面の性格が近い。実装時は必ず Graphik / Tazugane Gothic StdN を読み込むこと。
+
+  原典は【見出し・ナビ】と【本文】で組版設定を切り替える:
+    見出し・ナビ … YakuHanJP  + font-feature-settings: "lnum","palt"
+    本文・日付   … YakuHanJPs + font-feature-settings: normal
+  このプレビューでも --font-head / --font-body の 2 系統でその境界を明示している。
+
+  原典の line-height は【グローバルに 1.15】。実測値がすべて基準サイズ ×1.15 で揃う。
+  短いラベル・見出しに最適化された値であり、長文には使わない（DESIGN.md の Don't 参照）。
+  比較のため、本プレビューの「読み物」だけは 1.8 で組んでいる。
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Zen+Kaku+Gothic+New:wght@400;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* === Colors: 実測値 === */
+    --color-bg: #ffffff;          /* ページ地色 */
+    --color-ink: #000000;         /* 見出し・本文・ラベル面（純黒） */
+    --color-blue: #356eb0;        /* MOT Blue。唯一の恒常的な有彩色 */
+    --color-cream: #f9ede0;       /* 「MOTからのお知らせ」帯 */
+    --color-cream-light: #fcf6ef; /* 「これまでの展覧会をみる」 */
+    --color-gray-100: #f1f1f1;    /* 開館ステータスバー */
+    --color-gray-200: #eeeff0;    /* コレクション展示・ページ上部へ戻る */
+    --color-gray-300: #dddddd;    /* ページ見出し帯 */
+    --color-gray-400: #cccccc;    /* 区切り・非活性 */
+    --color-overlay: rgba(0,0,0,0.75); /* ナビモーダル */
+    --color-error: #c0392b;       /* エラー（フォーム用途のみ） */
+
+    /* === Fonts === */
+    /* 原典: 見出し = Graphik Web + YakuHanJP + TazuganeGothicStdN-Bold */
+    --font-head: "Inter", "Zen Kaku Gothic New", sans-serif;
+    /* 原典: 本文 = Graphik Web + YakuHanJPs + YuGothic/Noto Sans JP/Hiragino Sans */
+    --font-body: "Inter", "Noto Sans JP", sans-serif;
+    --font-mono: SFMono-Regular, Consolas, Menlo, monospace;
+
+    /* === Type === */
+    --fs-body: 16px;
+    --lh: 1.15;        /* グローバル。原典の実測値はすべて ×1.15 */
+    --lh-read: 1.8;    /* 長文にはこちらを使う（原典の 1.15 は長文に不可） */
+
+    /* === Shape === */
+    --radius-0: 0px;   /* ステータスチップ・カード・画像 */
+    --radius-5: 5px;   /* ボタン・カテゴリチップ */
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--color-bg); color: var(--color-ink);
+    font-family: var(--font-body);
+    font-size: var(--fs-body); font-weight: 400;
+    line-height: var(--lh);
+    letter-spacing: normal;              /* 原典は全域 normal */
+    font-feature-settings: normal;       /* 本文は normal */
+    -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+  }
+  .head { font-family: var(--font-head); font-feature-settings: "lnum","palt"; }
+
+  /* STATUS BAR（開館状況。ページ最上部に常設） */
+  .statusbar { background: var(--color-ink); color: #fff; display: flex; align-items: center; gap: 10px;
+    padding: 10px 20px; font-family: var(--font-head); font-feature-settings: "lnum","palt"; }
+  .statusbar .today { font-size: 20px; font-weight: 700; line-height: var(--lh); }
+  .statusbar .hours { font-size: 16px; font-weight: 700; line-height: var(--lh); padding-left: 10px; border-left: 1px solid rgba(255,255,255,.4); }
+  .statusbar .spacer { flex: 1; }
+  .statusbar .lang { font-size: 14px; font-weight: 700; padding: 0 40px 0 10px; }
+
+  /* HEADER */
+  .header { position: sticky; top: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 20px; background: #fff; border-bottom: 1px solid var(--color-gray-300); }
+  .header-brand { font-family: var(--font-head); font-feature-settings: "lnum","palt";
+    font-size: 28px; font-weight: 700; letter-spacing: .02em; color: var(--color-ink); text-decoration: none; line-height: var(--lh); }
+  .header-brand small { display: block; font-size: 10px; font-weight: 400; letter-spacing: .08em; }
+  .header-menu { display: flex; gap: 8px; align-items: center; }
+  .header-menu a { font-family: var(--font-head); font-feature-settings: "lnum","palt";
+    color: var(--color-ink); text-decoration: none; font-size: 16px; font-weight: 700; padding: 11.2px 8px; line-height: var(--lh); }
+  .header-menu a:hover { color: var(--color-blue); }
+  .header-menu .menu-btn { display: flex; flex-direction: column; align-items: center; gap: 4px; margin-left: 12px; }
+  .header-menu .menu-btn span { display: block; width: 26px; height: 2px; background: var(--color-ink); }
+  .header-menu .menu-btn em { font-size: 12px; font-weight: 700; font-style: normal; line-height: var(--lh); }
+
+  /* PAGE HEAD BAND */
+  .pagehead { background: var(--color-gray-300); padding: 40px 20px; }
+  .pagehead-inner { max-width: 1200px; margin: 0 auto; }
+  .pagehead h1 { font-family: var(--font-head); font-feature-settings: "lnum","palt";
+    font-size: 44px; font-weight: 700; line-height: var(--lh); }
+  .pagehead .crumb { font-size: 14px; font-weight: 700; margin-bottom: 14px; line-height: var(--lh); }
+
+  /* HERO（展覧会ギャラリー） */
+  .hero { position: relative; background: var(--color-gray-200); padding: 0; }
+  .hero-visual { position: relative; height: 320px; background: linear-gradient(120deg, #cfd6d9 0%, #e6e0d6 55%, #d5dbcf 100%); }
+  .hero-chip { position: absolute; top: 0; right: 0; background: var(--color-ink); color: #fff;
+    font-family: var(--font-head); font-feature-settings: normal;
+    font-size: 20px; font-weight: 700; line-height: var(--lh); padding: 20px 83px; border-radius: var(--radius-0); }
+  .hero-caption { padding: 26px 20px 40px; max-width: 1200px; margin: 0 auto; }
+  .hero-caption h2 { font-family: var(--font-head); font-feature-settings: "lnum","palt";
+    font-size: 28px; font-weight: 700; line-height: var(--lh); }
+  .hero-caption .date { font-size: 14px; font-weight: 700; line-height: var(--lh); margin-top: 14px; }
+  .hero-cta { display: flex; gap: 16px; margin-top: 24px; flex-wrap: wrap; align-items: center; }
+
+  /* SECTIONS */
+  .section { padding: 64px 20px; max-width: 1200px; margin: 0 auto; }
+  .section-eyebrow { font-family: var(--font-head); font-feature-settings: "lnum","palt";
+    font-size: 14px; font-weight: 700; color: var(--color-blue); margin-bottom: 12px; line-height: var(--lh); }
+  .section-title { font-family: var(--font-head); font-feature-settings: "lnum","palt";
+    font-size: 48px; font-weight: 700; line-height: var(--lh); margin-bottom: 20px; }
+  .section-lead { font-size: 16px; line-height: var(--lh-read); color: var(--color-ink); max-width: 760px; margin-bottom: 40px; }
+  .divider { border: none; border-top: 1px solid var(--color-gray-300); max-width: 1200px; margin: 0 auto; }
+  .band-cream { background: var(--color-cream); }
+  .band-cream .section { max-width: 1200px; }
+
+  /* COLORS */
+  .color-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px,1fr)); gap: 16px; }
+  .swatch { border: 1px solid var(--color-gray-300); border-radius: var(--radius-0); overflow: hidden; background: #fff; }
+  .swatch-block { height: 92px; }
+  .swatch-info { padding: 14px 16px 18px; }
+  .swatch-name { font-family: var(--font-head); font-size: 14px; font-weight: 700; line-height: var(--lh); }
+  .swatch-hex { font-family: var(--font-mono); font-size: 11px; color: #555; margin-top: 5px; }
+  .swatch-role { font-size: 11px; color: #555; margin-top: 6px; line-height: 1.6; }
+
+  /* TYPOGRAPHY */
+  .type-sample { padding: 24px 0; border-bottom: 1px solid var(--color-gray-300); }
+  .type-sample:last-child { border-bottom: none; }
+  .type-meta { font-family: var(--font-mono); font-size: 11px; color: var(--color-blue); margin-top: 12px; line-height: 1.5; }
+
+  /* ARTICLE */
+  .article { max-width: 680px; }
+  .article h2 { font-family: var(--font-head); font-feature-settings: "lnum","palt";
+    font-size: 32px; font-weight: 700; line-height: var(--lh); margin-bottom: 20px; }
+  .article h3 { font-family: var(--font-head); font-feature-settings: "lnum","palt";
+    font-size: 20px; font-weight: 700; line-height: var(--lh); color: var(--color-blue); margin: 34px 0 12px; }
+  .article p { font-size: 16px; font-weight: 400; line-height: var(--lh-read); margin-bottom: 20px; }
+  .article a { color: var(--color-blue); text-decoration: underline; }
+  .article .note { font-size: 14px; font-weight: 700; line-height: var(--lh); color: #555; }
+
+  /* BUTTONS & CHIPS */
+  .btn-row { display: flex; gap: 16px; flex-wrap: wrap; align-items: center; }
+  .btn { font-family: var(--font-head); font-feature-settings: "lnum","palt";
+    font-size: 16px; font-weight: 700; line-height: var(--lh); text-decoration: none; cursor: pointer;
+    display: inline-block; border: none; transition: opacity .15s ease; }
+  .btn-primary { background: var(--color-ink); color: #fff; border-radius: var(--radius-5); padding: 8px 16px; }
+  .btn-primary:hover { opacity: .78; }
+  .btn-arrow { background: var(--color-ink); color: #fff; border-radius: var(--radius-5); padding: 5px 30px 5px 10px; font-size: 14px; position: relative; }
+  .btn-arrow::after { content: "›"; position: absolute; right: 12px; top: 50%; transform: translateY(-52%); font-size: 16px; }
+  .btn-link { background: transparent; color: var(--color-blue); border-radius: var(--radius-0); padding: 14px 40px 14px 0; }
+  .btn-link:hover { text-decoration: underline; }
+  .chip { display: inline-block; font-family: var(--font-head); font-feature-settings: normal;
+    font-size: 14px; font-weight: 700; line-height: var(--lh); }
+  .chip-status { background: var(--color-ink); color: #fff; border-radius: var(--radius-0); padding: 8px 20px; }
+  .chip-category { background: #fff; color: var(--color-ink); border: 1px solid var(--color-ink); border-radius: var(--radius-5); padding: 4px 32px; }
+  .chip-news { background: #fff; color: var(--color-ink); border-radius: var(--radius-5); padding: 3px 8px; }
+
+  /* LINK LIST（ブルーの文字リンクを行で並べる） */
+  .linklist { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); gap: 0 24px; }
+  .linklist a { display: block; color: var(--color-blue); text-decoration: none;
+    font-family: var(--font-head); font-feature-settings: "lnum","palt";
+    font-size: 16px; font-weight: 700; line-height: var(--lh); padding: 14px 40px 14px 0;
+    border-bottom: 1px solid var(--color-gray-300); }
+  .linklist a:hover { text-decoration: underline; }
+
+  /* CARDS */
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap: 24px; }
+  .card { background: #fff; border-radius: var(--radius-0); overflow: hidden; }
+  .card-visual { position: relative; height: 150px; border-radius: var(--radius-0); }
+  .card-visual .chip-status { position: absolute; left: 0; bottom: 0; }
+  .card-body { padding: 16px 0 0; }
+  .card-title { font-family: var(--font-head); font-feature-settings: "lnum","palt";
+    font-size: 20px; font-weight: 700; line-height: var(--lh); }
+  .card-date { font-size: 14px; font-weight: 700; line-height: var(--lh); margin-top: 10px; }
+
+  /* FORMS */
+  .form { max-width: 460px; display: grid; gap: 24px; }
+  .field label { display: block; font-family: var(--font-head); font-feature-settings: "lnum","palt";
+    font-size: 14px; font-weight: 700; line-height: var(--lh); margin-bottom: 8px; }
+  .field input { width: 100%; background: #fff; border: 1px solid var(--color-gray-400); border-radius: var(--radius-0);
+    padding: 12px 14px; font-family: var(--font-body); font-size: 16px; line-height: var(--lh); color: var(--color-ink); }
+  .field input::placeholder { color: #8a8a8a; }
+  .field input:focus { outline: none; border-color: var(--color-ink); }
+  .field--error input { border-color: var(--color-error); }
+  .field--error .msg { font-size: 14px; font-weight: 700; color: var(--color-error); margin-top: 6px; line-height: var(--lh); }
+
+  /* ELEVATION */
+  .elev-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(210px,1fr)); gap: 24px; }
+  .elev { border-radius: var(--radius-0); padding: 28px; text-align: center; font-size: 16px; font-weight: 700; line-height: var(--lh); }
+  .elev--0 { background: #fff; border: 1px solid var(--color-gray-300); }
+  .elev--1 { background: var(--color-gray-200); }
+  .elev--2 { background: var(--color-gray-300); }
+  .elev--3 { background: var(--color-ink); color: #fff; }
+  .elev-cap { font-family: var(--font-mono); font-size: 11px; color: #555; margin-top: 10px; text-align: center; line-height: 1.5; }
+
+  /* LAYOUT */
+  .space-row { display: flex; align-items: flex-end; gap: 18px; flex-wrap: wrap; }
+  .space-bar { background: var(--color-blue); }
+  .space-label { font-family: var(--font-mono); font-size: 11px; color: #555; margin-top: 8px; text-align: center; }
+
+  /* MODAL OVERLAY サンプル */
+  .modal-demo { position: relative; background: linear-gradient(120deg,#e6e0d6,#cfd6d9); height: 220px; border-radius: var(--radius-0); overflow: hidden; }
+  .modal-demo .veil { position: absolute; inset: 0; background: var(--color-overlay); display: flex; flex-direction: column; justify-content: center; padding: 0 40px; }
+  .modal-demo .veil .t { font-family: var(--font-head); font-feature-settings: "lnum","palt";
+    color: #fff; font-size: 24px; font-weight: 700; line-height: var(--lh); margin-bottom: 16px; }
+  .modal-demo .veil .i { color: #fff; font-family: var(--font-head); font-feature-settings: "lnum","palt";
+    font-size: 18px; font-weight: 700; line-height: var(--lh); padding: 4px 0; }
+
+  footer { background: var(--color-gray-200); padding: 48px 20px; }
+  footer .finner { max-width: 1200px; margin: 0 auto; }
+  footer .flinks { display: flex; gap: 24px; flex-wrap: wrap; margin-bottom: 22px; }
+  footer .flinks a { color: var(--color-ink); text-decoration: none; font-family: var(--font-head);
+    font-feature-settings: "lnum","palt"; font-size: 14px; font-weight: 700; line-height: var(--lh); }
+  footer .fnote { font-size: 14px; line-height: var(--lh-read); color: #555; }
+</style>
+</head>
+<body>
+
+<div class="statusbar">
+  <span class="today">lorem ipsum dolor</span>
+  <span class="hours">lorem ipsum 10:00-18:00</span>
+  <span class="spacer"></span>
+  <span class="lang">Language ▾</span>
+</div>
+
+<header class="header">
+  <a class="header-brand" href="#">MOT<small>MUSEUM OF CONTEMPORARY ART TOKYO</small></a>
+  <nav class="header-menu">
+    <a href="#">lorem ipsum</a>
+    <a href="#">lorem</a>
+    <a href="#">lorem ipsum</a>
+    <a href="#">lorem ipsum</a>
+    <a href="#">lorem ipsum</a>
+    <a href="#">lorem ipsum</a>
+    <span class="menu-btn"><span></span><span></span><em>lorem ipsum</em></span>
+  </nav>
+</header>
+
+<section class="pagehead">
+  <div class="pagehead-inner">
+    <div class="crumb">lorem</div>
+    <h1>lorem / lorem ipsum dolor</h1>
+  </div>
+</section>
+
+<section class="hero">
+  <div class="hero-visual"><span class="hero-chip">lorem</span></div>
+  <div class="hero-caption">
+    <h2>lorem ipsum, lorem ipsum ― MOT lorem ipsum dolor</h2>
+    <div class="date">2026 lorem 4 lorem 28 lorem(lorem)― 8 lorem 16 lorem(lorem)</div>
+    <div class="hero-cta">
+      <a class="btn btn-primary" href="#">MOT lorem ipsum dolor sit</a>
+      <a class="btn btn-arrow" href="#">lorem ipsum dolor sit</a>
+      <span class="chip chip-category">lorem ipsum dolor</span>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-eyebrow">01 — COLORS</div>
+  <h2 class="section-title">lorem ipsum dolor</h2>
+  <p class="section-lead">lorem, lorem ipsum. lorem ipsum dolor sit amet consectetur #356eb0 lorem, lorem ipsum dolor 4 lorem ipsum dolor 2 lorem ipsum. lorem ipsum dolor sit amet consectetur adipiscing, UI lorem ipsum dolor sit amet consectetur.</p>
+  <div class="color-grid">
+    <div class="swatch"><div class="swatch-block" style="background:var(--color-ink)"></div><div class="swatch-info"><div class="swatch-name">Ink</div><div class="swatch-hex">#000000</div><div class="swatch-role">lorem / lorem ipsum dolor / lorem ipsum</div></div></div>
+    <div class="swatch"><div class="swatch-block" style="background:var(--color-blue)"></div><div class="swatch-info"><div class="swatch-name">MOT Blue</div><div class="swatch-hex">#356eb0</div><div class="swatch-role">lorem / lorem ipsum(lorem ipsum dolor)</div></div></div>
+    <div class="swatch"><div class="swatch-block" style="background:var(--color-cream)"></div><div class="swatch-info"><div class="swatch-name">Cream</div><div class="swatch-hex">#f9ede0</div><div class="swatch-role">“MOT lorem ipsum dolor”lorem</div></div></div>
+    <div class="swatch"><div class="swatch-block" style="background:var(--color-cream-light)"></div><div class="swatch-info"><div class="swatch-name">Cream Light</div><div class="swatch-hex">#fcf6ef</div><div class="swatch-role">lorem ipsum dolor sit amet</div></div></div>
+    <div class="swatch"><div class="swatch-block" style="background:var(--color-gray-100)"></div><div class="swatch-info"><div class="swatch-name">Gray 100</div><div class="swatch-hex">#f1f1f1</div><div class="swatch-role">lorem ipsum dolor sit</div></div></div>
+    <div class="swatch"><div class="swatch-block" style="background:var(--color-gray-200)"></div><div class="swatch-info"><div class="swatch-name">Gray 200</div><div class="swatch-hex">#eeeff0</div><div class="swatch-role">lorem ipsum dolor / lorem ipsum dolor</div></div></div>
+    <div class="swatch"><div class="swatch-block" style="background:var(--color-gray-300)"></div><div class="swatch-info"><div class="swatch-name">Gray 300</div><div class="swatch-hex">#dddddd</div><div class="swatch-role">lorem ipsum dolor / lorem</div></div></div>
+    <div class="swatch"><div class="swatch-block" style="background:var(--color-gray-400)"></div><div class="swatch-info"><div class="swatch-name">Gray 400</div><div class="swatch-hex">#cccccc</div><div class="swatch-role">lorem / lorem / lorem ipsum</div></div></div>
+    <div class="swatch"><div class="swatch-block" style="background:var(--color-bg);box-shadow:inset 0 0 0 1px #ddd"></div><div class="swatch-info"><div class="swatch-name">Background</div><div class="swatch-hex">#ffffff</div><div class="swatch-role">lorem ipsum / lorem ipsum / lorem</div></div></div>
+    <div class="swatch"><div class="swatch-block" style="background:rgba(0,0,0,0.75)"></div><div class="swatch-info"><div class="swatch-name">Overlay</div><div class="swatch-hex">rgba(0,0,0,.75)</div><div class="swatch-role">lorem ipsum dolor sit amet consectetur</div></div></div>
+  </div>
+</section>
+<hr class="divider">
+
+<section class="section">
+  <div class="section-eyebrow">02 — TYPOGRAPHY</div>
+  <h2 class="section-title">lorem ipsum dolor</h2>
+  <p class="section-lead">lorem ipsum dolor Tazugane Gothic StdN Bold, lorem Graphik. line-height lorem ipsum dolor 1.15 lorem, lorem ipsum dolor sit amet ×1.15 lorem. letter-spacing lorem normal. lorem / lorem ipsum "lnum","palt" lorem ipsum, lorem normal lorem.</p>
+
+  <div class="type-sample"><div class="head" style="font-size:48px;font-weight:700;line-height:1.15">lorem ipsum</div><div class="type-meta">Section Display · Tazugane Bold · 48px · weight 600 · lh 1.15 (55.2px) · ls normal · "lnum","palt"</div></div>
+  <div class="type-sample"><div class="head" style="font-size:44px;font-weight:700;line-height:1.15">lorem / lorem ipsum dolor</div><div class="type-meta">Page Title · Tazugane Bold · 44px · weight 600 · lh 1.15 (50.6px) · "lnum","palt"</div></div>
+  <div class="type-sample"><div class="head" style="font-size:32px;font-weight:700;line-height:1.15">lorem ipsum</div><div class="type-meta">Heading 2 · Tazugane Bold · 32px · weight 600 · lh 1.15 (36.8px) · "lnum","palt"</div></div>
+  <div class="type-sample"><div class="head" style="font-size:28px;font-weight:700;line-height:1.15">lorem ipsum ― lorem, lorem ipsum</div><div class="type-meta">Exhibition Title · Tazugane Bold · 28px · weight 600 · lh 1.15 (32.2px) · "lnum","palt"</div></div>
+  <div class="type-sample"><div class="head" style="font-size:20px;font-weight:700;line-height:1.15;color:var(--color-blue)">lorem ipsum dolor sit amet consectetur</div><div class="type-meta">Sub Heading · Tazugane Bold · 20px · weight 600 · lh 1.15 (23px) · #356eb0</div></div>
+  <div class="type-sample"><div class="head" style="font-size:18px;font-weight:700;line-height:1.15">lorem ipsum dolor</div><div class="type-meta">Nav Item · Tazugane Bold · 18px · weight 600 · lh 1.15 (20.7px) · "lnum","palt"</div></div>
+  <div class="type-sample"><div style="font-size:16px;font-weight:400;line-height:1.15">lorem(lorem)— lorem ipsum dolor sit, lorem ipsum dolor sit amet consectetur, lorem ipsum dolor sit amet consectetur.</div><div class="type-meta">Body · Graphik + lorem ipsum/Noto Sans JP · 16px · weight 400 · lh 1.15 (18.4px) · ffs normal</div></div>
+  <div class="type-sample"><div style="font-size:14px;font-weight:700;line-height:1.15">2026 lorem 5 lorem 16 lorem(lorem)–8 lorem 16 lorem(lorem)</div><div class="type-meta">Label / Date · 14px · weight 600 · lh 1.15 (16.1px) · ffs normal(lorem ipsum dolor "lnum" lorem ipsum dolor sit)</div></div>
+  <div class="type-sample"><div class="head" style="font-size:12px;font-weight:700;line-height:1.15">lorem ipsum</div><div class="type-meta">Menu Caption · Tazugane Bold · 12px · weight 700 · lh 1.15 (13.8px)</div></div>
+  <div class="type-sample"><div style="font-size:16px;font-weight:400;line-height:1.8">lorem ipsum — lorem, lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod, lorem ipsum dolor sit amet consectetur adipiscing. lorem line-height 1.15 lorem ipsum dolor 1–2 lorem ipsum dolor sit amet consectetur, 3 lorem ipsum dolor sit amet 1.7–1.9 lorem ipsum.</div><div class="type-meta">Body (lorem) · 16px ·<strong>lh 1.8</strong> — lorem 1.15 lorem ipsum dolor sit amet consectetur</div></div>
+</section>
+<hr class="divider">
+
+<div class="band-cream">
+  <section class="section">
+    <div class="section-eyebrow">03 — ARTICLE</div>
+    <h2 class="section-title">lorem ipsum dolor</h2>
+    <div class="article">
+      <h2>lorem ipsum, lorem ipsum</h2>
+      <p class="note">MOT lorem ipsum dolor ／ 2026 lorem 4 lorem 28 lorem(lorem)― 8 lorem 16 lorem(lorem)</p>
+      <h3>lorem ipsum dolor</h3>
+      <p>lorem ipsum dolor sit amet, lorem ipsum dolor sit amet consectetur. lorem, lorem ipsum dolor sit amet“lorem ipsum”lorem ipsum dolor sit amet consectetur, lorem / lorem / lorem / lorem ipsum dolor sit amet consectetur adipiscing.</p>
+      <p>lorem ipsum, lorem ipsum dolor, lorem ipsum dolor sit amet consectetur, lorem ipsum dolor sit amet consectetur adipiscing. lorem ipsum dolor, lorem ipsum dolor sit amet consectetur.<a href="#">lorem ipsum / lorem ipsum dolor</a>。</p>
+      <h3>lorem ipsum dolor</h3>
+      <p>lorem ipsum dolor sit, lorem ipsum dolor sit amet consectetur adipiscing. lorem ipsum dolor, lorem ipsum dolor sit amet consectetur. lorem ipsum dolor 45 lorem.</p>
+    </div>
+  </section>
+</div>
+<hr class="divider">
+
+<section class="section">
+  <div class="section-eyebrow">04 — BUTTONS &amp; LABELS</div>
+  <h2 class="section-title">lorem ipsum dolor</h2>
+  <p class="section-lead">lorem CTA lorem ipsum dolor / lorem 5px. lorem ipsum dolor sit amet / lorem 0, lorem ipsum dolor sit amet＋lorem 1px lorem ipsum dolor / lorem 5px lorem, lorem ipsum dolor. lorem ipsum dolor sit amet, lorem ipsum dolor sit amet consectetur.</p>
+  <div class="btn-row" style="margin-bottom:32px">
+    <a class="btn btn-primary" href="#">MOT lorem ipsum dolor sit</a>
+    <a class="btn btn-arrow" href="#">lorem ipsum dolor sit</a>
+    <span class="chip chip-status">lorem</span>
+    <span class="chip chip-status">lorem ipsum</span>
+    <span class="chip chip-status">lorem ipsum dolor</span>
+    <span class="chip chip-category">lorem ipsum dolor</span>
+    <span class="chip chip-category">lorem ipsum dolor sit</span>
+    <span class="chip chip-news">lorem ipsum</span>
+    <span class="chip chip-news">lorem</span>
+  </div>
+  <div class="linklist">
+    <a href="#">lorem ipsum / lorem／lorem</a>
+    <a href="#">lorem ipsum / lorem ipsum dolor</a>
+    <a href="#">lorem ipsum dolor</a>
+    <a href="#">lorem ipsum</a>
+    <a href="#">lorem ipsum dolor／lorem ipsum dolor</a>
+    <a href="#">lorem ipsum dolor</a>
+    <a href="#">lorem ipsum</a>
+    <a href="#">lorem ipsum dolor</a>
+  </div>
+</section>
+<hr class="divider">
+
+<section class="section">
+  <div class="section-eyebrow">05 — CARDS</div>
+  <h2 class="section-title">lorem ipsum dolor</h2>
+  <p class="section-lead">lorem → lorem ipsum dolor sit amet → lorem ipsum → lorem ipsum dolor. lorem 0px lorem, lorem ipsum dolor sit. lorem ipsum dolor.</p>
+  <div class="card-grid">
+    <div class="card"><div class="card-visual" style="background:linear-gradient(140deg,#dfe4e6,#c9d2cf)"><span class="chip chip-status">lorem</span></div><div class="card-body"><div class="card-title">lorem ipsum, lorem ipsum</div><div class="card-date">2026 lorem 4 lorem 28 lorem(lorem)― 8 lorem 16 lorem(lorem)</div></div></div>
+    <div class="card"><div class="card-visual" style="background:linear-gradient(140deg,#e8e0d4,#d6cbbb)"><span class="chip chip-status">lorem ipsum</span></div><div class="card-body"><div class="card-title">lorem ipsum dolor sit amet</div><div class="card-date">2026 lorem 8 lorem 7 lorem(lorem) / 8 lorem 14 lorem(lorem)</div></div></div>
+    <div class="card"><div class="card-visual" style="background:linear-gradient(140deg,#d8d5e2,#c4c6d8)"><span class="chip chip-status">lorem</span></div><div class="card-body"><div class="card-title">lorem ipsum ― lorem, lorem ipsum</div><div class="card-date">2026 lorem 5 lorem 16 lorem(lorem)― 8 lorem 16 lorem(lorem)</div></div></div>
+    <div class="card"><div class="card-visual" style="background:linear-gradient(140deg,#cfe0dc,#b9cfca)"><span class="chip chip-status">lorem ipsum dolor</span></div><div class="card-body"><div class="card-title">MOT lorem ipsum dolor</div><div class="card-date">lorem(lorem ipsum dolor)</div></div></div>
+  </div>
+</section>
+<hr class="divider">
+
+<section class="section">
+  <div class="section-eyebrow">06 — FORMS</div>
+  <h2 class="section-title">lorem ipsum</h2>
+  <p class="section-lead">lorem ipsum / lorem ipsum / lorem ipsum 3 lorem. lorem 0px, lorem #cccccc, lorem ipsum dolor. lorem ipsum dolor sit amet 1px lorem ipsum, lorem ipsum dolor sit amet.</p>
+  <div class="form">
+    <div class="field"><label>lorem</label><input type="text" placeholder="東京 花子"></div>
+    <div class="field"><label>lorem ipsum dolor(lorem ipsum)</label><input type="email" value="hello@example.com" autofocus></div>
+    <div class="field field--error"><label>lorem ipsum</label><input type="tel" value="03-000"><div class="msg">lorem ipsum dolor sit amet consectetur.</div></div>
+    <a class="btn btn-primary" href="#" style="justify-self:start">lorem ipsum</a>
+  </div>
+</section>
+<hr class="divider">
+
+<section class="section">
+  <div class="section-eyebrow">07 — ELEVATION</div>
+  <h2 class="section-title">lorem</h2>
+  <p class="section-lead">lorem ipsum dolor sit box-shadow: none. lorem ipsum“lorem → lorem ipsum → lorem → lorem”lorem 4 lorem ipsum dolor. lorem ipsum dolor sit amet consectetur 75% lorem ipsum dolor.</p>
+  <div class="elev-grid">
+    <div><div class="elev elev--0">Level 0</div><div class="elev-cap">#ffffff(lorem / lorem ipsum)</div></div>
+    <div><div class="elev elev--1">Level 1</div><div class="elev-cap">#eeeff0(lorem ipsum dolor)</div></div>
+    <div><div class="elev elev--2">Level 2</div><div class="elev-cap">#dddddd(lorem ipsum dolor)</div></div>
+    <div><div class="elev elev--3">Level 3</div><div class="elev-cap">#000000(lorem / lorem)</div></div>
+  </div>
+  <div style="margin-top:32px">
+    <div class="modal-demo">
+      <div class="veil">
+        <div class="t">lorem ipsum</div>
+        <div class="i">lorem ipsum dolor</div>
+        <div class="i">lorem ipsum / lorem／lorem</div>
+        <div class="i">lorem ipsum</div>
+      </div>
+    </div>
+    <div class="elev-cap" style="text-align:left">Modal · rgba(0,0,0,0.75) lorem ipsum dolor sit. lorem ipsum dolor sit amet consectetur</div>
+  </div>
+</section>
+<hr class="divider">
+
+<section class="section">
+  <div class="section-eyebrow">08 — LAYOUT</div>
+  <h2 class="section-title">lorem ipsum dolor</h2>
+  <p class="section-lead">4 / 8 / 16 / 24 / 40 / 64px. lorem ipsum dolor sit 8px / 10px / 20px / 24px / 40px lorem ipsum. lorem ipsum dolor 1200px, lorem ipsum dolor sit amet consectetur.</p>
+  <div class="space-row">
+    <div><div class="space-bar" style="width:4px;height:4px"></div><div class="space-label">XS 4</div></div>
+    <div><div class="space-bar" style="width:8px;height:8px"></div><div class="space-label">S 8</div></div>
+    <div><div class="space-bar" style="width:16px;height:16px"></div><div class="space-label">M 16</div></div>
+    <div><div class="space-bar" style="width:24px;height:24px"></div><div class="space-label">L 24</div></div>
+    <div><div class="space-bar" style="width:40px;height:40px"></div><div class="space-label">XL 40</div></div>
+    <div><div class="space-bar" style="width:64px;height:64px"></div><div class="space-label">XXL 64</div></div>
+  </div>
+</section>
+
+<footer>
+  <div class="finner">
+    <div class="flinks">
+      <a href="#">lorem ipsum</a>
+      <a href="#">lorem</a>
+      <a href="#">lorem ipsum</a>
+      <a href="#">lorem ipsum</a>
+      <a href="#">lorem ipsum</a>
+      <a href="#">lorem ipsum dolor／lorem ipsum dolor</a>
+      <a href="#">lorem ipsum dolor</a>
+    </div>
+    <div class="fnote">lorem ipsum dolor MOT — Design System Preview　/　lorem ipsum 2026-07-28</div>
+  </div>
+</footer>
+
+</body>
+</html>

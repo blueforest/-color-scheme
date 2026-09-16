@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design System Preview: KING JIM(lorem ipsum)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* === Colors: computed style 実測値 === */
+    --brand-blue: #418fde;
+    --brand-blue-dark: #3381d0;
+    --text-primary: #333333;
+    --text-black: #000000;
+    --gray-border: #cccccc;
+    --gray-light: #efefef;
+    --gray-divider: #dddddd;
+    --surface-blue: #f0f5f9;
+    --surface-gray: #f2f3f5;
+    --surface-blue-light: #f2f7fb;
+    --nav-bg: #f6f6f6;
+    --white: #ffffff;
+    /* === Semantic（推奨補完） === */
+    --danger: #c41e3a;
+    --success: #2e8b57;
+    --warning: #d4a017;
+    /* === Fonts 実測値 === */
+    --font-default: "Noto Sans JP", "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", メイリオ, Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
+    --font-heading: "Noto Sans JP", "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", メイリオ, Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--white);
+    color: var(--text-primary);
+    font-family: var(--font-default);
+    font-size: 16px; font-weight: 400; line-height: 1.75;
+    letter-spacing: normal;
+    word-wrap: break-word;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: normal;
+  }
+
+  /* NAV */
+  .nav {
+    position: sticky; top: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 32px; height: 64px;
+    background: var(--white);
+    border-bottom: 1px solid var(--gray-divider);
+  }
+  .nav-brand {
+    font-size: 18px; font-weight: 900; color: var(--text-primary);
+    text-decoration: none; letter-spacing: 0.05em;
+  }
+  .nav-links { display: flex; gap: 24px; list-style: none; }
+  .nav-links a {
+    font-size: 14px; font-weight: 400; color: var(--text-primary);
+    text-decoration: none; transition: color 0.15s;
+  }
+  .nav-links a:hover { color: var(--brand-blue-dark); }
+  .nav-cta {
+    display: inline-block; background: var(--white); color: var(--brand-blue);
+    padding: 8px 20px; border: 2px solid var(--brand-blue);
+    font-family: var(--font-heading); font-size: 14px; font-weight: 700;
+    text-decoration: none; transition: background 0.15s;
+  }
+  .nav-cta:hover { background: var(--surface-blue); }
+
+  /* HERO */
+  .hero { padding: 80px 32px 64px; text-align: center; background: var(--surface-blue); }
+  .hero h1 {
+    font-family: var(--font-heading);
+    font-size: 36px; font-weight: 900; line-height: 1.5;
+    letter-spacing: normal;
+    color: var(--text-primary); margin-bottom: 16px;
+  }
+  .hero p {
+    font-size: 16px; font-weight: 400; line-height: 1.75;
+    color: var(--text-primary); max-width: 620px; margin: 0 auto 32px;
+  }
+  .hero-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .btn-primary {
+    display: inline-block; background: var(--brand-blue); color: var(--white);
+    padding: 12px 32px; border: 2px solid var(--brand-blue);
+    font-family: var(--font-heading); font-size: 16px; font-weight: 700;
+    text-decoration: none; cursor: pointer; transition: opacity 0.15s;
+  }
+  .btn-primary:hover { opacity: 0.85; }
+  .btn-outline {
+    display: inline-block; background: var(--white); color: var(--text-primary);
+    padding: 12px 32px;
+    border: 2px solid var(--gray-border);
+    font-family: var(--font-heading); font-size: 16px; font-weight: 700;
+    text-decoration: none; cursor: pointer; transition: background 0.15s;
+  }
+  .btn-outline:hover { background: var(--surface-blue); }
+  .btn-blue-border {
+    display: inline-block; background: var(--white); color: var(--brand-blue);
+    padding: 12px 32px;
+    border: 2px solid var(--brand-blue);
+    font-family: var(--font-heading); font-size: 16px; font-weight: 700;
+    text-decoration: none; cursor: pointer; transition: background 0.15s;
+  }
+  .btn-blue-border:hover { background: var(--surface-blue); }
+
+  /* SECTIONS */
+  .section { padding: 64px 32px; max-width: 940px; margin: 0 auto; }
+  .section-label {
+    font-size: 12px; font-weight: 700; color: var(--brand-blue);
+    text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.06em;
+  }
+  .section-title {
+    font-family: var(--font-heading);
+    font-size: 28px; font-weight: 900; line-height: 1.5;
+    letter-spacing: normal;
+    margin-bottom: 32px;
+  }
+  .section-divider { border: none; border-top: 1px solid var(--gray-divider); margin: 0; }
+
+  .section-blue { background: var(--surface-blue); padding: 64px 32px; }
+  .section-blue .section-inner { max-width: 940px; margin: 0 auto; }
+
+  /* COLORS */
+  .color-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(155px, 1fr)); gap: 12px; margin-bottom: 24px; }
+  .color-swatch { overflow: hidden; background: var(--white); border: 1px solid var(--gray-divider); }
+  .color-swatch-block { height: 72px; width: 100%; }
+  .color-swatch-info { padding: 10px 12px; }
+  .color-swatch-name { font-size: 13px; font-weight: 700; margin-bottom: 2px; color: var(--text-primary); }
+  .color-swatch-hex { font-size: 12px; color: var(--text-primary); opacity: 0.6; font-family: monospace; }
+  .color-swatch-role { font-size: 11px; color: var(--text-primary); opacity: 0.6; margin-top: 3px; }
+  .color-group-label { font-size: 14px; font-weight: 700; color: var(--text-primary); margin: 24px 0 10px; }
+
+  /* TYPOGRAPHY */
+  .type-sample { margin-bottom: 28px; padding-bottom: 24px; border-bottom: 1px solid var(--gray-divider); }
+  .type-sample:last-child { border-bottom: none; }
+  .type-meta { font-family: monospace; font-size: 12px; font-weight: 400; color: var(--text-primary); opacity: 0.6; margin-top: 8px; }
+  .type-context { display: inline-block; background: var(--surface-blue); color: var(--text-primary); font-size: 11px; padding: 2px 8px; margin-left: 8px; }
+
+  /* BUTTONS */
+  .button-row { display: flex; gap: 20px; flex-wrap: wrap; align-items: center; }
+  .button-item { text-align: center; }
+  .button-label { font-size: 12px; font-weight: 400; color: var(--text-primary); opacity: 0.6; margin-top: 8px; }
+  .btn-header {
+    display: inline-block; background: var(--white); color: var(--text-primary);
+    padding: 8px 20px; border: 2px solid var(--text-primary);
+    font-family: var(--font-default); font-size: 14px; font-weight: 400;
+    text-decoration: none; cursor: pointer;
+  }
+  .btn-danger {
+    display: inline-block; background: var(--danger); color: var(--white);
+    padding: 12px 32px; border: 2px solid var(--danger);
+    font-family: var(--font-heading); font-size: 16px; font-weight: 700;
+    text-decoration: none; cursor: pointer;
+  }
+
+  /* CARDS */
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+  .card {
+    background: var(--white); border: 1px solid var(--gray-divider);
+    padding: 24px; transition: border-color 0.3s;
+  }
+  .card:hover { border-color: var(--brand-blue); }
+  .card h3 {
+    font-family: var(--font-heading);
+    font-size: 20px; font-weight: 700; line-height: 1.5;
+    letter-spacing: normal; margin-bottom: 8px;
+  }
+  .card p { font-size: 16px; color: var(--text-primary); line-height: 1.75; }
+  .card-link {
+    font-size: 14px; color: var(--brand-blue-dark); text-decoration: none;
+    margin-top: 12px; display: inline-block;
+  }
+  .card-link:hover { text-decoration: underline; }
+
+  /* PRODUCT PREVIEW */
+  .product-preview { max-width: 620px; margin: 0 auto; }
+  .product-preview h1 {
+    font-family: var(--font-heading);
+    font-size: 36px; font-weight: 900; line-height: 1.5;
+    letter-spacing: normal; margin-bottom: 16px;
+  }
+  .product-preview h2 {
+    font-family: var(--font-heading);
+    font-size: 24px; font-weight: 700; line-height: 1.5;
+    letter-spacing: normal; margin: 24px 0 12px;
+  }
+  .product-preview p {
+    font-size: 16px; font-weight: 400; line-height: 1.75;
+    letter-spacing: normal; margin-bottom: 16px; color: var(--text-primary);
+  }
+  .product-preview .spec-table {
+    width: 100%; border-collapse: collapse; margin: 16px 0;
+  }
+  .product-preview .spec-table th,
+  .product-preview .spec-table td {
+    padding: 10px 16px; text-align: left; font-size: 14px;
+    border-bottom: 1px solid var(--gray-divider);
+  }
+  .product-preview .spec-table th {
+    font-weight: 700; background: var(--surface-blue); width: 30%;
+  }
+
+  /* FORMS */
+  .form-group { margin-bottom: 20px; max-width: 400px; }
+  .form-label { display: block; font-size: 14px; font-weight: 700; color: var(--text-primary); margin-bottom: 6px; }
+  .form-input {
+    width: 100%; background: var(--white); color: var(--text-primary);
+    border: 1px solid var(--gray-border); padding: 9px 13px;
+    font-family: var(--font-default); font-size: 16px; outline: none;
+    transition: border-color 0.15s;
+  }
+  .form-input:focus, .form-input--focus { border-color: var(--brand-blue); box-shadow: 0 0 0 2px rgba(65,143,222,0.2); }
+  .form-input--error { border-color: var(--danger); box-shadow: 0 0 0 2px rgba(196,30,58,0.2); }
+  .form-state-label { font-size: 11px; color: var(--text-primary); opacity: 0.6; margin-top: 4px; }
+  .form-select {
+    width: 100%; background: var(--white); color: var(--text-primary);
+    border: 1px solid var(--gray-border); padding: 5px 30px 3px 10px;
+    font-family: var(--font-default); font-size: 16px; outline: none;
+    appearance: auto;
+  }
+
+  /* ELEVATION */
+  .elevation-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+  .elevation-card {
+    background: var(--white); padding: 24px; text-align: center;
+    border: 1px solid var(--gray-divider);
+  }
+  .elevation-label { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+  .elevation-desc { font-family: monospace; font-size: 11px; color: var(--text-primary); opacity: 0.6; word-break: break-all; }
+
+  /* SPACING */
+  .spacing-row { display: flex; align-items: flex-end; gap: 12px; flex-wrap: wrap; margin-bottom: 24px; }
+  .spacing-item { text-align: center; }
+  .spacing-block { background: var(--brand-blue); margin-bottom: 6px; height: 28px; }
+  .spacing-value { font-family: monospace; font-size: 11px; font-weight: 500; color: var(--text-primary); opacity: 0.6; }
+
+  /* CONTENT WIDTHS */
+  .width-bar { height: 32px; background: var(--surface-blue); border: 1px solid var(--gray-divider); margin-bottom: 8px; position: relative; }
+  .width-bar-inner { height: 100%; background: var(--brand-blue); opacity: 0.25; }
+  .width-bar-label { font-size: 13px; font-weight: 700; color: var(--text-primary); margin-bottom: 4px; }
+  .width-bar-value { font-family: monospace; font-size: 12px; color: var(--text-primary); opacity: 0.6; }
+
+  /* FOOTER */
+  .footer { padding: 32px; text-align: center; background: var(--surface-blue); font-size: 12px; color: var(--text-primary); }
+  .footer a { color: var(--brand-blue-dark); text-decoration: underline; }
+
+  @media (max-width: 767px) {
+    .hero h1 { font-size: 24px; }
+    .hero p { font-size: 14px; }
+    .nav-links { display: none; }
+    .section { padding: 48px 20px; }
+    .section-blue { padding: 48px 20px; }
+    .card-grid { grid-template-columns: 1fr; }
+    .product-preview h1 { font-size: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="nav-brand" href="#">KING JIM</a>
+  <ul class="nav-links">
+    <li><a href="#colors">Colors</a></li>
+    <li><a href="#typography">Typography</a></li>
+    <li><a href="#product">Product</a></li>
+    <li><a href="#buttons">Buttons</a></li>
+    <li><a href="#cards">Cards</a></li>
+    <li><a href="#forms">Forms</a></li>
+    <li><a href="#elevation">Elevation</a></li>
+  </ul>
+  <a class="nav-cta" href="#">lorem ipsum</a>
+</nav>
+
+<section class="hero">
+  <h1>Design System Preview<br>KING JIM — lorem ipsum</h1>
+  <p>DESIGN.md lorem ipsum dolor sit amet consectetur adipiscing. lorem, lorem ipsum, lorem ipsum dolor, lorem ipsum dolor sit amet consectetur. computed style lorem ipsum dolor.</p>
+  <div class="hero-buttons">
+    <a class="btn-primary" href="#">lorem ipsum</a>
+    <a class="btn-outline" href="#">DESIGN.md lorem</a>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- COLORS -->
+<section class="section" id="colors">
+  <div class="section-label">01 / Colors</div>
+  <h2 class="section-title">lorem ipsum dolor</h2>
+
+  <div class="color-group-label">Brand</div>
+  <div class="color-grid">
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#418fde"></div><div class="color-swatch-info"><div class="color-swatch-name">Brand Blue</div><div class="color-swatch-hex">#418fde</div><div class="color-swatch-role">CTA lorem ipsum / lorem ipsum</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#3381d0"></div><div class="color-swatch-info"><div class="color-swatch-name">Brand Blue Dark</div><div class="color-swatch-hex">#3381d0</div><div class="color-swatch-role">lorem ipsum dolor</div></div></div>
+  </div>
+
+  <div class="color-group-label">Text</div>
+  <div class="color-grid">
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#333333"></div><div class="color-swatch-info"><div class="color-swatch-name">Text Primary</div><div class="color-swatch-hex">#333333</div><div class="color-swatch-role">lorem / lorem ipsum dolor</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#000000"></div><div class="color-swatch-info"><div class="color-swatch-name">Black</div><div class="color-swatch-hex">#000000</div><div class="color-swatch-role">lorem ipsum</div></div></div>
+  </div>
+
+  <div class="color-group-label">Semantic(lorem ipsum)</div>
+  <div class="color-grid">
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#c41e3a"></div><div class="color-swatch-info"><div class="color-swatch-name">Danger</div><div class="color-swatch-hex">#c41e3a</div><div class="color-swatch-role">lorem / lorem</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#2e8b57"></div><div class="color-swatch-info"><div class="color-swatch-name">Success</div><div class="color-swatch-hex">#2e8b57</div><div class="color-swatch-role">lorem / lorem</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#d4a017"></div><div class="color-swatch-info"><div class="color-swatch-name">Warning</div><div class="color-swatch-hex">#d4a017</div><div class="color-swatch-role">lorem</div></div></div>
+  </div>
+
+  <div class="color-group-label">Surface & Border</div>
+  <div class="color-grid">
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#ffffff; border-bottom:1px solid #ddd"></div><div class="color-swatch-info"><div class="color-swatch-name">White</div><div class="color-swatch-hex">#ffffff</div><div class="color-swatch-role">lorem ipsum</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#f0f5f9"></div><div class="color-swatch-info"><div class="color-swatch-name">Surface Blue</div><div class="color-swatch-hex">#f0f5f9</div><div class="color-swatch-role">lorem ipsum dolor</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#f2f3f5"></div><div class="color-swatch-info"><div class="color-swatch-name">Surface Gray</div><div class="color-swatch-hex">#f2f3f5</div><div class="color-swatch-role">lorem ipsum dolor</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#f2f7fb"></div><div class="color-swatch-info"><div class="color-swatch-name">Surface Blue Light</div><div class="color-swatch-hex">#f2f7fb</div><div class="color-swatch-role">lorem ipsum dolor</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#f6f6f6"></div><div class="color-swatch-info"><div class="color-swatch-name">Nav BG</div><div class="color-swatch-hex">#f6f6f6</div><div class="color-swatch-role">lorem ipsum dolor sit</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#cccccc"></div><div class="color-swatch-info"><div class="color-swatch-name">Gray Border</div><div class="color-swatch-hex">#cccccc</div><div class="color-swatch-role">lorem ipsum dolor</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#dddddd"></div><div class="color-swatch-info"><div class="color-swatch-name">Divider</div><div class="color-swatch-hex">#dddddd</div><div class="color-swatch-role">lorem ipsum</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#efefef"></div><div class="color-swatch-info"><div class="color-swatch-name">Light Gray</div><div class="color-swatch-hex">#efefef</div><div class="color-swatch-role">lorem ipsum dolor</div></div></div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- TYPOGRAPHY -->
+<section class="section" id="typography">
+  <div class="section-label">02 / Typography — lorem</div>
+  <h2 class="section-title">lorem ipsum dolor sit</h2>
+
+  <div class="type-sample">
+    <div style="font-family:var(--font-heading); font-size:38px; font-weight:900; line-height:1.5; letter-spacing:normal;">lorem ipsum — Page Title H1</div>
+    <div class="type-meta">38px / 900 / line-height: 1.5 / letter-spacing: normal<span class="type-context">lorem ipsum</span></div>
+  </div>
+  <div class="type-sample">
+    <div style="font-family:var(--font-heading); font-size:36px; font-weight:900; line-height:1.5; letter-spacing:normal;">lorem ipsum — Section H2</div>
+    <div class="type-meta">36px / 900 / line-height: 1.5 / letter-spacing: normal<span class="type-context">lorem ipsum dolor</span></div>
+  </div>
+  <div class="type-sample">
+    <div style="font-family:var(--font-heading); font-size:27px; font-weight:900; line-height:1.5; letter-spacing:normal;">lorem ipsum — Mega Nav Title</div>
+    <div class="type-meta">27px / 900 / line-height: 1.5 / letter-spacing: normal<span class="type-context">lorem ipsum dolor sit</span></div>
+  </div>
+  <div class="type-sample">
+    <div style="font-family:var(--font-heading); font-size:24px; font-weight:700; line-height:1.5; letter-spacing:normal;">lorem ipsum dolor / lorem ipsum dolor — Category H3</div>
+    <div class="type-meta">24px / 700 / line-height: 1.5 / letter-spacing: normal<span class="type-context">lorem ipsum</span></div>
+  </div>
+  <div class="type-sample">
+    <div style="font-family:var(--font-heading); font-size:20px; font-weight:700; line-height:1.75; letter-spacing:normal;">lorem ipsum dolor — Sub Heading H3</div>
+    <div class="type-meta">20px / 700 / line-height: 1.75 / letter-spacing: normal<span class="type-context">lorem ipsum dolor</span></div>
+  </div>
+  <div class="type-sample">
+    <div style="font-family:var(--font-heading); font-size:19px; font-weight:700; line-height:1.25; letter-spacing:normal;">lorem ipsum dolor / lorem ipsum dolor — Mega Nav Label</div>
+    <div class="type-meta">19px / 700 / line-height: 1.25 / letter-spacing: normal<span class="type-context">lorem ipsum dolor sit</span></div>
+  </div>
+  <div class="type-sample">
+    <div style="font-family:var(--font-heading); font-size:17px; font-weight:400; line-height:1.75; letter-spacing:normal;">lorem ipsum / lorem ipsum / IR lorem — Nav Link</div>
+    <div class="type-meta">17px / 400 / line-height: 1.75 / letter-spacing: normal<span class="type-context">lorem ipsum dolor</span></div>
+  </div>
+  <div class="type-sample">
+    <div style="font-family:var(--font-heading); font-size:16px; font-weight:700; line-height:1.5; letter-spacing:normal;">lorem ipsum dolor — News Heading</div>
+    <div class="type-meta">16px / 700 / line-height: 1.5 / letter-spacing: normal<span class="type-context">lorem ipsum dolor</span></div>
+  </div>
+  <div class="type-sample">
+    <div style="font-family:var(--font-default); font-size:16px; font-weight:400; line-height:1.75; letter-spacing:normal;">lorem ipsum dolor — line-height 1.75 lorem ipsum dolor sit. lorem ipsum dolor(lorem ipsum dolor Pro W3)lorem ipsum dolor. letter-spacing lorem normal lorem, lorem ipsum dolor sit amet consectetur.</div>
+    <div class="type-meta">16px / 400 / line-height: 1.75 / letter-spacing: normal<span class="type-context">lorem</span></div>
+  </div>
+  <div class="type-sample">
+    <div style="font-family:var(--font-default); font-size:15px; font-weight:700; line-height:1.75; letter-spacing:normal;">“lorem ipsum dolor sit amet consectetur”lorem ipsum dolor — News Title</div>
+    <div class="type-meta">15px / 700 / line-height: 1.75 / letter-spacing: normal<span class="type-context">lorem ipsum</span></div>
+  </div>
+  <div class="type-sample">
+    <div style="font-family:var(--font-default); font-size:16px; font-weight:400; line-height:1.75; letter-spacing:normal; color:var(--brand-blue-dark);">lorem ipsum dolor — #3381d0 lorem ipsum dolor sit</div>
+    <div class="type-meta">16px / 400 / line-height: 1.75 / color: #3381d0<span class="type-context">lorem</span></div>
+  </div>
+  <div class="type-sample">
+    <div style="font-family:var(--font-default); font-size:10px; font-weight:700; line-height:1.2; letter-spacing:normal;">SEARCH / GLOBAL / MENU — Utility Label</div>
+    <div class="type-meta">10px / 700 / line-height: 1.2 / letter-spacing: normal<span class="type-context">lorem ipsum dolor sit amet</span></div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- PRODUCT PREVIEW -->
+<section class="section-blue" id="product">
+<div class="section-inner">
+  <div class="section-label">03 / Product — lorem ipsum dolor</div>
+  <h2 class="section-title">lorem ipsum dolor sit amet</h2>
+  <div class="product-preview">
+    <h1>“lorem”PRO MARK SR-MK1</h1>
+    <p>lorem ipsum dolor sit amet consectetur. lorem ipsum dolor sit amet consectetur, lorem ipsum dolor sit amet consectetur adipiscing. lorem ipsum dolor sit amet consectetur.</p>
+    <h2>lorem ipsum</h2>
+    <table class="spec-table">
+      <tr><th>lorem ipsum</th><td>4mm / 6mm / 9mm / 12mm / 18mm / 24mm</td></tr>
+      <tr><th>lorem</th><td>AC lorem ipsum / lorem 3 lorem ipsum dolor x 6 lorem</td></tr>
+      <tr><th>lorem ipsum</th><td>lorem 146(W) x 133(D) x 64(H) mm</td></tr>
+      <tr><th>lorem</th><td>lorem 470g(lorem / lorem ipsum dolor sit amet)</td></tr>
+      <tr><th>lorem</th><td>Bluetooth Ver.5.0</td></tr>
+    </table>
+    <p>lorem ipsum dolor sit amet consectetur. lorem ipsum, lorem ipsum dolor sit amet consectetur adipiscing, lorem ipsum dolor sit amet consectetur adipiscing elit.</p>
+  </div>
+</div>
+</section>
+
+<hr class="section-divider">
+
+<!-- BUTTONS -->
+<section class="section" id="buttons">
+  <div class="section-label">04 / Buttons</div>
+  <h2 class="section-title">lorem ipsum dolor sit</h2>
+  <div class="button-row">
+    <div class="button-item"><a class="btn-primary" href="#">lorem ipsum</a><div class="button-label">Primary(lorem ipsum)</div></div>
+    <div class="button-item"><a class="btn-blue-border" href="#">lorem ipsum</a><div class="button-label">Blue Border</div></div>
+    <div class="button-item"><a class="btn-outline" href="#">lorem ipsum dolor</a><div class="button-label">Gray Border</div></div>
+    <div class="button-item"><a class="btn-header" href="#">lorem ipsum</a><div class="button-label">Header Button</div></div>
+    <div class="button-item"><a class="btn-danger" href="#" style="text-decoration:none;">lorem</a><div class="button-label">Danger(lorem)</div></div>
+  </div>
+  <div style="margin-top:20px; font-size:13px; color:var(--text-primary); opacity:0.6;">
+ lorem ipsum border-radius: 0px(lorem). lorem ipsum dolor. lorem ipsum 2px solid.
+</div>
+</section>
+
+<hr class="section-divider">
+
+<!-- CARDS -->
+<section class="section" id="cards">
+  <div class="section-label">05 / Cards</div>
+  <h2 class="section-title">lorem ipsum dolor sit</h2>
+  <div class="card-grid">
+    <div class="card">
+      <h3>lorem PRO lorem ipsum</h3>
+      <p>lorem ipsum dolor sit. lorem ipsum dolor sit amet, lorem ipsum dolor, lorem ipsum dolor sit amet consectetur.</p>
+      <a class="card-link" href="#">lorem ipsum dolor</a>
+    </div>
+    <div class="card" style="border-color:var(--brand-blue);">
+      <h3>lorem ipsum dolor</h3>
+      <p>50 lorem ipsum dolor sit amet consectetur. lorem ipsum dolor sit amet, lorem ipsum dolor sit amet consectetur.</p>
+      <a class="card-link" href="#">lorem ipsum dolor</a>
+    </div>
+    <div class="card">
+      <h3>lorem ipsum dolor“lorem”</h3>
+      <p>lorem ipsum dolor sit amet consectetur. lorem 2 lorem, lorem ipsum. lorem ipsum dolor sit amet consectetur.</p>
+      <a class="card-link" href="#">lorem ipsum dolor</a>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- FORMS -->
+<section class="section" id="forms">
+  <div class="section-label">06 / Forms</div>
+  <h2 class="section-title">lorem ipsum dolor</h2>
+  <div class="form-group">
+    <label class="form-label">lorem / lorem ipsum</label>
+    <input class="form-input" type="text" placeholder="例: SR-MK1">
+    <div class="form-state-label">lorem ipsum — border: #cccccc, radius: 0px</div>
+  </div>
+  <div class="form-group">
+    <label class="form-label">lorem</label>
+    <input class="form-input form-input--focus" type="text" value="キングジム太郎">
+    <div class="form-state-label">lorem ipsum — border: #418fde(Brand Blue)</div>
+  </div>
+  <div class="form-group">
+    <label class="form-label">lorem ipsum dolor</label>
+    <input class="form-input form-input--error" type="text" value="invalid@">
+    <div class="form-state-label">lorem — border: #c41e3a(Danger)</div>
+  </div>
+  <div class="form-group">
+    <label class="form-label">lorem ipsum</label>
+    <select class="form-select">
+      <option>lorem</option>
+      <option>lorem ipsum</option>
+      <option>lorem ipsum dolor</option>
+      <option>lorem ipsum</option>
+    </select>
+    <div class="form-state-label">lorem ipsum dolor — padding: 5px 30px 3px 10px, radius: 0px</div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ELEVATION -->
+<section class="section" id="elevation">
+  <div class="section-label">07 / Elevation</div>
+  <h2 class="section-title">Depth & Elevation</h2>
+  <div class="elevation-grid">
+    <div class="elevation-card">
+      <div class="elevation-label">Level 0: Flat</div>
+      <div class="elevation-desc">lorem, lorem ipsum dolor(lorem)</div>
+    </div>
+    <div class="elevation-card" style="border:2px solid #333333;">
+      <div class="elevation-label">Header Button</div>
+      <div class="elevation-desc">border: 2px solid #333333</div>
+    </div>
+    <div class="elevation-card" style="border:2px solid #cccccc;">
+      <div class="elevation-label">Gray Border CTA</div>
+      <div class="elevation-desc">border: 2px solid #cccccc</div>
+    </div>
+    <div class="elevation-card" style="border:2px solid #418fde;">
+      <div class="elevation-label">Blue Border CTA</div>
+      <div class="elevation-desc">border: 2px solid #418fde</div>
+    </div>
+    <div class="elevation-card" style="box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+      <div class="elevation-label">Level 1(lorem)</div>
+      <div class="elevation-desc">0 2px 8px rgba(0,0,0,0.08)</div>
+    </div>
+    <div class="elevation-card" style="box-shadow:0 4px 16px rgba(0,0,0,0.10);">
+      <div class="elevation-label">Level 2(lorem)</div>
+      <div class="elevation-desc">0 4px 16px rgba(0,0,0,0.10)</div>
+    </div>
+  </div>
+  <div style="margin-top:16px; font-size:13px; color:var(--text-primary); opacity:0.6;">
+ lorem ipsum dolor sit amet consectetur adipiscing elit sed. box-shadow lorem ipsum none.
+</div>
+</section>
+
+<hr class="section-divider">
+
+<!-- LAYOUT -->
+<section class="section" id="layout">
+  <div class="section-label">08 / Layout</div>
+  <h2 class="section-title">lorem ipsum & lorem ipsum dolor</h2>
+
+  <h3 style="font-family:var(--font-heading); font-size:20px; font-weight:700; margin-bottom:16px;">Spacing Scale</h3>
+  <div class="spacing-row">
+    <div class="spacing-item"><div class="spacing-block" style="width:5px"></div><div class="spacing-value">5px</div></div>
+    <div class="spacing-item"><div class="spacing-block" style="width:10px"></div><div class="spacing-value">10px</div></div>
+    <div class="spacing-item"><div class="spacing-block" style="width:15px"></div><div class="spacing-value">15px</div></div>
+    <div class="spacing-item"><div class="spacing-block" style="width:20px"></div><div class="spacing-value">20px</div></div>
+    <div class="spacing-item"><div class="spacing-block" style="width:32px"></div><div class="spacing-value">32px</div></div>
+    <div class="spacing-item"><div class="spacing-block" style="width:40px"></div><div class="spacing-value">40px</div></div>
+    <div class="spacing-item"><div class="spacing-block" style="width:44px"></div><div class="spacing-value">44px</div></div>
+  </div>
+
+  <h3 style="font-family:var(--font-heading); font-size:20px; font-weight:700; margin:32px 0 16px;">Content Widths</h3>
+  <div style="margin-bottom:16px"><div class="width-bar-label">Main Content <span class="width-bar-value">1200px(lorem)</span></div><div class="width-bar"><div class="width-bar-inner" style="width:100%"></div></div></div>
+  <div style="margin-bottom:16px"><div class="width-bar-label">Product Grid <span class="width-bar-value">940px(lorem)</span></div><div class="width-bar"><div class="width-bar-inner" style="width:78%"></div></div></div>
+  <div style="margin-bottom:16px"><div class="width-bar-label">Article Content <span class="width-bar-value">620px(lorem)</span></div><div class="width-bar"><div class="width-bar-inner" style="width:52%"></div></div></div>
+
+  <h3 style="font-family:var(--font-heading); font-size:20px; font-weight:700; margin:32px 0 16px;">Border Radius</h3>
+  <div style="font-size:14px; line-height:1.75;">
+ lorem<code style="background:var(--surface-blue); padding:2px 6px;">border-radius: 0px</code> lorem. lorem ipsum dolor sit.
+</div>
+</section>
+
+<footer class="footer">
+  Generated from <a href="https://www.kingjim.co.jp/">kingjim.co.jp</a> DESIGN.md — awesome-design-md-jp / computed style lorem(2026-06-20)
+</footer>
+
+</body>
+</html>

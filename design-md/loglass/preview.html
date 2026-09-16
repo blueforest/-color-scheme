@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>lorem ipsum(Loglass) — Design System Preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;900&family=Montserrat:wght@500;600&display=swap" rel="stylesheet">
+<!--
+  ログラス（Loglass）DESIGN.md のプレビュー。
+  実測日 2026-08-08 / https://www.loglass.jp/
+
+  このサイトの要点は8つ。
+  1. letter-spacing を em ではなく px で持つ（既定 0.28px）。大きい文字ほど相対的に詰まる。
+  2. 11段階のカラースケールを6色相ぶん持つ。UI に出るのは blue だけ。
+  3. 見出しの line-height はサイズによらず一律 1.4。
+  4. 見出しのウェイトは 600。700 はボタンだけ。900 は「New Release」1箇所のみ。
+  5. ボタンの角丸は 4px（ヘッダー内）と 8px（セクション内）の2値。バッジだけ 9999px のピル。
+  6. font-feature-settings は normal。palt を使わない。
+  7. 影が用途名で20種類以上あり、多くが color-mix でブランド色を混ぜた「青い影」。
+  8. 橙 #e77623 は「資料ダウンロード」以外に使わない。
+
+  ■ フォント代替について
+    Noto Sans JP / Montserrat は Google Fonts で公開されているため代替不要。
+    実サイトの --font-yugothic（游ゴシック）はヒーローのスライド見出しにだけ使われる
+    OS 同梱フォントのため、ここでは Noto Sans JP + palt で代替しています。
+    --font-mono（avenir-next-lt-pro）は Adobe Fonts のため Montserrat で代替。
+-->
+<style>
+  :root {
+    /* --- Neutral scale 0→10 --- */
+    --color-neutral-0:  #fff;
+    --color-neutral-1:  #fafafb;
+    --color-neutral-2:  #f1f1f5;
+    --color-neutral-3:  #e2e2ea;
+    --color-neutral-4:  #d5d5dc;
+    --color-neutral-5:  #b5b5be;
+    --color-neutral-6:  #9090a1;
+    --color-neutral-7:  #6c6c7f;
+    --color-neutral-8:  #50505d;
+    --color-neutral-9:  #3f3f4a;
+    --color-neutral-10: #171725;
+
+    /* --- Blue scale 1→10 --- */
+    --color-blue-1:  #f8fafd;
+    --color-blue-2:  #eef5ff;
+    --color-blue-3:  #d5e4fb;
+    --color-blue-4:  #bdd4f7;
+    --color-blue-5:  #90ade3;
+    --color-blue-6:  #7295de;
+    --color-blue-7:  #4673d4;
+    --color-blue-8:  #2352c8;
+    --color-blue-9:  #1337a1;
+    --color-blue-10: #062073;
+    --color-blue-ai-light: #67bcff;
+
+    /* --- Semantic --- */
+    --color-surface-normal:    #fff;
+    --color-surface-secondary: #f1f1f5;
+    --color-surface-info:      #f0f7ff;
+    --color-surface-success:   #eafbe5;
+    --color-surface-warning:   #fff2de;
+    --color-surface-error:     #ffede9;
+    --color-text-info:    #026572;
+    --color-text-success: #108a10;
+    --color-text-warning: #c3540a;
+    --color-text-error:   #d3403a;
+
+    --color-bg-white:  #fff;
+    --color-bg-muted:  #f1f1f5;
+    --color-bg-surface:#fafafb;
+
+    --color-text-primary:   #171725;
+    --color-text-normal:    #3f3f4a;
+    --color-text-secondary: #6c6c7f;
+    --color-text-placeholder:#9090a1;
+    --color-text-disabled:  #b5b5be;
+    --color-text-onfill:    #fff;
+
+    --color-border-soft:   #f1f1f5;
+    --color-border-medium: #d5d5dc;
+    --color-border-hard:   #b5b5be;
+    --color-border-error:  #d3403a;
+
+    --color-cta-primary:        #2352c8;
+    --color-cta-primary-hover:  #1337a1;
+    --color-cta-secondary:      #171725;
+    --color-cta-secondary-hover:#3f3f4a;
+    --color-cta-accent:         #e77623;
+    --color-cta-accent-hover:   #c3540a;
+
+    /* --- Chart --- */
+    --c1:#2352c8; --c2:#d5e4fb; --c3:#29a4b3; --c4:#bfebef; --c5:#37ac32;
+    --c6:#cdecc6; --c7:#e77623; --c8:#ffdebf; --c9:#ee6e66; --c10:#ffdbd4; --c11:#b5b5be;
+
+    /* --- Type --- */
+    --font-heading: "Noto Sans JP", sans-serif;
+    --font-body:    "Noto Sans JP", sans-serif;
+    --font-display: "Montserrat", sans-serif;
+
+    --text-xs:12px; --text-sm:14px; --text-base:16px; --text-lg:18px;
+    --text-xl:20px; --text-2xl:24px; --text-3xl:32px; --text-4xl:40px; --text-5xl:48px;
+
+    --leading-tight:130%; --leading-snug:140%; --leading-normal:170%; --leading-relaxed:180%;
+    --tracking-tight:.24px; --tracking-normal:.28px; --tracking-wide:.36px; --tracking-wider:.4px;
+
+    --radius-sm:4px; --radius-md:8px; --radius-lg:8px; --radius-xl:12px;
+    --radius-2xl:16px; --radius-full:9999px;
+
+    --shadow-card: 0 10px 30px -20px rgba(23,23,37,.2), 0 16px 30px -30px rgba(23,23,37,.2);
+    --shadow-card-hover: 0 30px 60px -20px rgba(23,23,37,.1), 0 16px 40px -30px rgba(23,23,37,.1), 0 0 0 1px rgba(23,23,37,.05);
+    --shadow-floating: 0 0 32px rgba(23,23,37,.18), 0 0 8px rgba(23,23,37,.08);
+    --shadow-ai-hero: 0 10px 80px -12px rgba(35,82,200,.3);
+    --shadow-benefit-card: 0 2px 20px rgba(35,82,200,.2), 0 2px 0 #2352c8;
+
+    --container-max: 1200px;
+    --container-header: 1280px;
+    --container-padding: 40px;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    background: var(--color-bg-white);
+    color: var(--color-text-primary);
+    font-family: var(--font-body);
+    font-size: var(--text-sm);          /* 14px。16px ではない */
+    font-weight: 400;
+    line-height: 1.6;                   /* 22.4px */
+    letter-spacing: var(--tracking-normal);  /* px 指定 */
+    font-feature-settings: normal;      /* palt は使わない */
+    -webkit-text-size-adjust: 100%;
+  }
+  h1,h2,h3,h4,h5,h6 { font-size:100%; font-weight:600; }
+  ul,ol { list-style:none; }
+  .mont { font-family: var(--font-display); }
+
+  .section {
+    max-width: var(--container-max);
+    margin: 28px auto;
+    padding: 56px var(--container-padding);
+    background: var(--color-surface-normal);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-card);
+  }
+  .section-title { font-size: var(--text-4xl); font-weight:600; line-height:1.4; }
+  .section-no { font-size: var(--text-sm); color: var(--color-text-secondary); line-height:1.6; margin-bottom:36px; }
+  .group-label {
+    font-size: var(--text-xl); font-weight:600; line-height:1.4;
+    margin: 36px 0 16px; padding-left:12px; border-left:4px solid var(--color-cta-primary);
+  }
+  .group-label:first-of-type { margin-top:0; }
+  .note { font-size: var(--text-sm); line-height:1.7; color: var(--color-text-secondary); margin-top:18px; }
+
+  /* ---------- HEADER ---------- */
+  .site-header {
+    max-width: var(--container-header); margin:0 auto;
+    display:flex; align-items:center; gap:24px;
+    height:64px; padding: 0 var(--container-padding);
+    background: var(--color-bg-white);
+    box-shadow: var(--shadow-floating);
+    border-radius: 0 0 var(--radius-md) var(--radius-md);
+  }
+  .logo { font-family: var(--font-display); font-weight:600; font-size:22px; color: var(--color-cta-primary); letter-spacing:0; }
+  .site-header nav { display:flex; gap:22px; margin-left:12px; }
+  .site-header nav a { font-size: var(--text-sm); font-weight:600; line-height:1.43; color: var(--color-text-primary); text-decoration:none; }
+  .header-cta { display:flex; gap:10px; margin-left:auto; }
+
+  /* ---------- BANNER ---------- */
+  .banner {
+    max-width: var(--container-header); margin: 0 auto;
+    background: linear-gradient(90deg, #2352c8, #67bcff);
+    color:#fff; display:flex; align-items:center; justify-content:center; gap:16px;
+    height:48px; font-size: var(--text-base); font-weight:700;
+  }
+  .banner .kicker { font-size: var(--text-sm); font-weight:900; font-style:italic; }
+
+  /* ---------- HERO ---------- */
+  .hero {
+    max-width: var(--container-max); margin: 0 auto;
+    background: linear-gradient(180deg, #fff 0%, #f1f1f5 100%);
+    padding: 64px var(--container-padding);
+    border-radius: var(--radius-2xl);
+    box-shadow: var(--shadow-ai-hero);
+  }
+  .hero .eyebrow { font-size: var(--text-4xl); font-weight:600; line-height:1.4; letter-spacing:var(--tracking-wider); color: var(--color-cta-primary); }
+  .hero h2 { font-size: 60px; font-weight:600; line-height:1.4; letter-spacing:var(--tracking-normal); margin:8px 0 28px; }
+  .hero .slide {
+    margin-top:28px; padding:24px;
+    background: linear-gradient(135deg, #1337a1, #2352c8);
+    border-radius: var(--radius-xl); color:#fff;
+    font-size:48px; font-weight:600; line-height:1.4;
+    font-feature-settings:"palt";   /* 実サイトはここだけ游ゴシック + palt */
+  }
+  .hero .slide small { display:block; font-size:12px; font-weight:400; opacity:.8; margin-top:10px; letter-spacing:var(--tracking-normal); font-feature-settings:normal; }
+
+  /* ---------- BUTTONS ---------- */
+  .btn { display:inline-flex; align-items:center; justify-content:center; text-decoration:none; letter-spacing:var(--tracking-normal); }
+  .btn-sm  { border-radius: var(--radius-sm); padding:6px 12px; font-size:var(--text-sm); font-weight:700; line-height:1.43; }
+  .btn-md  { border-radius: var(--radius-md); padding:10px 20px; font-size:var(--text-base); font-weight:700; line-height:1.5; }
+  .btn-primary   { background: var(--color-cta-primary); color:#fff; border:0; }
+  .btn-primary:hover { background: var(--color-cta-primary-hover); }
+  .btn-secondary { background: var(--color-cta-secondary); color:#fff; border:0; font-weight:500; }
+  .btn-outline   { background: transparent; color: var(--color-text-primary); border:1px solid var(--color-border-medium); }
+  .btn-accent    { background: var(--color-cta-accent); color:#fff; border:0; height:44px; padding:0 24px; font-weight:600; border-radius: var(--radius-sm); }
+  .btn-gradient  {
+    background: linear-gradient(90deg, #2352c8, #67bcff); color:#fff; border:0;
+    border-radius: var(--radius-md); padding:16px 24px;
+    font-size: var(--text-base); font-weight:700; gap:16px; justify-content:space-between; min-width:220px;
+  }
+  .btn-row { display:flex; flex-wrap:wrap; gap:16px; align-items:center; }
+
+  /* ---------- BADGES ---------- */
+  .badge {
+    display:inline-flex; align-items:center;
+    border-radius: var(--radius-full); padding:2px 10px;
+    font-size: var(--text-xs); font-weight:500; line-height:1.33;
+    letter-spacing: normal;              /* バッジだけ字間を持たない */
+  }
+  .badge-muted   { background: var(--color-neutral-2); color: var(--color-cta-primary); }
+  .badge-primary { background: var(--color-cta-primary); color:#fff; }
+  .badge-ink     { background: var(--color-neutral-10); color:#fff; }
+
+  /* ---------- COLORS ---------- */
+  .swatches { display:grid; grid-template-columns:repeat(auto-fill,minmax(178px,1fr)); gap:16px; }
+  .scale    { display:grid; grid-template-columns:repeat(11,1fr); gap:4px; }
+  .scale div { height:56px; border-radius: var(--radius-sm); }
+  .scale span { display:block; text-align:center; font-size:11px; color: var(--color-text-secondary); margin-top:6px; letter-spacing:0; }
+  .swatch .chip { height:76px; border-radius: var(--radius-md); border:1px solid var(--color-border-soft); }
+  .swatch .meta { padding:8px 2px 0; font-size:var(--text-sm); font-weight:600; line-height:1.6; }
+  .swatch .hex  { display:block; font-weight:400; color: var(--color-text-secondary); font-size:12px; }
+
+  /* ---------- TYPOGRAPHY ---------- */
+  .type-row { display:grid; grid-template-columns:250px 1fr; gap:24px; padding:18px 0; border-bottom:1px solid var(--color-border-soft); align-items:baseline; }
+  .type-spec { font-size:12px; line-height:1.7; color: var(--color-text-secondary); }
+  .t-hero    { font-size:60px; font-weight:600; line-height:1.4; }
+  .t-sec     { font-size:40px; font-weight:600; line-height:1.4; }
+  .t-sec-s   { font-size:32px; font-weight:600; line-height:1.4; letter-spacing:1.6px; }
+  .t-sub     { font-size:24px; font-weight:600; line-height:1.4; }
+  .t-lead    { font-size:20px; font-weight:600; line-height:1.4; }
+  .t-card    { font-size:18px; font-weight:600; line-height:1.4; }
+  .t-body    { font-size:16px; font-weight:400; line-height:1.7; color: var(--color-text-secondary); }
+  .t-body2   { font-size:16px; font-weight:400; line-height:1.8; }
+  .t-base    { font-size:14px; font-weight:400; line-height:1.6; }
+  .t-btn     { font-size:14px; font-weight:700; line-height:1.43; }
+  .t-meta    { font-size:14px; font-weight:500; line-height:1.8; letter-spacing:var(--tracking-wide); }
+  .t-cap     { font-size:12px; font-weight:400; line-height:1.7; color: var(--color-text-secondary); }
+  .t-kicker  { font-size:14px; font-weight:900; font-style:italic; line-height:1.43; color: var(--color-cta-primary); }
+
+  /* ---------- ARTICLE ---------- */
+  .article { max-width:800px; }
+  .article .crumb { font-size:12px; color: var(--color-text-secondary); margin-bottom:12px; }
+  .article h1 { font-size:40px; font-weight:600; line-height:1.4; margin-bottom:20px; }
+  .article h2 { font-size:24px; font-weight:600; line-height:1.4; margin:32px 0 12px; }
+  .article p  { font-size:16px; font-weight:400; line-height:1.8; margin-bottom:18px; color: var(--color-text-normal); }
+  .metrics { display:flex; gap:12px; flex-wrap:wrap; margin:20px 0 8px; }
+  .metric {
+    background: var(--color-cta-primary); color:#fff;
+    border-radius: var(--radius-md); padding:8px 18px;
+    font-size:22.6px; font-weight:700; line-height:1.2;
+    font-family: var(--font-display); font-variant-numeric: tabular-nums;
+  }
+
+  /* ---------- CARDS ---------- */
+  .card-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:24px; }
+  .card { background:#fff; border-radius: var(--radius-xl); box-shadow: var(--shadow-card); overflow:hidden; }
+  .card .thumb { aspect-ratio:16/9; background: var(--color-neutral-2); display:flex; align-items:center; justify-content:center; color: var(--color-text-placeholder); font-size:12px; }
+  .card .body { padding:20px; }
+  .card h3 { font-size:18px; font-weight:600; line-height:1.4; letter-spacing:var(--tracking-wide); margin:10px 0 8px; }
+  .card p  { font-size:14px; font-weight:500; line-height:1.8; letter-spacing:var(--tracking-wide); color: var(--color-text-secondary); }
+  .card-benefit { box-shadow: var(--shadow-benefit-card); padding:24px; border-radius: var(--radius-xl); background:#fff; }
+
+  /* ---------- CHART ---------- */
+  .chart { display:flex; align-items:flex-end; gap:10px; height:170px; padding:16px; background: var(--color-neutral-1); border-radius: var(--radius-md); }
+  .chart div { flex:1; border-radius: var(--radius-sm) var(--radius-sm) 0 0; }
+  .chart-legend { display:flex; flex-wrap:wrap; gap:14px; margin-top:14px; font-size:12px; color: var(--color-text-secondary); }
+  .chart-legend i { display:inline-block; width:12px; height:12px; border-radius:2px; margin-right:6px; vertical-align:-1px; }
+
+  /* ---------- FORMS ---------- */
+  .form-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:24px; }
+  .field label { display:block; font-size:14px; font-weight:600; line-height:1.6; margin-bottom:6px; }
+  .field input {
+    width:100%; background:#fff; color: var(--color-text-primary);
+    border:1px solid var(--color-border-medium); border-radius: var(--radius-sm);
+    padding:10px 12px; font-family: var(--font-body);
+    font-size:14px; line-height:1.6; letter-spacing: var(--tracking-normal);
+  }
+  .field input::placeholder { color: var(--color-text-placeholder); }
+  .field.is-focus input { border-color: var(--color-cta-primary); outline:2px solid var(--color-blue-2); }
+  .field.is-error input { border-color: var(--color-border-error); background: var(--color-surface-error); }
+  .field .msg { font-size:12px; line-height:1.7; color: var(--color-text-secondary); margin-top:6px; }
+  .field.is-error .msg { color: var(--color-text-error); }
+
+  /* ---------- SEMANTIC ---------- */
+  .alerts { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
+  .alert { border-radius: var(--radius-md); padding:14px 16px; font-size:14px; line-height:1.6; }
+  .alert strong { display:block; font-weight:600; margin-bottom:4px; }
+  .a-info    { background: var(--color-surface-info);    color: var(--color-text-info); }
+  .a-success { background: var(--color-surface-success); color: var(--color-text-success); }
+  .a-warning { background: var(--color-surface-warning); color: var(--color-text-warning); }
+  .a-error   { background: var(--color-surface-error);   color: var(--color-text-error); }
+
+  /* ---------- ELEVATION ---------- */
+  .elev-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:24px; }
+  .elev { background:#fff; border-radius: var(--radius-xl); padding:22px; min-height:130px; font-size:13px; line-height:1.7; color: var(--color-text-secondary); }
+  .elev strong { display:block; font-size:16px; font-weight:600; color: var(--color-text-primary); margin-bottom:8px; }
+  .e-card  { box-shadow: var(--shadow-card); }
+  .e-float { box-shadow: var(--shadow-floating); }
+  .e-ai    { box-shadow: var(--shadow-ai-hero); }
+
+  /* ---------- LAYOUT ---------- */
+  .bar { font-size:13px; font-weight:600; color:#fff; background: var(--color-cta-primary); padding:9px 14px; border-radius: var(--radius-sm); margin-bottom:8px; }
+  .bar-1280 { max-width:1280px; background: var(--color-neutral-10); }
+  .bar-1200 { max-width:1200px; }
+  .bar-520  { max-width:520px; background: var(--color-blue-6); }
+  .spacing { display:flex; align-items:flex-end; gap:18px; margin-top:20px; }
+  .spacing div { background: var(--color-blue-3); width:40px; border-radius:2px; }
+  .spacing span { display:block; text-align:center; margin-top:6px; font-size:12px; color: var(--color-text-secondary); }
+  .radii { display:flex; gap:16px; flex-wrap:wrap; margin-top:12px; }
+  .radii div { width:96px; height:64px; background: var(--color-neutral-2); display:flex; align-items:center; justify-content:center; font-size:12px; color: var(--color-text-secondary); }
+
+  /* ---------- DARK CTA ---------- */
+  .cta-dark {
+    max-width: var(--container-max); margin:28px auto 0;
+    background: linear-gradient(48deg, #000c2a, #02010c);
+    border-radius: var(--radius-2xl); padding:56px var(--container-padding); color:#fff;
+  }
+  .cta-dark h2 { font-size:40px; font-weight:600; line-height:1.4; margin-bottom:12px; }
+  .cta-dark p  { font-size:20px; font-weight:400; line-height:1.4; opacity:.85; margin-bottom:28px; }
+
+  .site-footer { max-width: var(--container-max); margin:28px auto 60px; padding:0 var(--container-padding); color: var(--color-text-secondary); font-size:12px; line-height:1.7; }
+
+  @media (max-width:768px) {
+    .card-grid,.form-grid,.elev-grid,.alerts { grid-template-columns:1fr; }
+    .type-row { grid-template-columns:1fr; }
+    .site-header nav { display:none; }
+    .section { padding:36px 20px; }
+    .t-hero,.hero h2 { font-size:24px; }
+    .hero .slide { font-size:24px; }
+    .section-title,.article h1,.cta-dark h2 { font-size:24px; }
+    .btn { width:100%; }
+    .scale { grid-template-columns:repeat(6,1fr); }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="logo">Loglass</div>
+  <nav>
+    <a href="#">lorem ipsum dolor</a><a href="#">lorem</a><a href="#">lorem ipsum</a>
+    <a href="#">lorem ipsum</a><a href="#">lorem ipsum dolor</a><a href="#">lorem ipsum</a>
+  </nav>
+  <div class="header-cta">
+    <a class="btn btn-sm btn-outline" href="#">lorem ipsum dolor</a>
+    <a class="btn btn-sm btn-primary" href="#">lorem ipsum dolor</a>
+  </div>
+</header>
+
+<div class="banner">
+  <span class="kicker">New Release</span>
+  <span>AI lorem ipsum dolor sit amet　→</span>
+</div>
+
+<div class="hero" style="margin-top:28px">
+  <div class="eyebrow">AI ✕ lorem ipsum</div>
+  <h2>lorem ipsum dolor,<br>AI lorem.</h2>
+  <div class="btn-row">
+    <a class="btn btn-md btn-primary" href="#">lorem ipsum</a>
+    <a class="btn btn-gradient" href="#"><span>lorem ipsum dolor sit</span><span>→</span></a>
+  </div>
+  <div class="slide">lorem ipsum dolor sit, lorem ipsum dolor.
+<small>lorem ipsum dolor sit amet consectetur adipiscing + font-feature-settings: "palt"(lorem ipsum Noto Sans JP lorem)</small>
+  </div>
+</div>
+
+<!-- ==================== 1. COLORS ==================== -->
+<section class="section">
+  <div class="section-title">Colors</div>
+  <div class="section-no">01 — 11 lorem ipsum dolor 6 lorem ipsum dolor. UI lorem ipsum blue lorem orange-6 lorem</div>
+
+  <div class="group-label">Neutral Scale（0 → 10）</div>
+  <div class="scale">
+    <div style="background:#fff;border:1px solid #e2e2ea"></div><div style="background:#fafafb"></div>
+    <div style="background:#f1f1f5"></div><div style="background:#e2e2ea"></div>
+    <div style="background:#d5d5dc"></div><div style="background:#b5b5be"></div>
+    <div style="background:#9090a1"></div><div style="background:#6c6c7f"></div>
+    <div style="background:#50505d"></div><div style="background:#3f3f4a"></div>
+    <div style="background:#171725"></div>
+  </div>
+  <div class="scale" style="margin-top:2px">
+    <span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span>
+    <span>6</span><span>7</span><span>8</span><span>9</span><span>10</span>
+  </div>
+
+  <div class="group-label">Blue Scale(1 → 10)— lorem ipsum dolor 8 lorem</div>
+  <div class="scale">
+    <div style="background:#f8fafd;border:1px solid #e2e2ea"></div><div style="background:#eef5ff"></div>
+    <div style="background:#d5e4fb"></div><div style="background:#bdd4f7"></div>
+    <div style="background:#90ade3"></div><div style="background:#7295de"></div>
+    <div style="background:#4673d4"></div><div style="background:#2352c8"></div>
+    <div style="background:#1337a1"></div><div style="background:#062073"></div>
+    <div style="background:#67bcff"></div>
+  </div>
+  <div class="scale" style="margin-top:2px">
+    <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span>
+    <span>7</span><span>8</span><span>9</span><span>10</span><span>ai</span>
+  </div>
+
+  <div class="group-label">Roles</div>
+  <div class="swatches">
+    <div class="swatch"><div class="chip" style="background:#2352c8"></div>
+      <div class="meta">Primary(CTA / lorem)<span class="hex">#2352c8 / --color-cta-primary</span></div></div>
+    <div class="swatch"><div class="chip" style="background:#1337a1"></div>
+      <div class="meta">Primary Hover<span class="hex">#1337a1 / --color-cta-primary-hover</span></div></div>
+    <div class="swatch"><div class="chip" style="background:#171725"></div>
+      <div class="meta">Secondary(lorem CTA)<span class="hex">#171725 / --color-cta-secondary</span></div></div>
+    <div class="swatch"><div class="chip" style="background:#e77623"></div>
+      <div class="meta">Accent(lorem DL lorem)<span class="hex">#e77623 / --color-cta-accent</span></div></div>
+    <div class="swatch"><div class="chip" style="background:#f1f1f5"></div>
+      <div class="meta">Surface Muted(lorem)<span class="hex">#f1f1f5 / --color-bg-muted</span></div></div>
+    <div class="swatch"><div class="chip" style="background:#fafafb"></div>
+      <div class="meta">Surface Subtle<span class="hex">#fafafb / --color-bg-surface</span></div></div>
+    <div class="swatch"><div class="chip" style="background:linear-gradient(90deg,#2352c8,#67bcff)"></div>
+      <div class="meta">Gradient(lorem / CTA)<span class="hex">90deg #2352c8 → #67bcff</span></div></div>
+    <div class="swatch"><div class="chip" style="background:linear-gradient(48deg,#000c2a,#02010c)"></div>
+      <div class="meta">Dark Section<span class="hex">48deg #000c2a → #02010c</span></div></div>
+  </div>
+
+  <div class="group-label">Semantic</div>
+  <div class="alerts">
+    <div class="alert a-info"><strong>Info</strong>surface #f0f7ff / text #026572</div>
+    <div class="alert a-success"><strong>Success</strong>surface #eafbe5 / text #108a10</div>
+    <div class="alert a-warning"><strong>Warning</strong>surface #fff2de / text #c3540a</div>
+    <div class="alert a-error"><strong>Error</strong>surface #ffede9 / text #d3403a</div>
+  </div>
+
+  <p class="note">lorem #e77623 lorem“lorem ipsum dolor”lorem ipsum dolor.
+ lorem ipsum dolor sit amet consectetur adipiscing.</p>
+</section>
+
+<!-- ==================== 2. TYPOGRAPHY ==================== -->
+<section class="section">
+  <div class="section-title">Typography</div>
+  <div class="section-no">02 — Noto Sans JP 1 lorem / lorem ipsum 600 / line-height lorem 1.4 / letter-spacing lorem px lorem(0.28px)</div>
+
+  <div class="type-row"><div class="type-spec">Hero Head<br>60px / 600 / 1.4 / 0.28px</div>
+    <div class="t-hero">AI ✕ lorem ipsum</div></div>
+  <div class="type-row"><div class="type-spec">Section Head<br>40px / 600 / 1.4 / 0.28px</div>
+    <div class="t-sec">lorem ipsum dolor sit amet</div></div>
+  <div class="type-row"><div class="type-spec">Section Head S<br>32px / 600 / 1.4 / <strong>1.6px</strong></div>
+    <div class="t-sec-s">lorem ipsum dolor</div></div>
+  <div class="type-row"><div class="type-spec">Sub Head<br>24px / 600 / 1.4 / 0.28px</div>
+    <div class="t-sub">lorem ipsum dolor, lorem ipsum, lorem</div></div>
+  <div class="type-row"><div class="type-spec">Lead<br>20px / 600 / 1.4 / 0.28px</div>
+    <div class="t-lead">lorem ipsum / lorem ipsum dolor sit</div></div>
+  <div class="type-row"><div class="type-spec">Card Title<br>18px / 600 / 1.4 / 0.36px</div>
+    <div class="t-card">lorem ipsum dolor sit 5 lorem 1. lorem ipsum dolor</div></div>
+  <div class="type-row"><div class="type-spec">Body<br>16px / 400 / <strong>1.7</strong> / 0.28px</div>
+    <div class="t-body">lorem ipsum dolor sit amet consectetur, “lorem ipsum dolor sit amet consectetur”
+ “lorem ipsum dolor sit amet consectetur”lorem ipsum dolor sit amet consectetur.</div></div>
+  <div class="type-row"><div class="type-spec">Body Dense<br>16px / 400 / <strong>1.8</strong> / 0.28px</div>
+    <div class="t-body2">lorem ipsum dolor sit amet consectetur adipiscing. lorem ipsum dolor sit amet consectetur.</div></div>
+  <div class="type-row"><div class="type-spec">Base（body）<br><strong>14px</strong> / 400 / 1.6 / 0.28px</div>
+    <div class="t-base">lorem ipsum dolor sit, lorem ipsum / lorem ipsum dolor, AI lorem ipsum dolor sit amet consectetur.</div></div>
+  <div class="type-row"><div class="type-spec">Button<br>14px / <strong>700</strong> / 1.43 / 0.28px</div>
+    <div class="t-btn">lorem ipsum dolor</div></div>
+  <div class="type-row"><div class="type-spec">Meta<br>14px / 500 / 1.8 / 0.36px</div>
+    <div class="t-meta">1,001–5,000 lorem／lorem</div></div>
+  <div class="type-row"><div class="type-spec">Badge<br>12px / 500 / 1.33 / <strong>normal</strong></div>
+    <div><span class="badge badge-muted">lorem ipsum dolor</span></div></div>
+  <div class="type-row"><div class="type-spec">Caption<br>12px / 400 / 1.7 / 0.28px</div>
+    <div class="t-cap">※1 lorem(2025 lorem 10 lorem 31 lorem)lorem ipsum No.1／lorem(2024 lorem)lorem ipsum dolor No.1</div></div>
+  <div class="type-row"><div class="type-spec">Kicker<br>14px / <strong>900</strong> / italic</div>
+    <div class="t-kicker">New Release</div></div>
+
+  <p class="note">letter-spacing lorem 0.28px lorem<strong>px lorem</strong>lorem. em lorem ipsum dolor,
+ 14px lorem 0.02em, 40px lorem 0.007em lorem, lorem ipsum dolor sit amet consectetur adipiscing.
+ lorem ipsum line-height lorem ipsum dolor sit 1.4. font-feature-settings lorem normal(palt lorem ipsum dolor).</p>
+</section>
+
+<!-- ==================== 3. ARTICLE ==================== -->
+<section class="section">
+  <div class="section-title">Case Study</div>
+  <div class="section-no">03 — lorem ipsum dolor. lorem Montserrat + tabular-nums lorem ipsum dolor</div>
+
+  <div class="article">
+    <div class="crumb">TOP ／ lorem ipsum ／ lorem</div>
+    <h1>lorem ipsum dolor, lorem ipsum dolor 5 lorem 1 lorem</h1>
+    <p>lorem ipsum dolor sit amet consectetur adipiscing, lorem ipsum dolor sit amet consectetur.
+ lorem ipsum dolor sit amet 10 lorem ipsum dolor, lorem ipsum dolor sit amet consectetur adipiscing elit.</p>
+
+    <div class="metrics">
+      <span class="metric">-10,800</span>
+      <span class="metric">-3.68pt</span>
+      <span class="metric">1/5</span>
+    </div>
+
+    <h2>lorem ipsum dolor sit</h2>
+    <p>lorem ipsum dolor sit amet consectetur, lorem ipsum dolor sit amet consectetur adipiscing elit sed.
+ lorem ipsum dolor sit amet consectetur adipiscing elit, lorem ipsum dolor sit amet consectetur adipiscing.</p>
+
+    <div class="btn-row" style="margin-top:24px">
+      <a class="btn btn-md btn-primary" href="#">lorem ipsum dolor</a>
+      <a class="btn btn-md btn-outline" href="#">lorem ipsum dolor</a>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 4. BUTTONS & BADGES ==================== -->
+<section class="section">
+  <div class="section-title">Buttons &amp; Badges</div>
+  <div class="section-no">04 — lorem ipsum dolor sit amet consectetur(lorem ipsum 4px / lorem ipsum dolor 8px). lorem ipsum dolor</div>
+
+  <div class="group-label">Header（radius 4px）</div>
+  <div class="btn-row">
+    <a class="btn btn-sm btn-primary" href="#">lorem ipsum dolor</a>
+    <a class="btn btn-sm btn-secondary" href="#">lorem</a>
+    <a class="btn btn-sm btn-outline" href="#">lorem ipsum dolor</a>
+  </div>
+
+  <div class="group-label">Section（radius 8px）</div>
+  <div class="btn-row">
+    <a class="btn btn-md btn-primary" href="#">lorem ipsum dolor</a>
+    <a class="btn btn-gradient" href="#"><span>lorem ipsum</span><span>→</span></a>
+    <a class="btn btn-accent" href="#">lorem ipsum dolor</a>
+  </div>
+  <p class="note">
+ Primary — lorem #2352c8 / lorem #fff / hover #1337a1<br>
+ Secondary — lorem #171725 / lorem #fff / hover #3f3f4a<br>
+ Outline — lorem / 1px solid #d5d5dc / lorem #171725<br>
+ Accent — lorem #e77623 / hover #c3540a.<strong>“lorem ipsum dolor”lorem ipsum dolor</strong><br>
+ lorem ipsum dolor 1 lorem ipsum dolor. lorem ipsum dolor sit amet.
+</p>
+
+  <div class="group-label">Badges（radius 9999px / letter-spacing normal）</div>
+  <div class="btn-row">
+    <span class="badge badge-muted">lorem ipsum dolor</span>
+    <span class="badge badge-muted">lorem ipsum dolor</span>
+    <span class="badge badge-primary">lorem</span>
+    <span class="badge badge-ink">lorem ipsum</span>
+  </div>
+  <p class="note">lorem ipsum dolor, lorem ipsum dolor. lorem 2 lorem ipsum dolor sit amet consectetur adipiscing.</p>
+</section>
+
+<!-- ==================== 5. CARDS & CHART ==================== -->
+<section class="section">
+  <div class="section-title">Cards &amp; Chart</div>
+  <div class="section-no">05 — lorem ipsum radius 12px. lorem ipsum dolor“lorem / lorem”lorem 11 lorem</div>
+
+  <div class="card-grid">
+    <div class="card">
+      <div class="thumb">case photo</div>
+      <div class="body"><span class="badge badge-muted">lorem</span>
+        <h3>lorem ipsum dolor sit 5 lorem 1</h3>
+        <p>1,001–5,000 lorem／Loglass lorem ipsum</p></div>
+    </div>
+    <div class="card">
+      <div class="thumb">case photo</div>
+      <div class="body"><span class="badge badge-muted">lorem</span>
+        <h3>lorem ipsum dolor sit 1 lorem ipsum dolor</h3>
+        <p>501–1,000 lorem／Loglass lorem ipsum</p></div>
+    </div>
+    <div class="card">
+      <div class="thumb">case photo</div>
+      <div class="body"><span class="badge badge-primary">lorem</span>
+        <h3>30 lorem ipsum Loglass lorem ipsum</h3>
+        <p>lorem ipsum／lorem ipsum 15:00</p></div>
+    </div>
+  </div>
+
+  <div class="group-label">Benefit Card(lorem + lorem ipsum dolor)</div>
+  <div class="card-benefit">
+    <div class="t-lead">lorem ipsum dolor sit amet consectetur</div>
+    <p class="t-body" style="margin-top:8px">lorem ipsum dolor, lorem ipsum, lorem. lorem ipsum dolor sit amet consectetur adipiscing.</p>
+  </div>
+
+  <div class="group-label">Chart（categorical 1 → 11）</div>
+  <div class="chart">
+    <div style="height:88%;background:var(--c1)"></div><div style="height:52%;background:var(--c2)"></div>
+    <div style="height:74%;background:var(--c3)"></div><div style="height:41%;background:var(--c4)"></div>
+    <div style="height:66%;background:var(--c5)"></div><div style="height:35%;background:var(--c6)"></div>
+    <div style="height:58%;background:var(--c7)"></div><div style="height:30%;background:var(--c8)"></div>
+    <div style="height:47%;background:var(--c9)"></div><div style="height:26%;background:var(--c10)"></div>
+    <div style="height:20%;background:var(--c11)"></div>
+  </div>
+  <div class="chart-legend">
+    <span><i style="background:var(--c1)"></i>lorem</span><span><i style="background:var(--c2)"></i>lorem(lorem)</span>
+    <span><i style="background:var(--c3)"></i>lorem</span><span><i style="background:var(--c4)"></i>lorem(lorem)</span>
+    <span><i style="background:var(--c5)"></i>lorem ipsum</span><span><i style="background:var(--c6)"></i>lorem ipsum(lorem)</span>
+    <span><i style="background:var(--c7)"></i>lorem</span><span><i style="background:var(--c11)"></i>lorem</span>
+  </div>
+  <p class="note">lorem → lorem ipsum dolor(lorem ipsum dolor sit). lorem ipsum dolor sit amet consectetur.</p>
+</section>
+
+<!-- ==================== 6. FORMS ==================== -->
+<section class="section">
+  <div class="section-title">Forms</div>
+  <div class="section-no">06 — lorem ipsum / lorem ipsum / lorem. radius 4px, lorem ipsum dolor #eef5ff lorem ipsum dolor</div>
+
+  <div class="form-grid">
+    <div class="field">
+      <label>lorem</label>
+      <input type="text" placeholder="株式会社ログラス">
+      <div class="msg">lorem ipsum dolor sit amet</div>
+    </div>
+    <div class="field is-focus">
+      <label>lorem ipsum dolor</label>
+      <input type="email" value="finance@example.co.jp">
+      <div class="msg">lorem ipsum dolor #2352c8 lorem＋ #eef5ff lorem ipsum dolor</div>
+    </div>
+    <div class="field is-error">
+      <label>lorem ipsum</label>
+      <input type="text" value="—">
+      <div class="msg">lorem ipsum dolor sit amet consectetur</div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 7. ELEVATION ==================== -->
+<section class="section">
+  <div class="section-title">Elevation</div>
+  <div class="section-no">07 — lorem ipsum 20 lorem ipsum. lorem color-mix lorem ipsum dolor sit“lorem”</div>
+
+  <div class="elev-grid">
+    <div class="elev e-card"><strong>--shadow-card</strong>
+ 0 10px 30px -20px / 0 16px 30px -30px. spread lorem ipsum dolor, lorem ipsum dolor sit amet consectetur.</div>
+    <div class="elev e-float"><strong>--shadow-floating</strong>
+ 0 0 32px / 0 0 8px. offset lorem ipsum, lorem ipsum dolor sit amet consectetur(lorem ipsum).</div>
+    <div class="elev e-ai"><strong>--shadow-ai-hero</strong>
+ color-mix(in srgb, #2352c8 30%, transparent) lorem<strong>lorem</strong>. AI lorem ipsum dolor.</div>
+  </div>
+</section>
+
+<!-- ==================== 8. LAYOUT ==================== -->
+<section class="section">
+  <div class="section-title">Layout</div>
+  <div class="section-no">08 — lorem 1200px / lorem ipsum 1280px / lorem ipsum dolor 40px. Tailwind v4 lorem rem lorem ipsum dolor</div>
+
+  <div class="bar bar-1280">1280px — --container-header</div>
+  <div class="bar bar-1200">1200px — --container-max(lorem)</div>
+  <div class="bar bar-520">520px — lorem / lorem ipsum</div>
+
+  <div class="group-label">Spacing Scale(8px lorem. 4px lorem ipsum dolor)</div>
+  <div class="spacing">
+    <div><div style="height:2px"></div><span>2</span></div>
+    <div><div style="height:4px"></div><span>4</span></div>
+    <div><div style="height:8px"></div><span>8</span></div>
+    <div><div style="height:12px"></div><span>12</span></div>
+    <div><div style="height:16px"></div><span>16</span></div>
+    <div><div style="height:24px"></div><span>24</span></div>
+    <div><div style="height:40px"></div><span>40</span></div>
+    <div><div style="height:64px"></div><span>64</span></div>
+  </div>
+
+  <div class="group-label">Border Radius</div>
+  <div class="radii">
+    <div style="border-radius:4px">sm 4px</div>
+    <div style="border-radius:8px">md / lg 8px</div>
+    <div style="border-radius:12px">xl 12px</div>
+    <div style="border-radius:16px">2xl 16px</div>
+    <div style="border-radius:9999px">full</div>
+  </div>
+  <p class="note">--radius-md lorem --radius-lg lorem ipsum 8px. lorem ipsum dolor sit amet consectetur adipiscing.</p>
+
+  <p class="note">lorem ipsum dolor sit 40rem(640) /<strong>48rem(768)</strong> / 64rem(1024) /
+ 80rem(1280) / 96rem(1536). lorem ipsum dolor @media (hover: hover) lorem,
+ @media (prefers-reduced-motion: reduce) lorem ipsum dolor.</p>
+</section>
+
+<div class="cta-dark">
+  <h2>lorem ipsum dolor sit amet consectetur Loglass lorem ipsum</h2>
+  <p>lorem ipsum dolor sit amet consectetur adipiscing.</p>
+  <div class="btn-row">
+    <a class="btn btn-gradient" href="#"><span>lorem ipsum dolor sit</span><span>→</span></a>
+    <a class="btn btn-md" style="background:#fff;color:#171725" href="#">lorem ipsum dolor</a>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <p>lorem ipsum dolor — lorem ipsum dolor Loglass</p>
+  <p style="margin-top:8px">
+ lorem ipsum dolor DESIGN.md lorem ipsum dolor. Noto Sans JP / Montserrat lorem ipsum Google Fonts lorem
+ lorem ipsum dolor sit amet consectetur adipiscing elit. lorem ipsum dolor sit amet consectetur adipiscing
+ lorem ipsum(--font-yugothic)lorem OS lorem ipsum dolor sit, lorem ipsum Noto Sans JP + palt lorem ipsum dolor.
+</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design System Preview: lorem(NOUSAKU)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@200;400;700&family=Shippori+Mincho:wght@200;300;400;500&family=Noto+Serif+JP:wght@200;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* === Colors: 実測値 === */
+    --gold: #b48c0f;
+    --black: #000000;
+    --white: #ffffff;
+    --light-gray: #e6e6e6;
+    --section-gray: #f0f0f0;
+    --badge-gray: #888888;
+    --ns-blue-gray: #c2d5db;
+    --text-primary: #000000;
+    --bg-primary: #ffffff;
+    --bg-section: #f0f0f0;
+    --bg-banner: #e6e6e6;
+    --border-default: #e6e6e6;
+    /* === Fonts: 実測値ベース（Google Fonts 代替） === */
+    --font-mincho: "Shippori Mincho", "ヒラギノ明朝 ProN W3", "Hiragino Mincho ProN", 游明朝, YuMincho, "ＭＳ Ｐ明朝", serif;
+    --font-gothic: "Noto Sans JP", sans-serif;
+    --font-serif-jp: "Noto Serif JP", serif;
+    --font-mono: SFMono-Regular, Consolas, Menlo, Courier, monospace;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: var(--font-gothic);
+    font-size: 14px; font-weight: 200; line-height: 2.0;
+    letter-spacing: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* NAV */
+  .nav {
+    position: sticky; top: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 32px; height: 64px;
+    background: var(--bg-primary);
+    border-bottom: 1px solid var(--border-default);
+  }
+  .nav-brand {
+    font-family: var(--font-mincho);
+    font-size: 15px; font-weight: 200; color: var(--text-primary);
+    text-decoration: none; letter-spacing: 0.2em;
+  }
+  .nav-links { display: flex; gap: 24px; list-style: none; }
+  .nav-links a {
+    font-family: var(--font-gothic);
+    font-size: 13px; font-weight: 200; color: var(--text-primary);
+    text-decoration: none; transition: color 0.15s;
+  }
+  .nav-links a:hover { color: var(--gold); }
+  .nav-cta {
+    display: inline-block; background: var(--gold); color: var(--white);
+    padding: 6px 20px; border-radius: 0; font-family: var(--font-gothic);
+    font-size: 13px; font-weight: 200;
+    text-decoration: none; transition: opacity 0.15s;
+  }
+  .nav-cta:hover { opacity: 0.7; }
+  .nav-lang {
+    font-family: var(--font-mincho);
+    font-size: 10px; font-weight: 400; color: var(--text-primary);
+    text-decoration: none; margin-left: 16px;
+    border: 1px solid var(--border-default); padding: 2px 8px;
+  }
+
+  /* HERO */
+  .hero { padding: 96px 32px 80px; text-align: center; background: var(--bg-primary); }
+  .hero h1 {
+    font-family: var(--font-mincho);
+    font-size: 30px; font-weight: 500; line-height: 1.15;
+    letter-spacing: 0.5em;
+    color: var(--text-primary); margin-bottom: 24px;
+  }
+  .hero .hero-sub {
+    font-family: var(--font-mincho);
+    font-size: 10px; font-weight: 500; line-height: 1.15;
+    letter-spacing: 0.4em; color: var(--text-primary);
+    margin-bottom: 32px; display: block;
+  }
+  .hero p {
+    font-family: var(--font-gothic);
+    font-size: 14px; font-weight: 200; line-height: 2.0;
+    color: var(--text-primary); max-width: 620px; margin: 0 auto 40px;
+  }
+  .hero-buttons { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+  .btn-gold {
+    display: inline-block; background: var(--gold); color: var(--white);
+    padding: 10px 35px; border-radius: 0; border: none;
+    font-family: var(--font-gothic); font-size: 13px; font-weight: 200;
+    text-decoration: none; cursor: pointer; transition: opacity 0.15s;
+  }
+  .btn-gold:hover { opacity: 0.7; }
+  .btn-dark {
+    display: inline-block; background: var(--black); color: var(--white);
+    padding: 11px 45px; border-radius: 0; border: none;
+    font-family: var(--font-gothic); font-size: 14px; font-weight: 200;
+    text-decoration: none; cursor: pointer; transition: opacity 0.15s;
+  }
+  .btn-dark:hover { opacity: 0.7; }
+  .btn-outline {
+    display: inline-block; background: transparent; color: var(--text-primary);
+    padding: 3px 16px; border-radius: 0;
+    border: 1px solid var(--border-default);
+    font-family: var(--font-gothic); font-size: 12px; font-weight: 200;
+    text-decoration: none; cursor: pointer; transition: background 0.15s;
+    letter-spacing: 0.08em;
+  }
+  .btn-outline:hover { background: var(--section-gray); }
+  .btn-pill {
+    display: inline-block; background: var(--black); color: var(--white);
+    padding: 6px 24px; border-radius: 30px; border: none;
+    font-family: var(--font-gothic); font-size: 13px; font-weight: 400;
+    text-decoration: none; cursor: pointer; transition: opacity 0.15s;
+    letter-spacing: 0.2em;
+  }
+  .btn-pill:hover { opacity: 0.7; }
+  .btn-gold-sm {
+    display: inline-block; background: var(--gold); color: var(--white);
+    padding: 3px 16px; border-radius: 0; border: none;
+    font-family: var(--font-gothic); font-size: 12px; font-weight: 200;
+    text-decoration: none; cursor: pointer; transition: opacity 0.15s;
+  }
+  .btn-gold-sm:hover { opacity: 0.7; }
+
+  /* SECTIONS */
+  .section { padding: 64px 32px; max-width: 940px; margin: 0 auto; }
+  .section-label {
+    font-family: var(--font-gothic);
+    font-size: 11px; font-weight: 200; color: var(--badge-gray);
+    letter-spacing: 0.24em; margin-bottom: 8px;
+  }
+  .section-title {
+    font-family: var(--font-mincho);
+    font-size: 20px; font-weight: 200; line-height: 1.0;
+    letter-spacing: 0.4em;
+    margin-bottom: 40px;
+  }
+  .section-divider { border: none; border-top: 1px solid var(--border-default); margin: 0; }
+
+  .section-gray { background: var(--bg-section); padding: 64px 32px; }
+  .section-gray .section-inner { max-width: 940px; margin: 0 auto; }
+
+  /* COLORS */
+  .color-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(155px, 1fr)); gap: 12px; margin-bottom: 24px; }
+  .color-swatch { overflow: hidden; background: var(--white); border: 1px solid var(--border-default); }
+  .color-swatch-block { height: 72px; width: 100%; }
+  .color-swatch-info { padding: 10px 12px; }
+  .color-swatch-name { font-size: 13px; font-weight: 400; margin-bottom: 2px; color: var(--text-primary); }
+  .color-swatch-hex { font-size: 12px; color: var(--badge-gray); font-family: var(--font-mono); }
+  .color-swatch-role { font-size: 11px; color: var(--badge-gray); margin-top: 3px; }
+  .color-group-label {
+    font-family: var(--font-mincho);
+    font-size: 14px; font-weight: 200; color: var(--badge-gray);
+    letter-spacing: 0.2em; margin: 24px 0 10px;
+  }
+
+  /* TYPOGRAPHY */
+  .type-sample { margin-bottom: 32px; padding-bottom: 28px; border-bottom: 1px solid var(--border-default); }
+  .type-sample:last-child { border-bottom: none; }
+  .type-meta { font-family: var(--font-mono); font-size: 11px; font-weight: 400; color: var(--badge-gray); margin-top: 10px; line-height: 1.5; }
+  .type-context { display: inline-block; background: var(--bg-section); color: var(--badge-gray); font-size: 10px; padding: 2px 8px; margin-left: 8px; }
+
+  /* BUTTONS */
+  .button-row { display: flex; gap: 24px; flex-wrap: wrap; align-items: flex-end; }
+  .button-item { text-align: center; }
+  .button-label { font-size: 11px; font-weight: 200; color: var(--badge-gray); margin-top: 10px; letter-spacing: 0.1em; }
+
+  /* BADGES */
+  .badge { display: inline-block; font-size: 11px; font-weight: 400; padding: 5px 10px; border-radius: 0; line-height: 1.5; }
+  .badge-black { background: var(--black); color: var(--white); }
+  .badge-gray { background: var(--badge-gray); color: var(--white); }
+  .badge-ns { background: var(--ns-blue-gray); color: var(--black); }
+
+  /* CARDS */
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 0; }
+  .card {
+    background: var(--bg-banner);
+    padding: 32px; transition: background 0.3s;
+    border: 1px solid var(--border-default);
+  }
+  .card:hover { background: #d9d9d9; }
+  .card h3 {
+    font-family: var(--font-mincho);
+    font-size: 20px; font-weight: 200; line-height: 1.75;
+    letter-spacing: 0.25em; margin-bottom: 12px;
+  }
+  .card p {
+    font-family: var(--font-gothic);
+    font-size: 14px; font-weight: 200; line-height: 2.0;
+    color: var(--text-primary);
+  }
+  .card-link {
+    font-family: var(--font-gothic);
+    font-size: 12px; font-weight: 200; color: var(--gold);
+    text-decoration: none; margin-top: 16px; display: inline-block;
+  }
+
+  /* ARTICLE / PRODUCT PREVIEW */
+  .article-preview { max-width: 620px; margin: 0 auto; }
+  .article-preview h1 {
+    font-family: var(--font-mincho);
+    font-size: 30px; font-weight: 500; line-height: 1.15;
+    letter-spacing: 0.5em; margin-bottom: 16px;
+  }
+  .article-preview h2 {
+    font-family: var(--font-mincho);
+    font-size: 20px; font-weight: 200; line-height: 1.0;
+    letter-spacing: 0.4em; margin: 32px 0 16px;
+  }
+  .article-preview h3 {
+    font-family: var(--font-mincho);
+    font-size: 20px; font-weight: 200; line-height: 1.75;
+    letter-spacing: 0.25em; margin: 24px 0 12px;
+  }
+  .article-preview p {
+    font-family: var(--font-mincho);
+    font-size: 14px; font-weight: 200; line-height: 2.0;
+    letter-spacing: 0.2em; margin-bottom: 20px;
+    color: var(--text-primary);
+  }
+  .article-preview p.gothic {
+    font-family: var(--font-gothic);
+    letter-spacing: normal;
+  }
+  .article-preview .product-name {
+    font-family: var(--font-mincho);
+    font-size: 20px; font-weight: 200; line-height: 1.75;
+    letter-spacing: 0.4em; margin-bottom: 8px;
+    text-align: center;
+  }
+  .article-preview .product-price {
+    font-family: var(--font-gothic);
+    font-size: 14px; font-weight: 200; line-height: 2.0;
+    text-align: center; margin-bottom: 20px;
+    letter-spacing: normal;
+  }
+  .article-preview .product-image {
+    width: 100%; height: 320px;
+    background: linear-gradient(135deg, #d4d4d4 0%, #e8e8e8 50%, #c8c8c8 100%);
+    margin-bottom: 20px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--badge-gray);
+    font-family: var(--font-mincho);
+    font-size: 14px; font-weight: 200; letter-spacing: 0.2em;
+  }
+
+  /* FORMS */
+  .form-group { margin-bottom: 20px; max-width: 400px; }
+  .form-label {
+    display: block; font-family: var(--font-gothic);
+    font-size: 14px; font-weight: 200; color: var(--text-primary);
+    margin-bottom: 6px;
+  }
+  .form-input {
+    width: 100%; background: var(--white); color: var(--text-primary);
+    border: 1px solid var(--black); padding: 10px; border-radius: 0;
+    font-family: Arial, var(--font-gothic); font-size: 13.3px; font-weight: 400;
+    outline: none; transition: border-color 0.15s;
+  }
+  .form-input:focus, .form-input--focus { border-color: var(--gold); box-shadow: 0 0 0 2px rgba(180,140,15,0.2); }
+  .form-input--error { border-color: #cf2e2e; box-shadow: 0 0 0 2px rgba(207,46,46,0.2); }
+  .form-state-label { font-size: 11px; color: var(--badge-gray); margin-top: 4px; }
+
+  /* ELEVATION */
+  .elevation-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0; }
+  .elevation-card { padding: 32px; text-align: center; }
+  .elevation-label { font-family: var(--font-gothic); font-size: 14px; font-weight: 200; margin-bottom: 4px; }
+  .elevation-desc { font-family: var(--font-mono); font-size: 11px; color: var(--badge-gray); word-break: break-all; }
+
+  /* SPACING */
+  .spacing-row { display: flex; align-items: flex-end; gap: 16px; flex-wrap: wrap; margin-bottom: 24px; }
+  .spacing-item { text-align: center; }
+  .spacing-block { background: var(--gold); margin-bottom: 6px; height: 28px; }
+  .spacing-value { font-family: var(--font-mono); font-size: 11px; font-weight: 400; color: var(--badge-gray); }
+
+  /* CONTENT WIDTHS */
+  .width-bar { height: 28px; background: var(--bg-section); border: 1px solid var(--border-default); margin-bottom: 8px; position: relative; }
+  .width-bar-inner { height: 100%; background: var(--gold); opacity: 0.2; }
+  .width-bar-label { font-size: 13px; font-weight: 200; color: var(--text-primary); margin-bottom: 4px; }
+  .width-bar-value { font-family: var(--font-mono); font-size: 12px; color: var(--badge-gray); }
+
+  /* FOOTER */
+  .footer {
+    padding: 48px 32px; text-align: center;
+    background: var(--black); color: var(--white);
+    font-size: 12px; font-weight: 200;
+  }
+  .footer a { color: var(--gold); text-decoration: none; }
+  .footer .footer-links {
+    font-family: var(--font-gothic);
+    font-size: 14px; font-weight: 200;
+    margin-bottom: 16px; letter-spacing: 0.1em;
+  }
+  .footer .footer-copy {
+    font-family: var(--font-gothic);
+    font-size: 11px; font-weight: 200; color: var(--badge-gray);
+  }
+
+  @media (max-width: 769px) {
+    .hero h1 { font-size: 22px; letter-spacing: 0.3em; }
+    .hero p { font-size: 13px; }
+    .nav-links { display: none; }
+    .nav-lang { display: none; }
+    .section { padding: 48px 20px; }
+    .section-gray { padding: 48px 20px; }
+    .section-title { font-size: 16px; letter-spacing: 0.3em; }
+    .card-grid { grid-template-columns: 1fr; }
+    .article-preview h1 { font-size: 22px; letter-spacing: 0.3em; }
+    .article-preview h2 { font-size: 16px; letter-spacing: 0.3em; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="nav-brand" href="#">lorem</a>
+  <ul class="nav-links">
+    <li><a href="#colors">Colors</a></li>
+    <li><a href="#typography">Typography</a></li>
+    <li><a href="#product">Product</a></li>
+    <li><a href="#buttons">Buttons</a></li>
+    <li><a href="#cards">Cards</a></li>
+    <li><a href="#forms">Forms</a></li>
+    <li><a href="#elevation">Elevation</a></li>
+    <li><a href="#layout">Layout</a></li>
+  </ul>
+  <div>
+    <a class="nav-cta" href="#">lorem ipsum dolor sit</a>
+    <a class="nav-lang" href="#">EN</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <h1>lorem</h1>
+  <span class="hero-sub">10TH ANNIVERSARY</span>
+  <p>DESIGN.md lorem ipsum dolor sit amet consectetur adipiscing. lorem, lorem ipsum, lorem ipsum dolor, lorem ipsum dolor sit amet consectetur. computed style lorem ipsum dolor.</p>
+  <div class="hero-buttons">
+    <a class="btn-gold" href="#">lorem ipsum dolor sit</a>
+    <a class="btn-dark" href="#">lorem ipsum dolor / lorem</a>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- COLORS -->
+<section class="section" id="colors">
+  <div class="section-label">01 / Colors</div>
+  <h2 class="section-title">lorem ipsum dolor</h2>
+
+  <div class="color-group-label">Brand</div>
+  <div class="color-grid">
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#b48c0f"></div><div class="color-swatch-info"><div class="color-swatch-name">Nousaku Gold</div><div class="color-swatch-hex">#b48c0f</div><div class="color-swatch-role">CTA / lorem / lorem ipsum dolor sit</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#000000"></div><div class="color-swatch-info"><div class="color-swatch-name">Pure Black</div><div class="color-swatch-hex">#000000</div><div class="color-swatch-role">lorem ipsum / lorem ipsum / lorem CTA</div></div></div>
+  </div>
+
+  <div class="color-group-label">Neutral</div>
+  <div class="color-grid">
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#ffffff; border-bottom:1px solid #e6e6e6"></div><div class="color-swatch-info"><div class="color-swatch-name">Background</div><div class="color-swatch-hex">#ffffff</div><div class="color-swatch-role">lorem ipsum</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#f0f0f0"></div><div class="color-swatch-info"><div class="color-swatch-name">Section Gray</div><div class="color-swatch-hex">#f0f0f0</div><div class="color-swatch-role">lorem ipsum dolor</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#e6e6e6"></div><div class="color-swatch-info"><div class="color-swatch-name">Light Gray</div><div class="color-swatch-hex">#e6e6e6</div><div class="color-swatch-role">lorem ipsum / lorem ipsum</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#888888"></div><div class="color-swatch-info"><div class="color-swatch-name">Badge Gray</div><div class="color-swatch-hex">#888888</div><div class="color-swatch-role">lorem“lorem ipsum”</div></div></div>
+  </div>
+
+  <div class="color-group-label">Sub-brand</div>
+  <div class="color-grid">
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#c2d5db"></div><div class="color-swatch-info"><div class="color-swatch-name">NS Blue Gray</div><div class="color-swatch-hex">#c2d5db</div><div class="color-swatch-role">NS by NOUSAKU lorem</div></div></div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- TYPOGRAPHY -->
+<section class="section" id="typography">
+  <div class="section-label">02 / Typography</div>
+  <h2 class="section-title">lorem ipsum dolor sit</h2>
+
+  <div class="type-sample">
+    <div style="font-family:var(--font-mincho); font-size:30px; font-weight:500; line-height:1.15; letter-spacing:0.5em;">lorem</div>
+    <div class="type-meta">Shippori Mincho / 30px / 500 / line-height: 1.15 / letter-spacing: 0.5em<span class="type-context">Hero Display</span></div>
+  </div>
+  <div class="type-sample">
+    <div style="font-family:var(--font-mincho); font-size:20px; font-weight:500; line-height:1.0; letter-spacing:0.4em;">lorem ipsum</div>
+    <div class="type-meta">Shippori Mincho / 20px / 500 / line-height: 1.0 / letter-spacing: 0.4em<span class="type-context">H2 Section</span></div>
+  </div>
+  <div class="type-sample">
+    <div style="font-family:var(--font-mincho); font-size:20px; font-weight:200; line-height:1.75; letter-spacing:0.25em;">lorem ipsum 10 lorem ipsum dolor</div>
+    <div class="type-meta">Shippori Mincho / 20px / 200 / line-height: 1.75 / letter-spacing: 0.25em<span class="type-context">H3 Copy</span></div>
+  </div>
+  <div class="type-sample">
+    <div style="font-family:var(--font-mincho); font-size:15px; font-weight:200; line-height:2.0; letter-spacing:0.2em;">lorem ipsum dolor</div>
+    <div class="type-meta">Shippori Mincho / 15px / 200 / line-height: 2.0 / letter-spacing: 0.2em<span class="type-context">Span Nav Mincho</span></div>
+  </div>
+  <div class="type-sample">
+    <div style="font-family:var(--font-mincho); font-size:14px; font-weight:200; line-height:2.0; letter-spacing:0.2em;">lorem 25 lorem 50 lorem ipsum dolor sit amet, lorem ipsum dolor, lorem 10 lorem ipsum dolor sit amet consectetur. lorem ipsum dolor sit, lorem ipsum dolor sit amet consectetur.</div>
+    <div class="type-meta">Shippori Mincho / 14px / 200 / line-height: 2.0 / letter-spacing: 0.2em<span class="type-context">P Body Mincho</span></div>
+  </div>
+  <div class="type-sample">
+    <div style="font-family:var(--font-gothic); font-size:14px; font-weight:200; line-height:2.0; letter-spacing:normal;">lorem ipsum dolor sit amet consectetur, lorem ipsum dolor sit amet consectetur adipiscing. lorem ipsum dolor sit amet consectetur.</div>
+    <div class="type-meta">Noto Sans JP / 14px / 200 / line-height: 2.0 / letter-spacing: normal<span class="type-context">P Body Gothic</span></div>
+  </div>
+  <div class="type-sample">
+    <div style="font-family:var(--font-gothic); font-size:11px; font-weight:200; line-height:1.75; letter-spacing:0.24em;">lorem(lorem)lorem ipsum dolor</div>
+    <div class="type-meta">Noto Sans JP / 11px / 200 / line-height: 1.75 / letter-spacing: 0.24em<span class="type-context">Span Caption</span></div>
+  </div>
+  <div class="type-sample">
+    <div style="font-family:var(--font-gothic); font-size:11px; font-weight:200; line-height:1.5; letter-spacing:0.2em;">2026.04.28</div>
+    <div class="type-meta">Noto Sans JP / 11px / 200 / line-height: 1.5 / letter-spacing: 0.2em<span class="type-context">Span Date</span></div>
+  </div>
+  <div class="type-sample">
+    <div style="font-family:var(--font-mincho); font-size:10px; font-weight:500; line-height:1.15; letter-spacing:0.4em;">10TH ANNIVERSARY</div>
+    <div class="type-meta">Shippori Mincho / 10px / 500 / line-height: 1.15 / letter-spacing: 0.4em<span class="type-context">Span Anniversary</span></div>
+  </div>
+  <div class="type-sample">
+    <div style="font-family:var(--font-mincho); font-size:10px; font-weight:400; line-height:1.0; letter-spacing:normal;">JP&ensp;|&ensp;EN&ensp;|&ensp;TW</div>
+    <div class="type-meta">Shippori Mincho / 10px / 400 / line-height: 1.0 / letter-spacing: normal<span class="type-context">A Lang Switcher</span></div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- PRODUCT PREVIEW -->
+<section class="section-gray" id="product">
+<div class="section-inner">
+  <div class="section-label">03 / Product</div>
+  <h2 class="section-title">lorem ipsum dolor sit amet</h2>
+  <div class="article-preview">
+    <div class="product-image">lorem ipsum dolor</div>
+    <div class="product-name">KAGO lorem ipsum</div>
+    <div class="product-price">¥12,100(lorem)</div>
+    <h2>lorem ipsum dolor</h2>
+    <p>lorem ipsum dolor sit amet, 1916 lorem ipsum dolor, lorem ipsum dolor sit amet consectetur. lorem 100%lorem ipsum dolor, lorem ipsum dolor sit amet consectetur.</p>
+    <h3>lorem ipsum dolor, lorem ipsum dolor.</h3>
+    <p>lorem ipsum, lorem ipsum dolor. lorem ipsum dolor sit, lorem ipsum dolor sit. lorem ipsum dolor sit amet consectetur.</p>
+    <p class="gothic">lorem ipsum dolor sit amet consectetur, lorem ipsum dolor sit amet consectetur. lorem ipsum dolor sit amet consectetur adipiscing. ABCabc 123</p>
+  </div>
+</div>
+</section>
+
+<hr class="section-divider">
+
+<!-- BUTTONS -->
+<section class="section" id="buttons">
+  <div class="section-label">04 / Buttons</div>
+  <h2 class="section-title">lorem ipsum dolor sit</h2>
+  <div class="button-row" style="margin-bottom:32px;">
+    <div class="button-item"><a class="btn-gold" href="#">lorem ipsum dolor sit</a><div class="button-label">Primary Gold CTA</div></div>
+    <div class="button-item"><a class="btn-gold-sm" href="#">lorem ipsum</a><div class="button-label">Gold Small</div></div>
+    <div class="button-item"><a class="btn-dark" href="#">lorem ipsum dolor / lorem</a><div class="button-label">Dark CTA</div></div>
+  </div>
+  <div class="button-row" style="margin-bottom:32px;">
+    <div class="button-item"><a class="btn-pill" href="#">lorem ipsum</a><div class="button-label">Nav Pill (30px)</div></div>
+    <div class="button-item"><a class="btn-outline" href="#">ENGLISH</a><div class="button-label">Outline</div></div>
+  </div>
+  <div class="button-row">
+    <div class="button-item"><span class="badge badge-black">lorem ipsum</span><div class="button-label">Badge Black</div></div>
+    <div class="button-item"><span class="badge badge-gray">lorem ipsum</span><div class="button-label">Badge Gray</div></div>
+    <div class="button-item"><span class="badge badge-ns">NS by NOUSAKU</span><div class="button-label">Badge NS</div></div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- CARDS -->
+<section class="section" id="cards">
+  <div class="section-label">05 / Cards</div>
+  <h2 class="section-title">lorem ipsum dolor sit</h2>
+  <div class="card-grid">
+    <div class="card">
+      <h3>lorem ipsum / lorem ipsum</h3>
+      <p>lorem ipsum dolor sit, 400 lorem ipsum dolor sit amet consectetur adipiscing.</p>
+      <a class="card-link" href="#">lorem ipsum &rarr;</a>
+    </div>
+    <div class="card">
+      <h3>lorem ipsum dolor sit amet</h3>
+      <p>lorem ipsum dolor sit amet consectetur adipiscing. lorem ipsum dolor sit amet consectetur.</p>
+      <a class="card-link" href="#">lorem ipsum &rarr;</a>
+    </div>
+    <div class="card">
+      <h3>lorem ipsum dolor</h3>
+      <p>lorem ipsum dolor sit amet consectetur. lorem ipsum dolor sit amet consectetur.</p>
+      <a class="card-link" href="#">lorem ipsum &rarr;</a>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- FORMS -->
+<section class="section" id="forms">
+  <div class="section-label">06 / Forms</div>
+  <h2 class="section-title">lorem ipsum dolor</h2>
+  <div class="form-group"><label class="form-label">lorem ipsum dolor</label><input class="form-input" type="text" placeholder="name@example.com"><div class="form-state-label">lorem ipsum — border: 1px solid #000, radius: 0</div></div>
+  <div class="form-group"><label class="form-label">lorem</label><input class="form-input form-input--focus" type="text" value="能作 太郎"><div class="form-state-label">lorem ipsum — border: #b48c0f (Gold)</div></div>
+  <div class="form-group"><label class="form-label">lorem ipsum</label><input class="form-input form-input--error" type="text" value="invalid"><div class="form-state-label">lorem — border: #cf2e2e</div></div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ELEVATION -->
+<section class="section" id="elevation">
+  <div class="section-label">07 / Elevation</div>
+  <h2 class="section-title">Depth & Elevation</h2>
+  <div class="elevation-grid">
+    <div class="elevation-card" style="background:var(--white); border:1px solid var(--border-default);"><div class="elevation-label">Level 0: White</div><div class="elevation-desc">#ffffff — lorem ipsum dolor</div></div>
+    <div class="elevation-card" style="background:var(--bg-section);"><div class="elevation-label">Level 1: Section</div><div class="elevation-desc">#f0f0f0 — lorem ipsum dolor</div></div>
+    <div class="elevation-card" style="background:var(--bg-banner);"><div class="elevation-label">Level 2: Banner</div><div class="elevation-desc">#e6e6e6 — lorem / lorem</div></div>
+    <div class="elevation-card" style="background:var(--black); color:var(--white);"><div class="elevation-label" style="color:var(--white);">Level 3: Dark</div><div class="elevation-desc" style="color:var(--badge-gray);">#000000 — lorem ipsum / lorem CTA</div></div>
+  </div>
+  <p style="font-size:11px; font-weight:200; color:var(--badge-gray); margin-top:16px; letter-spacing:0.1em;">lorem. lorem ipsum dolor sit amet consectetur. lorem ipsum pill(30px)lorem.</p>
+</section>
+
+<hr class="section-divider">
+
+<!-- LAYOUT -->
+<section class="section" id="layout">
+  <div class="section-label">08 / Layout</div>
+  <h2 class="section-title">lorem ipsum</h2>
+  <div style="margin-bottom:24px">
+    <div class="width-bar-label">Main Content <span class="width-bar-value">1200px (lorem)</span></div>
+    <div class="width-bar"><div class="width-bar-inner" style="width:100%"></div></div>
+  </div>
+  <div style="margin-bottom:24px">
+    <div class="width-bar-label">Article / Product <span class="width-bar-value">620px (lorem)</span></div>
+    <div class="width-bar"><div class="width-bar-inner" style="width:51.7%"></div></div>
+  </div>
+
+  <div style="margin-top:40px;">
+    <div class="color-group-label">Spacing Scale</div>
+    <div class="spacing-row">
+      <div class="spacing-item"><div class="spacing-block" style="width:10px"></div><div class="spacing-value">10px</div></div>
+      <div class="spacing-item"><div class="spacing-block" style="width:20px"></div><div class="spacing-value">20px</div></div>
+      <div class="spacing-item"><div class="spacing-block" style="width:35px"></div><div class="spacing-value">35px</div></div>
+      <div class="spacing-item"><div class="spacing-block" style="width:64px"></div><div class="spacing-value">64px</div></div>
+      <div class="spacing-item"><div class="spacing-block" style="width:96px"></div><div class="spacing-value">96px</div></div>
+      <div class="spacing-item"><div class="spacing-block" style="width:128px"></div><div class="spacing-value">128px</div></div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-links">lorem ipsum　|　SDGs lorem ipsum dolor　|　lorem ipsum</div>
+  <div class="footer-copy">Generated from <a href="https://www.nousaku.co.jp/">nousaku.co.jp</a> DESIGN.md — awesome-design-md-jp / computed style lorem(2026-05-08)</div>
+  <div class="footer-copy" style="margin-top:8px;">Copyright &copy; NOUSAKU. All Rights Reserved.</div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design System Preview: lorem 21 lorem ipsum (21st Century Museum of Contemporary Art, Kanazawa)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* === Colors: 金沢21世紀美術館 実測値 === */
+    --bg:            #ffffff;  /* body 実測。純白 */
+    --surface-tint:  #f9f9f9;  /* .panel__img 画像枠 */
+    --surface-sunken:#f6f6f6;  /* .footer / スライダー下地 */
+    --overlay:       rgba(255,255,255,0.9); /* トースト・モーダル */
+
+    /* ブランド（サイト唯一の彩色） */
+    --brand:         #f1832c;  /* rgb(241,131,44) */
+
+    /* テキスト */
+    --text:          #323232;  /* rgb(50,50,50) 本文・見出し */
+    --text-base:     #000000;  /* body 継承色 */
+    --text-on-dark:  #ffffff;
+    --muted:         #969696;  /* rgb(150,150,150) 非強調ステータス */
+
+    /* 罫 */
+    --border:        #a9a9a9;  /* rgb(169,169,169) .warrow-btn */
+    --border-light:  #e8e8e8;  /* ページネーション */
+
+    /* === Fonts ===
+       実スタック: 游ゴシック体（OS フォント。Google Fonts に無し）
+       → 末尾に Zen Kaku Gothic New を追加してクロスプラットフォーム代替 */
+    --font-jp: 游ゴシック体, YuGothic, 游ゴシック, "Yu Gothic", YuGothic,
+               "Hiragino Kaku Gothic ProN", Meiryo, "Zen Kaku Gothic New", sans-serif;
+    --font-en: Roboto, sans-serif;
+
+    /* === Metrics === */
+    --lh:        1.63;   /* サイト全体の既定行間 */
+    --lh-read:   2.0;    /* 読ませる段落 */
+    --lh-head:   1.2;    /* セクション見出し */
+    --radius-pill: 900px;
+    --radius-dot:  50%;
+    --radius-flat: 0px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-jp);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: var(--lh);
+    letter-spacing: normal;
+    font-feature-settings: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 40px; }
+
+  /* Header */
+  header.site {
+    display: flex; align-items: stretch; justify-content: space-between;
+    padding: 0 0 0 40px; background: var(--bg); border-bottom: 1px solid var(--border-light);
+  }
+  header.site .brandmark { display: flex; align-items: center; gap: 12px; padding: 18px 0; }
+  header.site .brandmark .num {
+    font-family: var(--font-en); font-size: 34px; font-weight: 400;
+    color: var(--brand); line-height: 1; letter-spacing: -0.02em;
+  }
+  header.site .brandmark .circle {
+    width: 34px; height: 34px; border-radius: var(--radius-dot);
+    border: 2px solid var(--brand);
+  }
+  header.site nav { display: flex; gap: 26px; align-items: center; margin-left: auto; padding: 0 28px; }
+  header.site nav a {
+    font-family: var(--font-jp); color: var(--text); text-decoration: none;
+    font-size: 14px; font-weight: 700; line-height: 1.0; letter-spacing: normal;
+  }
+  header.site nav a:hover { color: var(--brand); }
+  header.site .lang {
+    font-family: var(--font-jp); font-size: 14px; font-weight: 500; line-height: 1.0;
+    color: var(--brand); background: var(--bg); padding: 13px 15px;
+    font-feature-settings: "palt";
+  }
+  header.site .cta-stack { display: flex; flex-direction: column; width: 268px; flex: none; }
+
+  /* CTA 帯（radius 0） */
+  .cta-band {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 20px; height: 48px; border: none; cursor: pointer;
+    font-family: var(--font-jp); font-size: 14px; font-weight: 700;
+    line-height: var(--lh); letter-spacing: normal; border-radius: var(--radius-flat);
+    text-align: left; width: 100%;
+  }
+  .cta-band .chev { font-family: var(--font-en); font-size: 14px; }
+  .cta-primary { background: var(--brand); color: var(--text-on-dark); }
+  .cta-primary:hover { opacity: 0.88; }
+  .cta-secondary { background: var(--bg); color: var(--brand); }
+  .cta-secondary:hover { background: var(--surface-tint); }
+
+  /* Sections */
+  .section { padding: 56px 0; border-bottom: 1px solid var(--border-light); }
+  .section-label {
+    font-family: var(--font-jp); font-size: 13px; font-weight: 400; line-height: 1.6;
+    letter-spacing: 0.02em; color: var(--muted); margin-bottom: 20px;
+  }
+  h2.sec {
+    font-family: var(--font-jp); font-size: 26px; font-weight: 700;
+    line-height: var(--lh-head); letter-spacing: normal; color: var(--text);
+    margin-bottom: 26px;
+  }
+
+  /* Colors */
+  .swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(168px,1fr)); gap: 16px; }
+  .swatch { border: 1px solid var(--border-light); border-radius: var(--radius-flat); overflow: hidden; background: var(--bg); }
+  .swatch .chip { height: 84px; }
+  .swatch .meta { padding: 10px 12px 12px; }
+  .swatch .meta .name { font-family: var(--font-jp); font-size: 13px; font-weight: 700; line-height: 1.6; color: var(--text); }
+  .swatch .meta .hex { font-family: var(--font-en); font-size: 11px; color: var(--muted); line-height: 1.6; }
+
+  /* Typography */
+  .type-row { display: flex; align-items: baseline; gap: 24px; padding: 14px 0; border-bottom: 1px solid var(--border-light); }
+  .type-row .tag {
+    font-family: var(--font-en); width: 210px; flex: none;
+    font-size: 11px; letter-spacing: 0.02em; color: var(--muted); line-height: 1.5;
+  }
+  .t-hero   { font-family: var(--font-jp); font-size: 25px; font-weight: 700; line-height: var(--lh); }
+  .t-herosub{ font-family: var(--font-jp); font-size: 25px; font-weight: 400; line-height: var(--lh); color: var(--muted); }
+  .t-sec    { font-family: var(--font-jp); font-size: 26px; font-weight: 700; line-height: var(--lh-head); }
+  .t-panel  { font-family: var(--font-jp); font-size: 17px; font-weight: 700; line-height: var(--lh); }
+  .t-widget { font-family: var(--font-jp); font-size: 15px; font-weight: 700; line-height: var(--lh); }
+  .t-body   { font-family: var(--font-jp); font-size: 16px; font-weight: 400; line-height: var(--lh); }
+  .t-read   { font-family: var(--font-jp); font-size: 16px; font-weight: 700; line-height: var(--lh-read); }
+  .t-nav    { font-family: var(--font-jp); font-size: 14px; font-weight: 700; line-height: 1.0; }
+  .t-notice { font-family: var(--font-jp); font-size: 14px; font-weight: 700; line-height: var(--lh); color: var(--brand); }
+  .t-small  { font-family: var(--font-jp); font-size: 13px; font-weight: 400; line-height: 1.6; letter-spacing: 0.02em; color: var(--text); }
+  .t-copy   { font-family: var(--font-en); font-size: 10px; font-weight: 400; line-height: 1.6; color: var(--brand); font-feature-settings: "palt"; }
+
+  /* Article / Exhibition prose */
+  .prose { max-width: 720px; }
+  .prose .kicker { font-family: var(--font-jp); font-size: 14px; font-weight: 700; line-height: var(--lh); color: var(--brand); margin-bottom: 8px; }
+  .prose h3 { font-family: var(--font-jp); font-size: 26px; font-weight: 700; line-height: var(--lh-head); color: var(--text); margin-bottom: 8px; }
+  .prose .date { font-family: var(--font-jp); font-size: 16px; font-weight: 400; line-height: var(--lh); color: var(--text); margin-bottom: 20px; }
+  .prose p { font-family: var(--font-jp); font-size: 16px; font-weight: 400; line-height: var(--lh); margin-bottom: 18px; color: var(--text); }
+  .prose p.lead { font-weight: 700; line-height: var(--lh-read); }
+  .prose h4 { font-family: var(--font-jp); font-size: 16px; font-weight: 700; line-height: var(--lh); color: var(--text); margin: 26px 0 8px; }
+  .prose .note { font-family: var(--font-jp); font-size: 13px; font-weight: 400; line-height: 1.6; letter-spacing: 0.02em; color: var(--muted); }
+
+  /* Pill labels（radius 900px） */
+  .label {
+    display: inline-block; font-family: var(--font-jp);
+    font-size: 13px; font-weight: 700; line-height: 1.0; letter-spacing: normal;
+    padding: 5px 11px 4px; border-radius: var(--radius-pill);
+  }
+  .label-important { background: var(--brand);  color: var(--text-on-dark); border: 1px solid var(--brand); }
+  .label-primary   { background: var(--bg);     color: var(--brand);        border: 1px solid var(--brand); }
+  .label-secondary { background: var(--muted);  color: var(--text-on-dark); border: 1px solid var(--muted); }
+  .label-default   { background: var(--bg);     color: var(--muted);        border: 1px solid var(--muted); }
+  .label-list { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+
+  /* Ghost pill button（.warrow-btn） */
+  .warrow-btn {
+    position: relative; display: inline-block; cursor: pointer;
+    background: var(--bg); color: var(--text);
+    border: 1px solid var(--border); border-radius: var(--radius-pill);
+    padding: 10px 55px 8px 33px;
+    font-family: var(--font-jp); font-size: 14px; font-weight: 700;
+    line-height: 1.5; letter-spacing: normal; text-decoration: none;
+  }
+  .warrow-btn::after {
+    content: "›"; position: absolute; right: 26px; top: 50%;
+    transform: translateY(-52%); font-family: var(--font-en); font-size: 18px; color: var(--text);
+  }
+  .warrow-btn:hover { border-color: var(--brand); color: var(--brand); }
+  .warrow-btn:hover::after { color: var(--brand); }
+  .btns { display: flex; gap: 18px; flex-wrap: wrap; align-items: center; }
+
+  /* Pagination dots（radius 50%） */
+  .dots { display: flex; gap: 10px; align-items: center; }
+  .dot { width: 12px; height: 12px; border-radius: var(--radius-dot); background: var(--bg); border: 1px solid var(--border-light); }
+  .dot.active { background: var(--brand); }
+
+  /* Cards（panel） */
+  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(238px,1fr)); gap: 30px; }
+  .card { background: var(--bg); border: none; border-radius: var(--radius-flat); }
+  .card .ph { height: 168px; background: var(--surface-tint); display: flex; align-items: center; justify-content: center; }
+  .card .ph span { font-family: var(--font-en); font-size: 11px; color: var(--muted); letter-spacing: 0.06em; }
+  .card .body { padding: 14px 0 0; }
+  .card .body .tagrow { margin-bottom: 10px; display: flex; gap: 8px; flex-wrap: wrap; }
+  .card .body .date { font-family: var(--font-jp); font-size: 16px; font-weight: 400; line-height: var(--lh); color: var(--text); }
+  .card .body .title { font-family: var(--font-jp); font-size: 17px; font-weight: 700; line-height: var(--lh); color: var(--text); margin-top: 2px; }
+
+  /* Forms */
+  .field { margin-bottom: 20px; max-width: 440px; }
+  .field label { display: block; font-family: var(--font-jp); font-size: 14px; font-weight: 700; line-height: var(--lh); color: var(--text); margin-bottom: 6px; }
+  .field input {
+    width: 100%; font-family: var(--font-jp); font-size: 16px; font-weight: 400;
+    line-height: var(--lh); padding: 10px 14px;
+    border: 1px solid var(--border); border-radius: var(--radius-flat);
+    background: var(--bg); color: var(--text);
+  }
+  .field input::placeholder { color: var(--muted); }
+  .field input:focus { outline: none; border-color: var(--brand); }
+  .field .state { font-family: var(--font-en); font-size: 11px; color: var(--muted); margin-top: 5px; letter-spacing: 0.04em; }
+  .field.focused input { border-color: var(--brand); }
+  .field.err input { border-color: #d0021b; }
+  .field.err .msg { font-family: var(--font-jp); font-size: 13px; line-height: 1.6; letter-spacing: 0.02em; color: #d0021b; margin-top: 6px; }
+
+  /* Elevation */
+  .elevs { display: flex; gap: 28px; flex-wrap: wrap; }
+  .elev {
+    width: 200px; height: 108px; background: var(--bg);
+    border: 1px solid var(--border-light); border-radius: var(--radius-flat);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-jp); font-size: 13px; color: var(--muted); line-height: 1.6;
+  }
+  .elev.e1 { box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  .elev.e2 { box-shadow: 0 4px 16px rgba(0,0,0,0.10); }
+
+  /* Overlay demo */
+  .overlay-demo { margin-top: 26px; background: var(--surface-tint); padding: 30px; }
+  .toast {
+    background: var(--overlay); border-radius: var(--radius-flat); max-width: 520px;
+    padding: 26px 30px; border-left: 4px solid var(--brand); position: relative;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+  }
+  .toast .close { position: absolute; top: 16px; right: 20px; color: var(--brand); font-size: 20px; font-family: var(--font-en); }
+  .toast h4 { font-family: var(--font-jp); font-size: 16px; font-weight: 700; line-height: var(--lh); letter-spacing: 0.02em; color: var(--text); margin-bottom: 10px; }
+  .toast p { font-family: var(--font-jp); font-size: 13px; font-weight: 400; line-height: 1.6; letter-spacing: 0.02em; color: var(--text); }
+
+  /* Layout */
+  .layout-demo { display: grid; grid-template-columns: repeat(12, 1fr); gap: 24px; }
+  .layout-demo .col {
+    background: var(--surface-tint); grid-column: span 3; height: 76px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-en); font-size: 12px; color: var(--muted); border-radius: var(--radius-flat);
+  }
+  .scale { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 26px; align-items: flex-end; }
+  .scale .s { text-align: center; }
+  .scale .s .bar { background: var(--brand); height: 14px; border-radius: var(--radius-flat); }
+  .scale .s .cap { font-family: var(--font-en); font-size: 11px; color: var(--muted); margin-top: 6px; }
+
+  footer.site {
+    background: var(--surface-sunken); padding: 42px 40px 30px; text-align: center;
+  }
+  footer.site .fnav { font-family: var(--font-jp); font-size: 14px; font-weight: 700; line-height: var(--lh); color: var(--text); margin-bottom: 14px; }
+  footer.site .copy { font-family: var(--font-en); font-size: 10px; font-weight: 400; line-height: 1.6; color: var(--brand); font-feature-settings: "palt"; }
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="brandmark">
+    <span class="num">21</span><span class="circle"></span>
+  </div>
+  <nav>
+    <a href="#">lorem</a><a href="#">lorem ipsum</a><a href="#">lorem ipsum dolor</a>
+    <a href="#">lorem ipsum</a><a href="#">lorem ipsum dolor</a><a href="#">lorem ipsum dolor</a>
+    <span class="lang">Language</span>
+  </nav>
+  <div class="cta-stack">
+    <button class="cta-band cta-primary">lorem ipsum dolor sit<span class="chev">›</span></button>
+    <button class="cta-band cta-secondary">lorem ipsum / lorem ipsum dolor<span class="chev">›</span></button>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <section class="section">
+    <div class="section-label">01 — Colors(lorem ipsum dolor sit amet 1 lorem)</div>
+    <h2 class="sec">lorem ipsum dolor</h2>
+    <div class="swatches">
+      <div class="swatch"><div class="chip" style="background:#ffffff;border-bottom:1px solid var(--border-light)"></div><div class="meta"><div class="name">Background lorem</div><div class="hex">#ffffff</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#f1832c"></div><div class="meta"><div class="name">Brand Orange</div><div class="hex">#f1832c</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#323232"></div><div class="meta"><div class="name">Text Primary lorem</div><div class="hex">#323232</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#969696"></div><div class="meta"><div class="name">Muted / lorem ipsum</div><div class="hex">#969696</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#a9a9a9"></div><div class="meta"><div class="name">Border(lorem ipsum)</div><div class="hex">#a9a9a9</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#e8e8e8"></div><div class="meta"><div class="name">Border Light</div><div class="hex">#e8e8e8</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#f9f9f9;border-bottom:1px solid var(--border-light)"></div><div class="meta"><div class="name">Surface Tint lorem</div><div class="hex">#f9f9f9</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#f6f6f6;border-bottom:1px solid var(--border-light)"></div><div class="meta"><div class="name">Surface Sunken lorem ipsum</div><div class="hex">#f6f6f6</div></div></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-label">02 — Typography(lorem 1.63 lorem ipsum dolor / lorem normal / palt off)</div>
+    <h2 class="sec">lorem ipsum dolor</h2>
+    <div class="type-row"><div class="tag">Hero Title 25 / 700 / 1.63</div><div class="t-hero">lorem ipsum 21 lorem ipsum lorem ipsum</div></div>
+    <div class="type-row"><div class="tag">Hero Subtitle 25 / 400 / 1.63</div><div class="t-herosub">2026.04.04 - 2026.08.23</div></div>
+    <div class="type-row"><div class="tag">Section Title 26 / 700 / 1.2</div><div class="t-sec">lorem</div></div>
+    <div class="type-row"><div class="tag">Panel Title 17 / 700 / 1.63</div><div class="t-panel">lorem, lorem ipsum dolor?</div></div>
+    <div class="type-row"><div class="tag">Widget Title 15 / 700 / 1.63</div><div class="t-widget">lorem ipsum dolor</div></div>
+    <div class="type-row"><div class="tag">Body 16 / 400 / 1.63</div><div class="t-body">lorem ipsum dolor sit amet consectetur adipiscing, lorem ipsum dolor sit amet consectetur adipiscing.</div></div>
+    <div class="type-row"><div class="tag">Body Emphasis 16 / 700 / 2.0</div><div class="t-read">lorem 21 lorem ipsum dolor, “lorem ipsum dolor”lorem“lorem ipsum dolor sit amet”lorem ipsum dolor sit amet.</div></div>
+    <div class="type-row"><div class="tag">Nav Link 14 / 700 / 1.0</div><div class="t-nav">lorem ipsum dolor</div></div>
+    <div class="type-row"><div class="tag">Notice 14 / 700 / 1.63 / brand</div><div class="t-notice">lorem ipsum dolor:</div></div>
+    <div class="type-row"><div class="tag">Small 13 / 400 / 1.6 / 0.02em</div><div class="t-small">lorem ipsum dolor sit amet consectetur adipiscing. lorem ipsum dolor sit amet consectetur.</div></div>
+    <div class="type-row"><div class="tag">Copyright Roboto 10 / palt</div><div class="t-copy">Copyright © 2024 21st Century Museum of Contemporary Art, Kanazawa.</div></div>
+  </section>
+
+  <section class="section">
+    <div class="section-label">03 — Exhibition(lorem ipsum dolor sit)</div>
+    <h2 class="sec">lorem ipsum dolor</h2>
+    <div class="prose">
+      <div class="label-list" style="margin-bottom:14px">
+        <span class="label label-important">lorem</span>
+        <span class="label label-primary">lorem</span>
+        <span class="label label-primary">lorem</span>
+      </div>
+      <p class="kicker">lorem ipsum 21</p>
+      <h3>lorem, lorem ipsum dolor?</h3>
+      <div class="date">2026 lorem 4 lorem 25 lorem(lorem)–9 lorem 6 lorem(lorem)</div>
+      <p class="lead">lorem ipsum dolor sit amet consectetur adipiscing, lorem ipsum dolor sit amet consectetur. lorem ipsum dolor, lorem ipsum dolor sit amet, lorem ipsum dolor sit amet consectetur.</p>
+      <p>lorem 21 lorem ipsum dolor, “lorem ipsum dolor”lorem“lorem ipsum dolor sit amet”lorem ipsum dolor sit amet. lorem ipsum dolor sit amet consectetur, lorem, lorem ipsum dolor sit amet consectetur. lorem ipsum dolor sit amet consectetur, lorem ipsum dolor sit amet consectetur adipiscing.</p>
+      <h4>lorem ipsum dolor</h4>
+      <p>lorem ipsum dolor sit amet consectetur, lorem ipsum dolor sit amet consectetur, lorem ipsum dolor sit amet consectetur adipiscing elit. lorem ipsum dolor sit amet.</p>
+      <p class="note">※ lorem ipsum dolor sit amet consectetur adipiscing. lorem ipsum dolor“lorem ipsum dolor”lorem ipsum dolor.</p>
+      <div class="dots" style="margin-top:26px">
+        <span class="dot active"></span><span class="dot"></span><span class="dot"></span>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-label">04 — Buttons & Labels(lorem 900px / CTA lorem radius 0)</div>
+    <h2 class="sec">lorem ipsum dolor</h2>
+
+    <div class="label-list" style="margin-bottom:28px">
+      <span class="label label-important">lorem</span>
+      <span class="label label-secondary">lorem ipsum</span>
+      <span class="label label-primary">lorem</span>
+      <span class="label label-default">lorem</span>
+      <span class="label label-primary">lorem ipsum</span>
+      <span class="label label-primary">lorem</span>
+      <span class="label label-primary">lorem ipsum dolor</span>
+      <span class="label label-primary">lorem ipsum dolor</span>
+      <span class="label label-primary">lorem ipsum dolor sit</span>
+      <span class="label label-primary">lorem</span>
+    </div>
+
+    <div class="btns" style="margin-bottom:24px">
+      <a class="warrow-btn" href="#">lorem ipsum dolor</a>
+      <a class="warrow-btn" href="#">lorem ipsum dolor</a>
+      <a class="warrow-btn" href="#">lorem ipsum dolor sit</a>
+    </div>
+
+    <div style="display:flex;flex-direction:column;width:268px">
+      <button class="cta-band cta-primary">lorem ipsum dolor sit<span class="chev">›</span></button>
+      <button class="cta-band cta-secondary">lorem ipsum / lorem ipsum dolor<span class="chev">›</span></button>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-label">05 — Cards(lorem → lorem → lorem → lorem ipsum / radius 0 / lorem)</div>
+    <h2 class="sec">lorem</h2>
+    <div class="cards">
+      <div class="card">
+        <div class="ph"><span>EXHIBITION</span></div>
+        <div class="body">
+          <div class="tagrow"><span class="label label-important">lorem</span><span class="label label-primary">lorem</span></div>
+          <div class="date">2026 lorem 4 lorem 25 lorem(lorem)–9 lorem 6 lorem(lorem)</div>
+          <div class="title">lorem, lorem ipsum dolor?</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="ph"><span>EXHIBITION</span></div>
+        <div class="body">
+          <div class="tagrow"><span class="label label-secondary">lorem ipsum</span><span class="label label-primary">lorem</span></div>
+          <div class="date">2026 lorem 10 lorem 3 lorem(lorem)–2027 lorem 3 lorem 21 lorem(lorem)</div>
+          <div class="title">lorem ipsum 21 lorem ipsum lorem ipsum</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="ph"><span>EVENT</span></div>
+        <div class="body">
+          <div class="tagrow"><span class="label label-important">lorem</span><span class="label label-primary">lorem</span><span class="label label-default">lorem</span></div>
+          <div class="date">2026 lorem 7 lorem 26 lorem(lorem) 14:00–15:30</div>
+          <div class="title">lorem ipsum dolor sit“lorem ipsum dolor”</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="ph"><span>LEARNING</span></div>
+        <div class="body">
+          <div class="tagrow"><span class="label label-secondary">lorem ipsum</span><span class="label label-primary">lorem ipsum dolor</span></div>
+          <div class="date">2026 lorem 8 lorem 8 lorem(lorem) 10:00–12:00</div>
+          <div class="title">lorem ipsum dolor sit amet</div>
+        </div>
+      </div>
+    </div>
+    <div class="btns" style="margin-top:32px">
+      <a class="warrow-btn" href="#">lorem ipsum dolor</a>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-label">06 — Forms(lorem ipsum / lorem ipsum / lorem)</div>
+    <h2 class="sec">lorem ipsum</h2>
+    <div class="field">
+      <label>lorem</label>
+      <input type="text" placeholder="金沢 太郎">
+      <div class="state">DEFAULT — border 1px solid #a9a9a9</div>
+    </div>
+    <div class="field focused">
+      <label>lorem ipsum dolor</label>
+      <input type="email" value="taro@example.com">
+      <div class="state">FOCUS — border 1px solid #f1832c</div>
+    </div>
+    <div class="field err">
+      <label>lorem ipsum</label>
+      <input type="text" value="076-220">
+      <div class="msg">lorem ipsum dolor sit amet consectetur</div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-label">07 — Elevation(lorem ipsum dolor. lorem ipsum dolor sit amet consectetur)</div>
+    <h2 class="sec">lorem</h2>
+    <div class="elevs">
+      <div class="elev">Level 0 · lorem ipsum</div>
+      <div class="elev e1">Level 1 · lorem ipsum dolor</div>
+      <div class="elev e2">Level 2 · lorem ipsum</div>
+    </div>
+    <div class="overlay-demo">
+      <div class="toast">
+        <span class="close">×</span>
+        <h4>lorem　lorem 21 lorem ipsum dolor sit amet</h4>
+        <p>lorem 21 lorem ipsum dolor, lorem ipsum dolor sit, 2027 lorem 5 lorem 6 lorem 2028 lorem 3 lorem ipsum dolor sit amet consectetur. lorem ipsum dolor sit amet consectetur, lorem ipsum dolor, lorem ipsum, lorem ipsum dolor sit.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-label">08 — Layout(12 lorem / max-width 1280px)</div>
+    <h2 class="sec">lorem ipsum</h2>
+    <div class="layout-demo">
+      <div class="col">3</div><div class="col">3</div><div class="col">3</div><div class="col">3</div>
+    </div>
+    <div class="scale">
+      <div class="s"><div class="bar" style="width:5px"></div><div class="cap">XS 5</div></div>
+      <div class="s"><div class="bar" style="width:11px"></div><div class="cap">S 11</div></div>
+      <div class="s"><div class="bar" style="width:20px"></div><div class="cap">M 20</div></div>
+      <div class="s"><div class="bar" style="width:33px"></div><div class="cap">L 33</div></div>
+      <div class="s"><div class="bar" style="width:55px"></div><div class="cap">XL 55</div></div>
+      <div class="s"><div class="bar" style="width:80px"></div><div class="cap">XXL 80</div></div>
+    </div>
+  </section>
+
+</div>
+
+<footer class="site">
+  <div class="fnav">lorem　lorem ipsum　lorem ipsum dolor　lorem ipsum　lorem ipsum dolor　lorem ipsum dolor</div>
+  <div class="copy">Copyright © 2024 21st Century Museum of Contemporary Art, Kanazawa. — Design System Preview · lorem ipsum dolor: lorem ipsum dolor → Zen Kaku Gothic New</div>
+</footer>
+
+</body>
+</html>

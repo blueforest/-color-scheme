@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design System Preview: lorem ipsum(Nulab)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* === Colors: computed style 実測値 === */
+    --brand-purple: #7a6abf;
+    --deep-purple: #615499;
+    --purple-alt: #7e67c5;
+    --slate-purple: #74758b;
+    --slate-light: #75768b;
+    --slate-outline: #5d5e6f;
+    --navy: #27455c;
+    --mint-accent: #50e3c2;
+    --link-blue: #3860be;
+
+    /* Service Tints */
+    --tint-backlog: #edfaf6;
+    --tint-cacoo: #eef2fa;
+    --tint-pass: #f4f3ff;
+    --tint-flowbase: #effbff;
+    --tint-purple: #f3f0fa;
+
+    /* Neutral */
+    --bg: #ffffff;
+    --surface: #f5f5f7;
+    --surface-2: #f9f9f9;
+    --surface-3: #f2f2f2;
+    --ink: #17171c;
+    --ink-muted: #6a6a6a;
+    --ink-dark: #282828;
+    --border: #d1d1d1;
+
+    /* Semantic（サイト上に無いため実装目安） */
+    --danger: #c1392b;
+    --warning: #b8860b;
+    --success: #3b8f6d;
+
+    /* === Elevation 実測値（1 段のみ） === */
+    --elevation-1: 0 2px 4px rgba(28,28,28,0.2);
+
+    /* === Fonts 実測値 === */
+    --font-base: "Noto Sans JP", "hiragino sans", "Hiragino Kaku Gothic ProN", meiryo, helvetica, roboto, arial, sans-serif;
+    --font-mono: SFMono-Regular, Consolas, Menlo, Courier, monospace;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-base);
+    font-size: 16px; font-weight: 400; line-height: 1.5;
+    letter-spacing: normal;
+    word-wrap: break-word;
+    font-feature-settings: normal; /* palt は使わない */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* NAV */
+  .nav {
+    position: sticky; top: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 32px; height: 64px;
+    background: var(--bg);
+    border-bottom: 1px solid var(--surface-3);
+  }
+  .nav-brand { font-size: 20px; font-weight: 700; color: var(--ink); text-decoration: none; letter-spacing: 0.05em; }
+  .nav-brand span { color: var(--brand-purple); }
+  .nav-links { display: flex; gap: 24px; list-style: none; }
+  .nav-links a { font-size: 16px; font-weight: 400; line-height: 1; color: var(--ink); text-decoration: none; transition: color .15s; }
+  .nav-links a:hover { color: var(--brand-purple); }
+  .nav-cta {
+    display: inline-block; background: var(--brand-purple); color: #fff;
+    padding: 8px 30px; border-radius: 4px; border: 2px solid transparent;
+    font-size: 16px; font-weight: 700; line-height: 1.4; text-decoration: none;
+    transition: opacity .15s;
+  }
+  .nav-cta:hover { opacity: .85; }
+
+  /* HERO — ネイビー 1 面（唯一の暗い大面積） */
+  .hero { padding: 96px 32px; text-align: center; background: var(--navy); }
+  .hero h1 {
+    font-size: 40px; font-weight: 700; line-height: 1.4;
+    letter-spacing: normal; color: #fff; margin-bottom: 24px;
+  }
+  .hero p {
+    font-size: 16px; font-weight: 400; line-height: 1.5;
+    color: #fff; max-width: 680px; margin: 0 auto 32px;
+  }
+  .hero-buttons { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+
+  /* BUTTONS（共通） */
+  .btn-service {
+    display: inline-block; background: var(--slate-purple); color: #fff;
+    padding: 8px 14px 8px 38px; border-radius: 4px; border: 2px solid transparent;
+    font-family: var(--font-base); font-size: 16px; font-weight: 700; line-height: 1.4;
+    text-decoration: none; cursor: pointer; position: relative; transition: opacity .15s;
+  }
+  .btn-service::before {
+    content: "●"; position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+    font-size: 12px; opacity: .8;
+  }
+  .btn-service:hover { opacity: .85; }
+  .btn-brand {
+    display: inline-block; background: var(--brand-purple); color: #fff;
+    padding: 12px 30px; border-radius: 4px; border: 1px solid var(--brand-purple);
+    font-family: var(--font-base); font-size: 16px; font-weight: 700; line-height: 1.4;
+    text-decoration: none; cursor: pointer; transition: opacity .15s;
+  }
+  .btn-brand:hover { opacity: .85; }
+  .btn-outline {
+    display: inline-block; background: #fff; color: var(--slate-outline);
+    padding: 14px 14px 14px 38px; border-radius: 4px; border: 2px solid var(--slate-outline);
+    font-family: var(--font-base); font-size: 16px; font-weight: 700; line-height: 1.54;
+    text-decoration: none; cursor: pointer; position: relative; transition: background .15s;
+  }
+  .btn-outline::before {
+    content: "●"; position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+    font-size: 12px; opacity: .6;
+  }
+  .btn-outline:hover { background: var(--tint-purple); }
+  .btn-outline-purple {
+    display: inline-block; background: #fff; color: var(--brand-purple);
+    padding: 12px 30px; border-radius: 4px; border: 2px solid var(--brand-purple);
+    font-family: var(--font-base); font-size: 16px; font-weight: 700; line-height: 1.4;
+    text-decoration: none; cursor: pointer;
+  }
+  .btn-text {
+    display: inline-block; background: #fff; color: var(--brand-purple);
+    padding: 8px 0; border: none;
+    font-family: var(--font-base); font-size: 14px; font-weight: 600;
+    cursor: pointer; text-decoration: none;
+  }
+
+  /* SECTIONS */
+  .section { padding: 72px 32px; max-width: 1200px; margin: 0 auto; }
+  .section-label { font-size: 14px; font-weight: 700; color: var(--brand-purple); margin-bottom: 8px; letter-spacing: 0.05em; }
+  .section-title { font-size: 24px; font-weight: 700; line-height: 1.5; margin-bottom: 32px; color: var(--ink); }
+  .section-divider { border: none; border-top: 1px solid var(--surface-3); margin: 0; }
+  .section-tint { background: var(--tint-purple); padding: 72px 32px; }
+  .section-tint .section-inner { max-width: 1200px; margin: 0 auto; }
+
+  /* COLORS */
+  .color-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 12px; margin-bottom: 24px; }
+  .color-swatch { border-radius: 4px; overflow: hidden; background: #fff; border: 1px solid var(--surface-3); }
+  .color-swatch-block { height: 72px; width: 100%; }
+  .color-swatch-info { padding: 10px 12px; }
+  .color-swatch-name { font-size: 13px; font-weight: 700; margin-bottom: 2px; color: var(--ink); }
+  .color-swatch-hex { font-size: 12px; color: var(--ink-muted); font-family: var(--font-mono); }
+  .color-swatch-role { font-size: 11px; color: var(--ink-muted); margin-top: 3px; line-height: 1.5; }
+  .color-group-label { font-size: 16px; font-weight: 700; color: var(--ink); margin: 24px 0 10px; }
+
+  /* TYPOGRAPHY */
+  .type-sample { margin-bottom: 28px; padding-bottom: 24px; border-bottom: 1px solid var(--surface-3); }
+  .type-sample:last-child { border-bottom: none; }
+  .type-meta { font-family: var(--font-mono); font-size: 12px; color: var(--ink-muted); margin-top: 8px; }
+  .type-context { display: inline-block; background: var(--tint-purple); color: var(--deep-purple); font-size: 11px; padding: 2px 8px; border-radius: 4px; margin-left: 8px; font-family: var(--font-base); }
+
+  /* SERVICE BLOCKS */
+  .service-block { border-radius: 16px; padding: 48px 56px; margin-bottom: 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
+  .service-block h3 { font-size: 25px; font-weight: 700; line-height: 1.52; color: var(--ink); margin-bottom: 16px; }
+  .service-block p { font-size: 16px; font-weight: 400; line-height: 1.7; letter-spacing: 0.02em; color: var(--ink); margin-bottom: 24px; }
+  .service-links { margin-top: 16px; display: flex; flex-direction: column; gap: 6px; }
+  .service-links a { font-size: 14px; font-weight: 400; line-height: 1.5; color: var(--brand-purple); text-decoration: underline; }
+  .service-shot { background: rgba(255,255,255,.65); border-radius: 8px; height: 200px; display: flex; align-items: center; justify-content: center; font-size: 14px; color: var(--ink-muted); }
+
+  /* NEWS CARDS */
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; }
+  .news-card { background: var(--slate-light); border-radius: 4px; padding: 20px; color: #fff; }
+  .news-card .date { font-size: 18px; font-weight: 400; line-height: 1.6; margin-bottom: 8px; }
+  .news-card h4 { font-size: 18px; font-weight: 700; line-height: 1.6; }
+
+  /* FORMS */
+  .form-group { margin-bottom: 20px; max-width: 420px; }
+  .form-label { display: block; font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 6px; }
+  .form-input {
+    width: 100%; background: #fff; color: var(--ink);
+    border: 1px solid var(--border); padding: 12px 16px; border-radius: 4px;
+    font-family: var(--font-base); font-size: 16px; outline: none; transition: border-color .15s;
+  }
+  .form-input::placeholder { color: var(--ink-muted); }
+  .form-input--focus { border-color: var(--brand-purple); box-shadow: 0 0 0 3px rgba(122,106,191,.2); }
+  .form-input--error { border-color: var(--danger); box-shadow: 0 0 0 3px rgba(193,57,43,.2); }
+  .form-search { border-radius: 50px; padding: 6px 35px 6px 15px; font-size: 12.8px; }
+  .form-state-label { font-size: 11px; color: var(--ink-muted); margin-top: 4px; }
+
+  /* ELEVATION */
+  .elevation-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
+  .elevation-card { background: #fff; border-radius: 4px; padding: 24px; text-align: center; border: 1px solid var(--surface-3); }
+  .elevation-label { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+  .elevation-desc { font-family: var(--font-mono); font-size: 11px; color: var(--ink-muted); word-break: break-all; }
+
+  /* SPACING */
+  .spacing-row { display: flex; align-items: flex-end; gap: 12px; flex-wrap: wrap; margin-bottom: 24px; }
+  .spacing-item { text-align: center; }
+  .spacing-block { background: var(--brand-purple); border-radius: 2px; margin-bottom: 6px; height: 28px; }
+  .spacing-value { font-family: var(--font-mono); font-size: 11px; color: var(--ink-muted); }
+
+  /* WIDTHS */
+  .width-bar { height: 32px; background: var(--surface); border: 1px solid var(--surface-3); border-radius: 4px; margin-bottom: 8px; }
+  .width-bar-inner { height: 100%; background: var(--brand-purple); border-radius: 3px; opacity: .3; }
+  .width-bar-label { font-size: 14px; font-weight: 700; color: var(--ink); margin-bottom: 4px; }
+  .width-bar-value { font-family: var(--font-mono); font-size: 12px; color: var(--ink-muted); font-weight: 400; }
+
+  /* FOOTER */
+  .footer { padding: 40px 32px; text-align: center; background: var(--surface-2); font-size: 14px; color: var(--ink-muted); line-height: 1.5; }
+
+  @media (max-width: 769px) {
+    .hero { padding: 56px 20px; }
+    .hero h1 { font-size: 26px; }
+    .nav-links { display: none; }
+    .section, .section-tint { padding: 48px 20px; }
+    .service-block { grid-template-columns: 1fr; padding: 32px 24px; }
+    .card-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="nav-brand" href="#"><span>◟</span> nulab</a>
+  <ul class="nav-links">
+    <li><a href="#colors">Colors</a></li>
+    <li><a href="#typography">Typography</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#buttons">Buttons</a></li>
+    <li><a href="#cards">Cards</a></li>
+    <li><a href="#forms">Forms</a></li>
+    <li><a href="#elevation">Elevation</a></li>
+  </ul>
+  <a class="nav-cta" href="#">lorem ipsum dolor</a>
+</nav>
+
+<section class="hero">
+  <h1>“lorem ipsum dolor sit amet consectetur”<br>lorem ipsum dolor sit amet.</h1>
+  <p>DESIGN.md lorem ipsum dolor sit amet consectetur adipiscing. lorem, lorem ipsum dolor, lorem ipsum dolor, lorem ipsum dolor sit amet consectetur. computed style lorem ipsum dolor.</p>
+  <div class="hero-buttons">
+    <a class="btn-service" href="#">lorem ipsum dolor sit</a>
+    <a class="btn-outline-purple" href="#">DESIGN.md lorem</a>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- COLORS -->
+<section class="section" id="colors">
+  <div class="section-label">01 / Colors</div>
+  <h2 class="section-title">lorem ipsum dolor</h2>
+
+  <div class="color-group-label">Brand</div>
+  <div class="color-grid">
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#7a6abf"></div><div class="color-swatch-info"><div class="color-swatch-name">Brand Purple</div><div class="color-swatch-hex">#7a6abf</div><div class="color-swatch-role">lorem ipsum dolor sit amet / lorem / lorem ipsum dolor</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#615499"></div><div class="color-swatch-info"><div class="color-swatch-name">Deep Purple</div><div class="color-swatch-hex">#615499</div><div class="color-swatch-role">24px lorem ipsum dolor</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#7e67c5"></div><div class="color-swatch-info"><div class="color-swatch-name">Purple Alt</div><div class="color-swatch-hex">#7e67c5</div><div class="color-swatch-role">Value lorem ipsum</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#74758b"></div><div class="color-swatch-info"><div class="color-swatch-name">Slate Purple</div><div class="color-swatch-hex">#74758b</div><div class="color-swatch-role">lorem ipsum dolor CTA lorem</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#75768b"></div><div class="color-swatch-info"><div class="color-swatch-name">Slate Light</div><div class="color-swatch-hex">#75768b</div><div class="color-swatch-role">lorem ipsum dolor sit</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#5d5e6f"></div><div class="color-swatch-info"><div class="color-swatch-name">Slate Outline</div><div class="color-swatch-hex">#5d5e6f</div><div class="color-swatch-role">lorem ipsum dolor sit amet consectetur</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#27455c"></div><div class="color-swatch-info"><div class="color-swatch-name">Navy</div><div class="color-swatch-hex">#27455c</div><div class="color-swatch-role">KV lorem. lorem ipsum dolor</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#50e3c2"></div><div class="color-swatch-info"><div class="color-swatch-name">Mint Accent</div><div class="color-swatch-hex">#50e3c2</div><div class="color-swatch-role">lorem ipsum dolor sit amet consectetur</div></div></div>
+  </div>
+
+  <div class="color-group-label">Service Tints — lorem ipsum dolor sit(lorem ipsum)</div>
+  <div class="color-grid">
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#edfaf6"></div><div class="color-swatch-info"><div class="color-swatch-name">Backlog Mint</div><div class="color-swatch-hex">#edfaf6</div><div class="color-swatch-role">Backlog lorem ipsum dolor</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#eef2fa"></div><div class="color-swatch-info"><div class="color-swatch-name">Cacoo Blue</div><div class="color-swatch-hex">#eef2fa</div><div class="color-swatch-role">Cacoo lorem ipsum dolor</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#f4f3ff"></div><div class="color-swatch-info"><div class="color-swatch-name">Pass Lavender</div><div class="color-swatch-hex">#f4f3ff</div><div class="color-swatch-role">Nulab Pass lorem ipsum dolor</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#effbff"></div><div class="color-swatch-info"><div class="color-swatch-name">Flowbase Cyan</div><div class="color-swatch-hex">#effbff</div><div class="color-swatch-role">Nulab Flowbase lorem ipsum dolor</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#f3f0fa"></div><div class="color-swatch-info"><div class="color-swatch-name">Purple Tint</div><div class="color-swatch-hex">#f3f0fa</div><div class="color-swatch-role">lorem ipsum dolor sit amet consectetur</div></div></div>
+  </div>
+
+  <div class="color-group-label">Neutral</div>
+  <div class="color-grid">
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#ffffff; border-bottom:1px solid #d1d1d1"></div><div class="color-swatch-info"><div class="color-swatch-name">Background</div><div class="color-swatch-hex">#ffffff</div><div class="color-swatch-role">lorem ipsum</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#f5f5f7"></div><div class="color-swatch-info"><div class="color-swatch-name">Surface</div><div class="color-swatch-hex">#f5f5f7</div><div class="color-swatch-role">lorem ipsum dolor sit amet consectetur</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#f9f9f9"></div><div class="color-swatch-info"><div class="color-swatch-name">Surface 2</div><div class="color-swatch-hex">#f9f9f9</div><div class="color-swatch-role">lorem ipsum dolor / Mission＆Value</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#17171c"></div><div class="color-swatch-info"><div class="color-swatch-name">Ink</div><div class="color-swatch-hex">#17171c</div><div class="color-swatch-role">lorem / lorem. lorem ipsum dolor</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#6a6a6a"></div><div class="color-swatch-info"><div class="color-swatch-name">Ink Muted</div><div class="color-swatch-hex">#6a6a6a</div><div class="color-swatch-role">lorem / lorem ipsum / body lorem</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#d1d1d1"></div><div class="color-swatch-info"><div class="color-swatch-name">Border</div><div class="color-swatch-hex">#d1d1d1</div><div class="color-swatch-role">lorem ipsum dolor</div></div></div>
+  </div>
+
+  <div class="color-group-label">Semantic(lorem ipsum dolor sit amet consectetur)</div>
+  <div class="color-grid">
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#3b8f6d"></div><div class="color-swatch-info"><div class="color-swatch-name">Success</div><div class="color-swatch-hex">#3b8f6d</div><div class="color-swatch-role">Backlog lorem ipsum dolor sit amet</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#c1392b"></div><div class="color-swatch-info"><div class="color-swatch-name">Danger</div><div class="color-swatch-hex">#c1392b</div><div class="color-swatch-role">lorem ipsum dolor sit amet</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#b8860b"></div><div class="color-swatch-info"><div class="color-swatch-name">Warning</div><div class="color-swatch-hex">#b8860b</div><div class="color-swatch-role">lorem ipsum dolor sit amet consectetur</div></div></div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- TYPOGRAPHY -->
+<section class="section" id="typography">
+  <div class="section-label">02 / Typography — lorem</div>
+  <h2 class="section-title">lorem ipsum dolor sit</h2>
+
+  <div class="type-sample">
+    <div style="font-size:46px; font-weight:700; line-height:1.3; letter-spacing:0.05em;">lorem ipsum dolor sit amet</div>
+    <div class="type-meta">46px / 700 / line-height: 1.3 / letter-spacing: 0.05em (2.3px)<span class="type-context">lorem ipsum dolor(lorem)</span></div>
+  </div>
+  <div class="type-sample">
+    <div style="font-size:40px; font-weight:700; line-height:1.4; letter-spacing:normal; background:#27455c; color:#fff; padding:24px; border-radius:4px;">“lorem ipsum dolor sit amet consectetur”</div>
+    <div class="type-meta">40px / 700 / line-height: 1.4 / letter-spacing: normal / color: #ffffff<span class="type-context">KV lorem(lorem ipsum dolor)</span></div>
+  </div>
+  <div class="type-sample">
+    <div style="font-size:25px; font-weight:700; line-height:1.52;">lorem ipsum dolor sit amet consectetur adipiscing</div>
+    <div class="type-meta">25px / 700 / line-height: 1.52 / letter-spacing: normal<span class="type-context">lorem ipsum</span></div>
+  </div>
+  <div class="type-sample">
+    <div style="font-size:24px; font-weight:700; line-height:1.5;">lorem ipsum dolor</div>
+    <div class="type-meta">24px / 700 / line-height: 1.5 / letter-spacing: normal<span class="type-context">lorem ipsum dolor</span></div>
+  </div>
+  <div class="type-sample">
+    <div style="font-size:24px; font-weight:700; line-height:1.5; letter-spacing:0.05em; color:#615499;">lorem ipsum dolor sit amet, lorem ipsum dolor sit amet</div>
+    <div class="type-meta">24px / 700 / line-height: 1.5 / letter-spacing: 0.05em (1.2px) / color: #615499<span class="type-context">lorem(lorem / lorem / lorem ipsum dolor)</span></div>
+  </div>
+  <div class="type-sample">
+    <div style="font-size:20px; font-weight:400; line-height:1.44; color:#6a6a6a;">lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor.</div>
+    <div class="type-meta">20px / 400 / line-height: 1.44 / color: #6a6a6a<span class="type-context">lorem(lorem)</span></div>
+  </div>
+  <div class="type-sample">
+    <div style="font-size:16px; font-weight:400; line-height:1.7; letter-spacing:0.02em;">Backlog(lorem ipsum)lorem, lorem ipsum dolor sit amet consectetur adipiscing / lorem ipsum dolor sit. lorem ipsum dolor sit amet consectetur adipiscing, lorem ipsum dolor sit amet consectetur adipiscing. lorem ipsum dolor sit amet consectetur.</div>
+    <div class="type-meta">16px / 400 / line-height: 1.7 (27.2px) / letter-spacing: 0.02em (0.32px)<span class="type-context">lorem ipsum</span></div>
+  </div>
+  <div class="type-sample">
+    <div style="font-size:16px; font-weight:400; line-height:1.0;">lorem ipsum dolor — lorem ipsum / lorem ipsum / lorem ipsum / IR lorem</div>
+    <div class="type-meta">16px / 400 / line-height: 1.0 (16px) / letter-spacing: normal<span class="type-context">lorem ipsum dolor sit amet</span></div>
+  </div>
+  <div class="type-sample">
+    <div style="font-size:14px; font-weight:400; line-height:1.5; color:#7a6abf; text-decoration:underline;">Backlog lorem ipsum dolor sit“JBUG”</div>
+    <div class="type-meta">14px / 400 / line-height: 1.5 / color: #7a6abf<span class="type-context">lorem ipsum 14px lorem ipsum dolor sit</span></div>
+  </div>
+  <div class="type-sample">
+    <div style="font-size:14px; font-weight:400; line-height:1.3; color:#6a6a6a;">(lorem ipsum dolor)</div>
+    <div class="type-meta">14px / 400 / line-height: 1.3 / color: #6a6a6a<span class="type-context">lorem</span></div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- SERVICE BLOCKS -->
+<section class="section" id="services">
+  <div class="section-label">03 / Service Blocks — lorem ipsum dolor sit</div>
+  <h2 class="section-title">lorem ipsum dolor sit(radius 16px)</h2>
+
+  <div class="service-block" style="background:var(--tint-backlog)">
+    <div>
+      <h3>Backlog</h3>
+      <p>Backlog(lorem ipsum)lorem, lorem ipsum dolor sit amet consectetur adipiscing / lorem ipsum dolor sit. lorem ipsum dolor sit amet consectetur adipiscing, lorem ipsum dolor sit amet consectetur adipiscing.</p>
+      <a class="btn-service" href="#">Backlog lorem ipsum dolor</a>
+      <div class="service-links">
+        <a href="#">Backlog lorem ipsum dolor sit“JBUG”</a>
+        <a href="#">Backlog lorem ipsum dolor sit amet consectetur“b lorem”</a>
+      </div>
+    </div>
+    <div class="service-shot">lorem ipsum dolor sit amet consectetur</div>
+  </div>
+
+  <div class="service-block" style="background:var(--tint-cacoo)">
+    <div>
+      <h3>Cacoo</h3>
+      <p>Cacoo(lorem)lorem, lorem ipsum dolor sit amet consectetur adipiscing elit sed do. URL lorem ipsum dolor, lorem ipsum dolor sit amet consectetur.</p>
+      <a class="btn-service" href="#">Cacoo lorem ipsum dolor</a>
+    </div>
+    <div class="service-shot">lorem ipsum dolor sit amet consectetur</div>
+  </div>
+
+  <div class="service-block" style="background:var(--tint-pass)">
+    <div>
+      <h3>Nulab Pass</h3>
+      <p>Nulab Pass(lorem ipsum lorem)lorem, SAML lorem ipsum dolor sit amet consectetur / lorem ipsum dolor sit. lorem ipsum dolor sit amet consectetur.</p>
+      <a class="btn-service" href="#">Nulab Pass lorem ipsum dolor</a>
+    </div>
+    <div class="service-shot">lorem ipsum dolor sit amet consectetur</div>
+  </div>
+
+  <div class="service-block" style="background:var(--tint-flowbase)">
+    <div>
+      <h3>Nulab Flowbase</h3>
+      <p>Nulab Flowbase(lorem ipsum lorem ipsum dolor)lorem, lorem ipsum dolor sit amet consectetur, lorem ipsum dolor sit amet consectetur adipiscing.</p>
+      <a class="btn-service" href="#">Nulab Flowbase lorem ipsum dolor</a>
+    </div>
+    <div class="service-shot">lorem ipsum dolor sit amet consectetur</div>
+  </div>
+
+  <div style="text-align:center; margin-top:32px;">
+    <a class="btn-outline" href="#">lorem ipsum dolor sit</a>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- BUTTONS -->
+<section class="section-tint" id="buttons">
+<div class="section-inner">
+  <div class="section-label">04 / Buttons</div>
+  <h2 class="section-title">lorem ipsum dolor sit — lorem ipsum, lorem ipsum dolor</h2>
+  <div style="display:flex; gap:24px; flex-wrap:wrap; align-items:flex-start;">
+    <div style="text-align:center"><a class="btn-service" href="#">Backlog lorem ipsum dolor</a><div style="font-size:12px; color:var(--ink-muted); margin-top:8px;">Service CTA — #74758b</div></div>
+    <div style="text-align:center"><a class="btn-brand" href="#">lorem ipsum dolor</a><div style="font-size:12px; color:var(--ink-muted); margin-top:8px;">Brand CTA — #7a6abf</div></div>
+    <div style="text-align:center"><a class="btn-outline" href="#">lorem ipsum dolor sit</a><div style="font-size:12px; color:var(--ink-muted); margin-top:8px;">Outline — 2px solid #5d5e6f</div></div>
+    <div style="text-align:center"><a class="btn-outline-purple" href="#">lorem ipsum dolor</a><div style="font-size:12px; color:var(--ink-muted); margin-top:8px;">Outline Purple — 2px solid #7a6abf</div></div>
+    <div style="text-align:center"><a class="btn-text" href="#">lorem ipsum dolor</a><div style="font-size:12px; color:var(--ink-muted); margin-top:8px;">Text Button — 14px / 600</div></div>
+  </div>
+  <p style="margin-top:24px; font-size:14px; color:var(--ink-muted); line-height:1.7;">
+ lorem<code style="font-family:var(--font-mono)">border-radius: 4px</code>. lorem ipsum dolor<code style="font-family:var(--font-mono)">border: 2px solid transparent</code> lorem, lorem ipsum dolor sit amet consectetur. pill(radius 9999px)lorem ipsum.
+</p>
+</div>
+</section>
+
+<hr class="section-divider">
+
+<!-- CARDS -->
+<section class="section" id="cards">
+  <div class="section-label">05 / Cards</div>
+  <h2 class="section-title">lorem ipsum dolor(lorem ipsum dolor sit)</h2>
+  <div class="card-grid">
+    <div class="news-card"><div class="date">2026/07/21</div><h4>lorem ipsum dolor — Nulab Flowbase lorem ipsum dolor sit amet</h4></div>
+    <div class="news-card"><div class="date">2026/07/14</div><h4>【lorem ipsum】lorem ipsum dolor sit amet consectetur　lorem ipsum dolor Backlog lorem</h4></div>
+    <div class="news-card"><div class="date">2026/07/05</div><h4>Cacoo lorem ipsum dolor sit amet consectetur</h4></div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- FORMS -->
+<section class="section" id="forms">
+  <div class="section-label">06 / Forms</div>
+  <h2 class="section-title">lorem ipsum dolor</h2>
+  <div class="form-group"><label class="form-label">lorem(radius 50px lorem pill — lorem ipsum dolor)</label><input class="form-input form-search" type="text" placeholder="サイト内を検索"><div class="form-state-label">lorem ipsum — border: 1px solid #d1d1d1 / radius: 50px</div></div>
+  <div class="form-group"><label class="form-label">lorem ipsum dolor</label><input class="form-input" type="text" placeholder="name@example.com"><div class="form-state-label">lorem ipsum — border: 1px solid #d1d1d1 / radius: 4px</div></div>
+  <div class="form-group"><label class="form-label">lorem</label><input class="form-input form-input--focus" type="text" value="株式会社ヌーラボ"><div class="form-state-label">lorem ipsum — border: #7a6abf(lorem ipsum dolor)</div></div>
+  <div class="form-group"><label class="form-label">lorem ipsum dolor</label><input class="form-input form-input--error" type="text" value="invalid@"><div class="form-state-label">lorem — border: #c1392b(lorem ipsum)</div></div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ELEVATION -->
+<section class="section" id="elevation">
+  <div class="section-label">07 / Elevation — lorem(1 lorem)</div>
+  <h2 class="section-title">Depth &amp; Elevation</h2>
+  <div class="elevation-grid">
+    <div class="elevation-card"><div class="elevation-label">Level 0: Flat</div><div class="elevation-desc">lorem / lorem / lorem ipsum dolor / lorem ipsum dolor</div></div>
+    <div class="elevation-card" style="box-shadow: var(--elevation-1);"><div class="elevation-label">Level 1</div><div class="elevation-desc">0 2px 4px rgba(28,28,28,0.2) — lorem ipsum dolor sit</div></div>
+    <div class="elevation-card" style="background:var(--tint-backlog); border-radius:16px; border:none;"><div class="elevation-label">Tint + radius 16px</div><div class="elevation-desc">lorem ipsum dolor sit amet consectetur</div></div>
+    <div class="elevation-card" style="border: 2px solid var(--brand-purple);"><div class="elevation-label">Focus Ring</div><div class="elevation-desc">#7a6abf</div></div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- SPACING & WIDTHS -->
+<section class="section" id="layout">
+  <div class="section-label">08 / Layout</div>
+  <h2 class="section-title">lorem ipsum dolor sit amet consectetur</h2>
+
+  <div class="spacing-row">
+    <div class="spacing-item"><div class="spacing-block" style="width:4px"></div><div class="spacing-value">XS 4</div></div>
+    <div class="spacing-item"><div class="spacing-block" style="width:8px"></div><div class="spacing-value">S 8</div></div>
+    <div class="spacing-item"><div class="spacing-block" style="width:16px"></div><div class="spacing-value">M 16</div></div>
+    <div class="spacing-item"><div class="spacing-block" style="width:24px"></div><div class="spacing-value">L 24</div></div>
+    <div class="spacing-item"><div class="spacing-block" style="width:48px"></div><div class="spacing-value">XL 48</div></div>
+    <div class="spacing-item"><div class="spacing-block" style="width:80px"></div><div class="spacing-value">XXL 80</div></div>
+    <div class="spacing-item"><div class="spacing-block" style="width:120px"></div><div class="spacing-value">XXXL 120</div></div>
+  </div>
+
+  <div style="margin-bottom:16px"><div class="width-bar-label">Main Container <span class="width-bar-value">1200px</span></div><div class="width-bar"><div class="width-bar-inner" style="width:100%"></div></div></div>
+  <div style="margin-bottom:16px"><div class="width-bar-label">Sub Container <span class="width-bar-value">1120px</span></div><div class="width-bar"><div class="width-bar-inner" style="width:93.3%"></div></div></div>
+  <div style="margin-bottom:16px"><div class="width-bar-label">Narrow <span class="width-bar-value">960px</span></div><div class="width-bar"><div class="width-bar-inner" style="width:80%"></div></div></div>
+  <div style="margin-bottom:16px"><div class="width-bar-label">Article <span class="width-bar-value">816px</span></div><div class="width-bar"><div class="width-bar-inner" style="width:68%"></div></div></div>
+</section>
+
+<footer class="footer">
+  Generated from <a href="https://nulab.com/ja/" style="color:var(--brand-purple); text-decoration:underline;">nulab.com</a> DESIGN.md — awesome-design-md-jp / computed style lorem(2026-08-12)<br>
+ lorem ipsum Noto Sans JP(Google Fonts)lorem, lorem ipsum dolor sit amet consectetur.
+</footer>
+
+</body>
+</html>

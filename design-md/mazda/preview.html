@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design System Preview: Mazda</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* === Colors: Mazda 実測値 === */
+    --bg-primary: #ffffff;
+    --bg-soft: #f5f5f5;
+    --bg-nav: #e6e6e6;
+    --bg-footer: #27455c;
+    --bg-footer-slate: #535b69;
+    --bg-cookie: #041428;
+    --bg-overlay: rgba(4, 11, 19, 0.4);
+    --text-primary: #040b13;
+    --text-inverse: #ffffff;
+    --text-link: #8d7057;
+    --text-muted: rgba(4, 11, 19, 0.7);
+    --accent-green: #468254;
+    --accent-pdf: #ff2115;
+    --accent-filter: #3860be;
+
+    /* === Fonts ===
+       Note: MazdaType is a proprietary font. Falling back to Noto Sans JP for preview. */
+    --font-base: "Noto Sans JP", "Hiragino Kaku Gothic ProN", HiraKakuProN-W3, Meiryo, "Yu Gothic Medium", sans-serif;
+    --font-mono: SFMono-Regular, Consolas, Menlo, Courier, monospace;
+
+    /* === Spacing === */
+    --space-xs: 4px;
+    --space-s: 8px;
+    --space-m: 16px;
+    --space-l: 24px;
+    --space-xl: 40px;
+    --space-xxl: 80px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: var(--font-base);
+    font-size: 19px; font-weight: 400; line-height: 1.68;
+    letter-spacing: 0.07em;
+    font-feature-settings: "palt";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* NAV */
+  .nav {
+    position: sticky; top: 0; z-index: 100;
+    display: flex; align-items: stretch; justify-content: space-between;
+    background: var(--bg-primary);
+    border-bottom: 1px solid #e6e6e6;
+  }
+  .nav-brand {
+    display: flex; align-items: center;
+    padding: 0 32px;
+    font-size: 28px; font-weight: 500;
+    color: var(--text-primary);
+    text-decoration: none;
+    letter-spacing: 0.2em;
+    font-family: var(--font-base);
+  }
+  .nav-links { display: flex; gap: 0; list-style: none; }
+  .nav-links a {
+    display: block;
+    padding: 24px 36px 19px 20px;
+    font-size: 16px; font-weight: 700;
+    color: var(--text-primary);
+    background: var(--bg-nav);
+    text-decoration: none;
+    letter-spacing: 0.07em;
+    font-feature-settings: "palt";
+    border-right: 1px solid #ffffff;
+  }
+  .nav-cta {
+    display: inline-flex; align-items: center;
+    margin: 12px 32px;
+    padding: 8px 25px;
+    border: 1px solid var(--text-primary);
+    border-radius: 900px;
+    font-size: 19px; font-weight: 700;
+    letter-spacing: 0.07em;
+    color: var(--text-primary);
+    background: transparent;
+    text-decoration: none;
+    font-feature-settings: "palt";
+  }
+  .nav-cta:hover { background: var(--text-primary); color: var(--text-inverse); }
+
+  /* HERO */
+  .hero {
+    padding: var(--space-xxl) 32px;
+    background: var(--bg-primary);
+    border-bottom: 1px solid #e6e6e6;
+  }
+  .hero h1 {
+    font-size: 46px; font-weight: 500; line-height: 1.30;
+    letter-spacing: 0.10em;
+    color: var(--text-primary);
+    font-feature-settings: "palt";
+    margin-bottom: 24px;
+    max-width: 1000px;
+  }
+  .hero p.lead {
+    font-size: 19px; font-weight: 400; line-height: 1.68;
+    color: var(--text-primary);
+    letter-spacing: 0.07em;
+    font-feature-settings: "palt";
+    margin-bottom: 40px;
+    max-width: 820px;
+  }
+  .btn-pill {
+    display: inline-block;
+    background: transparent;
+    color: var(--text-primary);
+    border: 1px solid var(--text-primary);
+    border-radius: 900px;
+    padding: 10px 28px;
+    font-family: var(--font-base);
+    font-size: 19px; font-weight: 700;
+    letter-spacing: 0.07em;
+    font-feature-settings: "palt";
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+  }
+  .btn-pill:hover { background: var(--text-primary); color: var(--text-inverse); }
+  .btn-pill--inverse {
+    background: transparent;
+    color: var(--text-inverse);
+    border: 1px solid var(--text-inverse);
+  }
+  .btn-pill--inverse:hover { background: var(--text-inverse); color: var(--text-primary); }
+
+  /* SECTIONS */
+  .section { padding: var(--space-xxl) 32px; max-width: 1280px; margin: 0 auto; }
+  .section--dark { background: var(--bg-footer); color: var(--text-inverse); max-width: none; }
+  .section--soft { background: var(--bg-soft); max-width: none; }
+  .section-label {
+    font-family: var(--font-mono);
+    font-size: 11px; font-weight: 700;
+    color: var(--text-link);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin-bottom: 12px;
+  }
+  .section-title {
+    font-size: 34px; font-weight: 500; line-height: 1.29;
+    color: var(--text-primary);
+    letter-spacing: 0.10em;
+    font-feature-settings: "palt";
+    margin-bottom: 40px;
+  }
+  .section--dark .section-title { color: var(--text-inverse); }
+  .section-divider { border: none; border-top: 1px solid #e6e6e6; margin: 0; }
+
+  /* COLORS */
+  .color-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 0;
+    margin-bottom: 24px;
+    border-top: 1px solid #e6e6e6;
+    border-left: 1px solid #e6e6e6;
+  }
+  .color-swatch {
+    background: var(--bg-primary);
+    border-bottom: 1px solid #e6e6e6;
+    border-right: 1px solid #e6e6e6;
+  }
+  .color-swatch-block { height: 110px; width: 100%; }
+  .color-swatch-info { padding: 16px; }
+  .color-swatch-name {
+    font-size: 16px; font-weight: 700;
+    margin-bottom: 4px;
+    color: var(--text-primary);
+    letter-spacing: 0.07em;
+    font-feature-settings: "palt";
+  }
+  .color-swatch-hex { font-size: 12px; color: var(--text-link); font-family: var(--font-mono); letter-spacing: 0.05em; }
+  .color-swatch-role { font-size: 13px; color: var(--text-primary); margin-top: 8px; letter-spacing: 0.04em; opacity: 0.75; }
+  .color-group-label {
+    font-family: var(--font-mono);
+    font-size: 11px; font-weight: 700;
+    color: var(--text-link);
+    margin: 32px 0 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+  }
+
+  /* TYPOGRAPHY */
+  .type-sample {
+    margin-bottom: 32px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid #e6e6e6;
+  }
+  .type-sample:last-child { border-bottom: none; }
+  .type-meta {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-link);
+    margin-top: 10px;
+    letter-spacing: 0.05em;
+  }
+  .type-context {
+    display: inline-block;
+    background: var(--bg-soft);
+    color: var(--text-primary);
+    font-size: 11px;
+    padding: 2px 8px;
+    margin-left: 8px;
+    font-family: var(--font-base);
+    letter-spacing: 0.04em;
+  }
+
+  /* FEATURE CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+  }
+  .card-feature {
+    background: var(--bg-primary);
+    border: 1px solid #e6e6e6;
+    padding: 32px 28px;
+  }
+  .card-feature h3 {
+    font-family: var(--font-base);
+    font-size: 22px; font-weight: 700; line-height: 1.45;
+    letter-spacing: 0.10em;
+    color: var(--text-primary);
+    font-feature-settings: "palt";
+    margin-bottom: 16px;
+  }
+  .card-feature p {
+    font-size: 16px; line-height: 1.68;
+    letter-spacing: 0.07em;
+    color: var(--text-primary);
+    font-feature-settings: "palt";
+    margin-bottom: 20px;
+  }
+  .card-feature a {
+    font-size: 14px; font-weight: 700;
+    color: var(--text-link);
+    letter-spacing: 0.07em;
+    text-decoration: none;
+  }
+  .card-feature a:hover { text-decoration: underline; }
+  .badge {
+    display: inline-block;
+    background: var(--accent-green);
+    color: var(--text-inverse);
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 0.10em;
+    padding: 4px 10px;
+    margin-bottom: 16px;
+    font-feature-settings: "palt";
+  }
+  .badge--copper { background: var(--text-link); }
+  .badge--ink { background: var(--text-primary); }
+
+  /* DARK SECTION (footer-like banner) */
+  .banner-dark {
+    background: var(--bg-footer);
+    color: var(--text-inverse);
+    padding: 80px 64px;
+    text-align: left;
+  }
+  .banner-dark h2 {
+    font-family: var(--font-base);
+    font-size: 46px; font-weight: 500; line-height: 1.30;
+    letter-spacing: 0.10em;
+    margin-bottom: 24px;
+    font-feature-settings: "palt";
+  }
+  .banner-dark p {
+    font-size: 19px; line-height: 1.68;
+    letter-spacing: 0.07em;
+    margin-bottom: 32px;
+    max-width: 720px;
+    font-feature-settings: "palt";
+  }
+
+  /* FORMS */
+  .form-group { margin-bottom: 24px; max-width: 480px; }
+  .form-label {
+    display: block;
+    font-size: 14px; font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+    letter-spacing: 0.07em;
+    font-feature-settings: "palt";
+  }
+  .form-input {
+    width: 100%;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    border: 1px solid var(--text-primary);
+    padding: 14px 16px;
+    border-radius: 0;
+    font-family: var(--font-base);
+    font-size: 16px;
+    letter-spacing: 0.07em;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .form-input:focus, .form-input--focus { border-width: 2px; padding: 13px 15px; }
+  .form-state-label {
+    font-size: 11px;
+    color: var(--text-link);
+    margin-top: 6px;
+    font-family: var(--font-mono);
+    letter-spacing: 0.05em;
+  }
+
+  /* SPACING */
+  .spacing-row { display: flex; align-items: flex-end; gap: 12px; flex-wrap: wrap; margin-bottom: 24px; }
+  .spacing-item { text-align: center; }
+  .spacing-block {
+    background: var(--text-primary);
+    margin-bottom: 6px;
+    height: 28px;
+  }
+  .spacing-value { font-family: var(--font-mono); font-size: 11px; color: var(--text-link); letter-spacing: 0.05em; }
+
+  /* FOOTER */
+  .footer {
+    padding: 48px 32px;
+    text-align: center;
+    background: var(--bg-footer);
+    color: var(--text-inverse);
+    font-size: 14px;
+    letter-spacing: 0.07em;
+  }
+  .footer a { color: var(--text-inverse); text-decoration: underline; }
+
+  @media (max-width: 769px) {
+    body { font-size: 17px; }
+    .hero h1 { font-size: 30px; letter-spacing: 0.08em; }
+    .nav-links { display: none; }
+    .nav-cta { display: none; }
+    .section { padding: 56px 20px; }
+    .section-title { font-size: 26px; letter-spacing: 0.08em; }
+    .banner-dark h2 { font-size: 30px; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="nav-brand" href="#">MAZDA</a>
+  <ul class="nav-links">
+    <li><a href="#">lorem ipsum dolor</a></li>
+    <li><a href="#colors">lorem / lorem</a></li>
+    <li><a href="#typography">lorem ipsum dolor</a></li>
+    <li><a href="#cards">IR lorem</a></li>
+  </ul>
+  <a class="nav-cta" href="#">lorem ipsum dolor</a>
+</nav>
+
+<section class="hero">
+  <h1>“lorem ipsum”lorem, “lorem ipsum”lorem</h1>
+  <p class="lead">Mazda lorem ipsum dolor sit amet consectetur. lorem ipsum MazdaType(Regular / Medium / Bold)lorem Noto Sans JP lorem ipsum dolor sit amet, palt lorem ipsum dolor ON, letter-spacing lorem 0.07–0.1em lorem ipsum dolor sit amet consectetur adipiscing. lorem 19px / line-height 1.68 / lorem #040b13 lorem ipsum dolor #8d7057 lorem ipsum dolor, lorem ipsum dolor sit amet consectetur adipiscing UI.</p>
+  <a class="btn-pill" href="#cards">lorem ipsum</a>
+</section>
+
+<hr class="section-divider">
+
+<!-- COLORS -->
+<section class="section" id="colors">
+  <div class="section-label">01 / Colors</div>
+  <h2 class="section-title">lorem ipsum dolor</h2>
+
+  <div class="color-group-label">Brand</div>
+  <div class="color-grid">
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#040b13"></div><div class="color-swatch-info"><div class="color-swatch-name">Mazda Ink</div><div class="color-swatch-hex">#040b13</div><div class="color-swatch-role">lorem / lorem(lorem)</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#8d7057"></div><div class="color-swatch-info"><div class="color-swatch-name">Mazda Copper</div><div class="color-swatch-hex">#8d7057</div><div class="color-swatch-role">lorem ipsum(lorem / lorem ipsum)</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#ffffff; border-bottom:1px solid #e6e6e6"></div><div class="color-swatch-info"><div class="color-swatch-name">Page White</div><div class="color-swatch-hex">#ffffff</div><div class="color-swatch-role">lorem ipsum</div></div></div>
+  </div>
+
+  <div class="color-group-label">Surface</div>
+  <div class="color-grid">
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#e6e6e6"></div><div class="color-swatch-info"><div class="color-swatch-name">Nav Surface</div><div class="color-swatch-hex">#e6e6e6</div><div class="color-swatch-role">lorem ipsum dolor</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#f5f5f5"></div><div class="color-swatch-info"><div class="color-swatch-name">Soft Gray</div><div class="color-swatch-hex">#f5f5f5</div><div class="color-swatch-role">lorem ipsum dolor</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#27455c"></div><div class="color-swatch-info"><div class="color-swatch-name">Footer Navy</div><div class="color-swatch-hex">#27455c</div><div class="color-swatch-role">lorem ipsum / lorem</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#535b69"></div><div class="color-swatch-info"><div class="color-swatch-name">Footer Slate</div><div class="color-swatch-hex">#535b69</div><div class="color-swatch-role">lorem ipsum dolor</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#041428"></div><div class="color-swatch-info"><div class="color-swatch-name">Cookie Banner</div><div class="color-swatch-hex">#041428</div><div class="color-swatch-role">lorem ipsum dolor</div></div></div>
+  </div>
+
+  <div class="color-group-label">Accent / Semantic</div>
+  <div class="color-grid">
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#468254"></div><div class="color-swatch-info"><div class="color-swatch-name">Sustainability Green</div><div class="color-swatch-hex">#468254</div><div class="color-swatch-role">ESG lorem ipsum</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#ff2115"></div><div class="color-swatch-info"><div class="color-swatch-name">PDF Red</div><div class="color-swatch-hex">#ff2115</div><div class="color-swatch-role">PDF lorem ipsum</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#3860be"></div><div class="color-swatch-info"><div class="color-swatch-name">Filter Blue</div><div class="color-swatch-hex">#3860be</div><div class="color-swatch-role">lorem ipsum dolor sit</div></div></div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- TYPOGRAPHY -->
+<section class="section" id="typography">
+  <div class="section-label">02 / Typography — lorem</div>
+  <h2 class="section-title">lorem ipsum dolor sit</h2>
+
+  <div class="type-sample">
+    <div style="font-family:var(--font-base); font-size:46px; font-weight:500; line-height:1.30; letter-spacing:0.10em; font-feature-settings:'palt';">“lorem ipsum”lorem, “lorem ipsum”lorem</div>
+    <div class="type-meta">46px / 500 (Medium) / line-height: 1.30 / letter-spacing: 0.10em / palt: ON<span class="type-context">lorem ipsum h1</span></div>
+  </div>
+  <div class="type-sample">
+    <div style="font-family:var(--font-base); font-size:34px; font-weight:500; line-height:1.29; letter-spacing:0.10em; font-feature-settings:'palt';">HIGHLIGHTS ／ MAZDA MIRAI BASE</div>
+    <div class="type-meta">34px / 500 (Medium) / line-height: 1.29 / letter-spacing: 0.10em<span class="type-context">lorem ipsum h2</span></div>
+  </div>
+  <div class="type-sample">
+    <div style="font-family:var(--font-base); font-size:22px; font-weight:700; line-height:1.45; letter-spacing:0.10em; font-feature-settings:'palt';">CREATING THE JOY OF LIVING WITH A JOY OF DRIVING</div>
+    <div class="type-meta">22px / 700 (Bold) / line-height: 1.45 / letter-spacing: 0.10em<span class="type-context">lorem ipsum dolor h4</span></div>
+  </div>
+  <div class="type-sample">
+    <div style="font-family:var(--font-base); font-size:19px; font-weight:400; line-height:1.68; letter-spacing:0.07em; font-feature-settings:'palt';">lorem ipsum dolor ／ lorem ipsum, lorem ipsum dolor sit amet, lorem ipsum dolor, lorem ipsum dolor sit amet consectetur. lorem 19px lorem ipsum dolor, line-height 1.68, letter-spacing 0.07em lorem ipsum dolor sit amet, lorem ipsum dolor sit amet consectetur adipiscing elit.</div>
+    <div class="type-meta">19px / 400 / line-height: 1.68 / letter-spacing: 0.07em / palt: ON<span class="type-context">lorem / lorem p</span></div>
+  </div>
+  <div class="type-sample">
+    <div style="font-family:var(--font-base); font-size:16px; font-weight:700; line-height:1.50; letter-spacing:0.07em; font-feature-settings:'palt';">lorem ipsum dolor ／ lorem ipsum dolor</div>
+    <div class="type-meta">16px / 700 / line-height: 1.50 / letter-spacing: 0.07em<span class="type-context">lorem ipsum dolor</span></div>
+  </div>
+  <div class="type-sample">
+    <div><a href="#" style="color:#8d7057; font-size:16px; font-weight:700; letter-spacing:0.07em; text-decoration:none;">lorem ipsum → lorem ipsum</a></div>
+    <div class="type-meta">16px / 700 / lorem #8d7057 / lorem ipsum<span class="type-context">lorem ipsum dolor</span></div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- DARK BANNER -->
+<div class="banner-dark">
+  <h2>“lorem ipsum”lorem ipsum</h2>
+  <p>lorem ipsum, lorem ipsum dolor sit amet consectetur, lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt. lorem #27455c lorem ipsum, lorem ipsum dolor sit amet consectetur, CTA lorem ipsum dolor sit amet consectetur adipiscing.</p>
+  <a class="btn-pill btn-pill--inverse" href="#">lorem ipsum dolor sit amet</a>
+</div>
+
+<hr class="section-divider">
+
+<!-- FEATURE CARDS -->
+<section class="section" id="cards">
+  <div class="section-label">03 / Feature Cards</div>
+  <h2 class="section-title">lorem ipsum dolor</h2>
+  <div class="card-grid">
+    <div class="card-feature">
+      <span class="badge">lorem ipsum dolor</span>
+      <h3>2050 lorem ipsum dolor sit amet</h3>
+      <p>lorem ipsum, 2050 lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor. lorem ipsum dolor / lorem ipsum dolor sit amet consectetur adipiscing.</p>
+      <a href="#">lorem ipsum →</a>
+    </div>
+    <div class="card-feature">
+      <span class="badge badge--copper">lorem ipsum dolor</span>
+      <h3>SKYACTIV lorem ipsum dolor</h3>
+      <p>lorem ipsum dolor sit / lorem ipsum dolor sit amet consectetur, lorem ipsum dolor sit amet consectetur. lorem ipsum / lorem ipsum dolor sit / lorem ipsum / lorem ipsum dolor sit.</p>
+      <a href="#">lorem ipsum →</a>
+    </div>
+    <div class="card-feature">
+      <span class="badge badge--ink">lorem ipsum</span>
+      <h3>lorem — Soul of Motion</h3>
+      <p>“lorem”lorem ipsum dolor sit amet consectetur. lorem ipsum dolor sit amet, lorem ipsum dolor, lorem ipsum dolor sit amet consectetur.</p>
+      <a href="#">lorem ipsum →</a>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- BUTTONS & TAGS -->
+<section class="section" id="buttons">
+  <div class="section-label">04 / Buttons & Tags</div>
+  <h2 class="section-title">UI lorem ipsum dolor</h2>
+  <div style="display:flex; gap:32px; flex-wrap:wrap; align-items:center;">
+    <div style="text-align:center;"><a class="btn-pill" href="#">lorem ipsum</a><div style="font-family:var(--font-mono); font-size:11px; color:var(--text-link); margin-top:8px; letter-spacing:0.05em;">Pill CTA · radius 900px</div></div>
+    <div style="text-align:center; padding:16px 24px; background:var(--bg-footer);"><a class="btn-pill btn-pill--inverse" href="#">lorem ipsum</a><div style="font-family:var(--font-mono); font-size:11px; color:#fff; margin-top:8px; letter-spacing:0.05em;">Inverse Pill</div></div>
+    <div style="text-align:center;"><span class="badge">lorem ipsum dolor</span><div style="font-family:var(--font-mono); font-size:11px; color:var(--text-link); margin-top:8px; letter-spacing:0.05em;">Green Badge</div></div>
+    <div style="text-align:center;"><span class="badge badge--copper">lorem ipsum dolor</span><div style="font-family:var(--font-mono); font-size:11px; color:var(--text-link); margin-top:8px; letter-spacing:0.05em;">Copper Badge</div></div>
+    <div style="text-align:center;"><span class="badge badge--ink">lorem ipsum</span><div style="font-family:var(--font-mono); font-size:11px; color:var(--text-link); margin-top:8px; letter-spacing:0.05em;">Ink Badge</div></div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- FORMS -->
+<section class="section" id="forms">
+  <div class="section-label">05 / Forms</div>
+  <h2 class="section-title">lorem ipsum dolor</h2>
+  <div class="form-group"><label class="form-label">lorem ipsum dolor</label><input class="form-input" type="text" placeholder="モデル名・キーワードで検索"><div class="form-state-label">lorem ipsum — border: 1px solid #040b13, radius: 0px</div></div>
+  <div class="form-group"><label class="form-label">lorem ipsum dolor</label><input class="form-input form-input--focus" type="email" value="news@example.com"><div class="form-state-label">lorem ipsum — border 2px #040b13</div></div>
+</section>
+
+<hr class="section-divider">
+
+<!-- SPACING -->
+<section class="section" id="spacing">
+  <div class="section-label">06 / Spacing — 8px lorem ipsum</div>
+  <h2 class="section-title">lorem ipsum dolor</h2>
+  <div class="spacing-row">
+    <div class="spacing-item"><div class="spacing-block" style="width:4px"></div><div class="spacing-value">XS · 4px</div></div>
+    <div class="spacing-item"><div class="spacing-block" style="width:8px"></div><div class="spacing-value">S · 8px</div></div>
+    <div class="spacing-item"><div class="spacing-block" style="width:16px"></div><div class="spacing-value">M · 16px</div></div>
+    <div class="spacing-item"><div class="spacing-block" style="width:24px"></div><div class="spacing-value">L · 24px</div></div>
+    <div class="spacing-item"><div class="spacing-block" style="width:40px"></div><div class="spacing-value">XL · 40px</div></div>
+    <div class="spacing-item"><div class="spacing-block" style="width:80px"></div><div class="spacing-value">XXL · 80px</div></div>
+  </div>
+</section>
+
+<footer class="footer">
+  Generated from <a href="https://www.mazda.com/ja/">Mazda</a> DESIGN.md — awesome-design-md-jp / computed style lorem(2026-05-07)<br>
+  Note: MazdaType is proprietary. This preview uses Noto Sans JP as fallback.
+</footer>
+
+</body>
+</html>

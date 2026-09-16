@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design System Preview: Mitsubishi Estate</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Jost:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* === Brand === */
+    --brand-red: #dc000c;
+    --brand-red-dark: #d7000f;
+
+    /* === Neutral === */
+    --text-primary: #000000;
+    --text-sub: #404040;
+    --text-tertiary: #757575;
+    --text-meta: #999999;
+    --text-disabled: #c9c9c9;
+    --beige-accent: #9f9889;
+
+    /* === Backgrounds === */
+    --bg-page: #ffffff;
+    --bg-hero: #f7f6f6;
+    --bg-info: #f2f1ec;
+    --bg-subtle: #efefef;
+
+    /* === Tag === */
+    --tag-green: #4da262;
+    --tag-blue: #4a94bd;
+
+    /* === Fonts ===
+       実サイトは Century Gothic を先頭に置くが、Linux 環境では未搭載のことが多いため、
+       Jost (Google Fonts) を Century Gothic の代替として後段に置く。 */
+    --font-global: "Century Gothic", "Jost", "Noto Sans", "Noto Sans JP", sans-serif;
+    --font-content: "Noto Sans JP", "Noto Sans", sans-serif;
+    --font-h1: "Noto Sans JP", sans-serif;
+    --font-en-only: "Century Gothic", "Jost", sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg-page);
+    color: var(--text-primary);
+    font-family: var(--font-global);
+    font-size: 16px; font-weight: 400; line-height: normal;
+    letter-spacing: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* NAV */
+  .nav {
+    position: sticky; top: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 40px; height: 80px;
+    background: var(--bg-page);
+    border-bottom: 1px solid #e5e5e5;
+  }
+  .nav-brand {
+    font-family: var(--font-en-only);
+    font-size: 18px; font-weight: 700; color: var(--text-primary);
+    text-decoration: none; line-height: 1.2;
+  }
+  .nav-brand small { display: block; font-size: 11px; font-weight: 400; color: var(--text-meta); margin-top: 2px; }
+  .nav-links { display: flex; gap: 32px; list-style: none; }
+  .nav-links a {
+    font-family: var(--font-global); font-size: 16px; font-weight: 400;
+    color: var(--text-primary); text-decoration: none; transition: color 0.15s;
+  }
+  .nav-links a:hover { color: var(--brand-red); }
+  .nav-cta {
+    display: inline-flex; align-items: center;
+    background: var(--brand-red); color: #fff;
+    padding: 12px 28px; border-radius: 50px;
+    font-family: var(--font-global); font-size: 14px; font-weight: 400;
+    text-decoration: none; transition: background 0.15s;
+  }
+  .nav-cta:hover { background: var(--brand-red-dark); }
+
+  /* HERO PAGE TITLE BAR */
+  .page-hero {
+    background: var(--bg-hero);
+    padding: 80px 40px;
+  }
+  .page-hero-inner {
+    max-width: 1200px; margin: 0 auto;
+  }
+  .page-hero h1 {
+    font-family: var(--font-h1);
+    font-size: 34px; font-weight: 700; line-height: 47.6px;
+    color: var(--text-primary);
+  }
+  .page-hero-en {
+    font-family: var(--font-en-only);
+    font-size: 14px; font-weight: 400;
+    color: var(--text-meta);
+    margin-bottom: 12px; letter-spacing: 0.05em;
+  }
+
+  /* SECTIONS */
+  .section { padding: 80px 40px; max-width: 1200px; margin: 0 auto; }
+  .section-eyebrow {
+    font-family: var(--font-en-only);
+    font-size: 24px; font-weight: 400; line-height: normal;
+    color: var(--text-meta);
+    margin-bottom: 8px;
+  }
+  .section-title {
+    font-family: var(--font-content);
+    font-size: 28px; font-weight: 700; line-height: 39.2px;
+    margin-bottom: 48px;
+  }
+  .display-en {
+    font-family: var(--font-en-only);
+    font-size: 58px; font-weight: 700; line-height: 1;
+    margin-bottom: 16px; color: var(--text-primary);
+  }
+  .display-en.size-l { font-size: 46px; }
+  .display-en.size-m { font-size: 40px; }
+  .section-divider { border: none; border-top: 1px solid #e5e5e5; margin: 0; }
+
+  /* COLORS */
+  .color-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 16px; margin-bottom: 32px; }
+  .color-swatch { border-radius: 4px; overflow: hidden; background: #fff; border: 1px solid #e5e5e5; }
+  .color-swatch-block { height: 96px; width: 100%; }
+  .color-swatch-info { padding: 14px; }
+  .color-swatch-name { font-size: 14px; font-weight: 700; margin-bottom: 4px; color: var(--text-primary); font-family: var(--font-content); }
+  .color-swatch-hex { font-size: 12px; color: var(--text-meta); font-family: var(--font-en-only); }
+  .color-swatch-role { font-size: 12px; color: var(--text-tertiary); margin-top: 4px; font-family: var(--font-content); line-height: 1.5; }
+  .color-group-label { font-family: var(--font-en-only); font-size: 14px; font-weight: 700; color: var(--text-tertiary); margin: 32px 0 12px; text-transform: uppercase; letter-spacing: 0.08em; }
+
+  /* TYPOGRAPHY */
+  .type-sample { margin-bottom: 40px; padding-bottom: 32px; border-bottom: 1px solid #e5e5e5; }
+  .type-sample:last-child { border-bottom: none; }
+  .type-meta {
+    font-family: var(--font-en-only); font-size: 12px; font-weight: 400;
+    color: var(--text-meta); margin-top: 12px;
+  }
+  .type-context {
+    display: inline-block; background: var(--bg-subtle); color: var(--text-tertiary);
+    font-family: var(--font-content);
+    font-size: 11px; padding: 2px 8px; border-radius: 4px; margin-left: 8px;
+  }
+
+  /* ARTICLE / CORPORATE SAMPLE */
+  .article {
+    max-width: 760px; margin: 0 auto;
+    font-family: var(--font-content);
+  }
+  .article-lead {
+    font-family: var(--font-content);
+    font-size: 22px; font-weight: 700; line-height: 30.8px;
+    color: var(--beige-accent);
+    margin-bottom: 32px;
+  }
+  .article h2 {
+    font-family: var(--font-content);
+    font-size: 28px; font-weight: 700; line-height: 39.2px;
+    color: var(--text-primary);
+    margin: 56px 0 24px;
+  }
+  .article h3 {
+    font-family: var(--font-content);
+    font-size: 22px; font-weight: 700; line-height: 30.8px;
+    margin: 40px 0 16px;
+  }
+  .article p {
+    font-family: var(--font-content);
+    font-size: 16px; font-weight: 400; line-height: 32px;
+    margin-bottom: 24px;
+    color: var(--text-primary);
+  }
+  .article p.compact {
+    line-height: 25.6px;
+  }
+  .article-meta {
+    font-family: var(--font-en-only);
+    font-size: 14px; color: var(--text-meta);
+    margin-bottom: 16px;
+  }
+  .info-card {
+    background: var(--bg-info);
+    padding: 32px;
+    margin: 40px 0;
+  }
+  .info-card p {
+    font-size: 18px; line-height: 32.4px;
+    margin-bottom: 0;
+  }
+
+  /* BUTTONS */
+  .button-row { display: flex; gap: 24px; flex-wrap: wrap; align-items: flex-start; }
+  .button-item { text-align: center; }
+  .button-label {
+    font-family: var(--font-content);
+    font-size: 12px; font-weight: 400; color: var(--text-tertiary);
+    margin-top: 12px; line-height: 1.5;
+  }
+  .btn-cta-pill {
+    display: inline-block; background: var(--brand-red); color: #fff;
+    padding: 12px 32px; border-radius: 50px; border: none;
+    font-family: var(--font-global); font-size: 14px; font-weight: 400;
+    text-decoration: none; cursor: pointer;
+  }
+  .btn-cta-pill:hover { background: var(--brand-red-dark); }
+  .btn-search {
+    display: inline-block; background: var(--brand-red); color: #fff;
+    padding: 14px 40px; border-radius: 32px; border: none;
+    font-family: var(--font-content); font-size: 22px; font-weight: 400;
+    text-decoration: none; cursor: pointer;
+  }
+  .btn-tag {
+    display: inline-block; background: var(--bg-subtle); color: var(--text-primary);
+    padding: 8px 20px; border-radius: 0; border: none;
+    font-family: var(--font-content); font-size: 14px; font-weight: 400;
+    text-decoration: none; cursor: pointer;
+  }
+  .btn-clear {
+    display: inline-block; background: var(--bg-hero); color: var(--brand-red);
+    padding: 8px 20px; border-radius: 0; border: 1px solid #e5e5e5;
+    font-family: var(--font-content); font-size: 14px; font-weight: 400;
+    text-decoration: none; cursor: pointer;
+  }
+  .btn-modal-close {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 40px; height: 40px;
+    background: #fff; color: var(--text-primary);
+    border-radius: 50%; border: 1px solid #e5e5e5;
+    font-family: Arial, sans-serif; font-size: 13px; font-weight: 400;
+    cursor: pointer;
+  }
+
+  /* CARDS */
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+  .card {
+    background: #fff; border: 1px solid #e5e5e5;
+    padding: 32px; transition: border-color 0.2s;
+  }
+  .card:hover { border-color: var(--text-primary); }
+  .card-tag {
+    display: inline-block;
+    font-family: var(--font-en-only);
+    font-size: 11px; font-weight: 700;
+    color: #fff;
+    padding: 4px 10px;
+    margin-bottom: 16px;
+    letter-spacing: 0.05em;
+  }
+  .card-tag.green { background: var(--tag-green); }
+  .card-tag.blue { background: var(--tag-blue); }
+  .card-tag.red { background: var(--brand-red); }
+  .card-date {
+    font-family: var(--font-en-only);
+    font-size: 14px; color: var(--text-meta);
+    margin-bottom: 8px;
+  }
+  .card h3 {
+    font-family: var(--font-content);
+    font-size: 18px; font-weight: 700; line-height: 25.2px;
+    margin-bottom: 12px;
+    color: var(--text-primary);
+  }
+  .card p {
+    font-family: var(--font-content);
+    font-size: 14px; line-height: 25.2px;
+    color: var(--text-tertiary);
+  }
+
+  /* SERVICE GRID */
+  .service-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+  .service-item {
+    background: var(--bg-info);
+    padding: 32px 24px;
+    text-align: left;
+    transition: background 0.2s;
+  }
+  .service-item:hover { background: #ebe9e1; }
+  .service-item-en {
+    font-family: var(--font-en-only);
+    font-size: 14px; color: var(--brand-red);
+    margin-bottom: 8px;
+    letter-spacing: 0.05em;
+  }
+  .service-item h3 {
+    font-family: var(--font-content);
+    font-size: 18px; font-weight: 700; line-height: 25.2px;
+    color: var(--text-primary);
+  }
+
+  /* FORM */
+  .form-grid { display: grid; gap: 24px; max-width: 600px; }
+  .form-field { display: flex; flex-direction: column; gap: 8px; }
+  .form-label {
+    font-family: var(--font-content);
+    font-size: 14px; font-weight: 700; color: var(--text-primary);
+  }
+  .form-required {
+    color: var(--brand-red);
+    font-size: 11px; margin-left: 6px;
+  }
+  .form-input {
+    font-family: var(--font-content);
+    font-size: 16px; line-height: 1.5;
+    padding: 12px 16px;
+    border: 1px solid #c9c9c9;
+    border-radius: 0;
+    color: var(--text-primary);
+    background: #fff;
+  }
+  .form-input:focus {
+    outline: none;
+    border-color: var(--brand-red);
+  }
+  .form-input.error {
+    border-color: var(--brand-red);
+    background: #fff5f5;
+  }
+  .form-error-text {
+    font-family: var(--font-content);
+    font-size: 12px; color: var(--brand-red);
+  }
+  .form-help {
+    font-family: var(--font-content);
+    font-size: 12px; color: var(--text-meta);
+  }
+
+  /* ELEVATION */
+  .elevation-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 24px; }
+  .elev-block {
+    background: #fff;
+    padding: 32px;
+    text-align: center;
+    font-family: var(--font-en-only);
+    font-size: 14px; color: var(--text-tertiary);
+  }
+  .elev-block.flat { border: 1px solid #e5e5e5; }
+  .elev-block.tonal { background: var(--bg-info); }
+  .elev-block.subtle { background: var(--bg-subtle); }
+
+  /* LAYOUT */
+  .layout-demo {
+    background: var(--bg-hero);
+    padding: 24px;
+    margin-bottom: 16px;
+    font-family: var(--font-en-only);
+    font-size: 12px; color: var(--text-tertiary);
+  }
+  .layout-demo strong { color: var(--text-primary); font-size: 14px; }
+
+  /* FONT NOTE */
+  .font-note {
+    background: var(--bg-info);
+    padding: 32px;
+    font-family: var(--font-content);
+    font-size: 15px;
+    line-height: 1.8;
+    color: var(--text-primary);
+  }
+  .font-note strong { font-weight: 700; }
+
+  /* FOOTER */
+  .footer {
+    background: var(--bg-hero);
+    padding: 40px;
+    text-align: center;
+    font-family: var(--font-en-only);
+    font-size: 12px; color: var(--text-tertiary);
+    margin-top: 80px;
+  }
+  .footer a { color: var(--text-tertiary); text-decoration: none; }
+  .footer a:hover { color: var(--brand-red); }
+
+  @media (max-width: 768px) {
+    .nav { padding: 0 20px; height: 64px; }
+    .nav-links { display: none; }
+    .page-hero { padding: 48px 20px; }
+    .page-hero h1 { font-size: 24px; line-height: 1.4; }
+    .display-en { font-size: 36px; }
+    .display-en.size-l { font-size: 32px; }
+    .display-en.size-m { font-size: 28px; }
+    .section { padding: 48px 20px; }
+    .section-title { font-size: 22px; line-height: 30.8px; }
+    .article h2 { font-size: 22px; line-height: 30.8px; }
+    .article-lead { font-size: 18px; line-height: 28.8px; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="nav-brand" href="#">
+    Mitsubishi Estate
+    <small>lorem ipsum — Design System Preview</small>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#colors">Colors</a></li>
+    <li><a href="#typography">Typography</a></li>
+    <li><a href="#article">Article</a></li>
+    <li><a href="#buttons">Buttons</a></li>
+    <li><a href="#cards">Cards</a></li>
+    <li><a href="#forms">Forms</a></li>
+  </ul>
+  <a class="nav-cta" href="#">lorem ipsum</a>
+</nav>
+
+<!-- PAGE HERO -->
+<section class="page-hero">
+  <div class="page-hero-inner">
+    <div class="page-hero-en">DESIGN SYSTEM</div>
+    <h1>lorem ipsum dolor sit amet consectetur</h1>
+  </div>
+</section>
+
+<!-- COLORS -->
+<section class="section" id="colors">
+  <div class="section-eyebrow">Our Palette</div>
+  <h2 class="section-title">lorem ipsum dolor</h2>
+
+  <div class="color-group-label">Brand</div>
+  <div class="color-grid">
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#dc000c"></div><div class="color-swatch-info"><div class="color-swatch-name">Brand Red</div><div class="color-swatch-hex">#DC000C</div><div class="color-swatch-role">CTA / lorem / lorem</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#d7000f"></div><div class="color-swatch-info"><div class="color-swatch-name">Brand Red Dark</div><div class="color-swatch-hex">#D7000F</div><div class="color-swatch-role">lorem ipsum</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#000000"></div><div class="color-swatch-info"><div class="color-swatch-name">Black</div><div class="color-swatch-hex">#000000</div><div class="color-swatch-role">lorem / lorem</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#ffffff; border:1px solid #e5e5e5"></div><div class="color-swatch-info"><div class="color-swatch-name">White</div><div class="color-swatch-hex">#FFFFFF</div><div class="color-swatch-role">lorem ipsum</div></div></div>
+  </div>
+
+  <div class="color-group-label">Backgrounds</div>
+  <div class="color-grid">
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#f7f6f6"></div><div class="color-swatch-info"><div class="color-swatch-name">Hero Bg</div><div class="color-swatch-hex">#F7F6F6</div><div class="color-swatch-role">lorem ipsum dolor</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#f2f1ec"></div><div class="color-swatch-info"><div class="color-swatch-name">Info Card Bg</div><div class="color-swatch-hex">#F2F1EC</div><div class="color-swatch-role">lorem ipsum(lorem ipsum)</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#efefef"></div><div class="color-swatch-info"><div class="color-swatch-name">Subtle Bg</div><div class="color-swatch-hex">#EFEFEF</div><div class="color-swatch-role">lorem ipsum / lorem</div></div></div>
+  </div>
+
+  <div class="color-group-label">Text</div>
+  <div class="color-grid">
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#000000"></div><div class="color-swatch-info"><div class="color-swatch-name">Text Primary</div><div class="color-swatch-hex">#000000</div><div class="color-swatch-role">lorem</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#404040"></div><div class="color-swatch-info"><div class="color-swatch-name">Text Sub</div><div class="color-swatch-hex">#404040</div><div class="color-swatch-role">lorem ipsum dolor</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#757575"></div><div class="color-swatch-info"><div class="color-swatch-name">Text Tertiary</div><div class="color-swatch-hex">#757575</div><div class="color-swatch-role">lorem / lorem ipsum dolor</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#999999"></div><div class="color-swatch-info"><div class="color-swatch-name">Text Meta</div><div class="color-swatch-hex">#999999</div><div class="color-swatch-role">lorem / lorem</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#c9c9c9"></div><div class="color-swatch-info"><div class="color-swatch-name">Text Disabled</div><div class="color-swatch-hex">#C9C9C9</div><div class="color-swatch-role">lorem ipsum</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#9f9889"></div><div class="color-swatch-info"><div class="color-swatch-name">Beige Accent</div><div class="color-swatch-hex">#9F9889</div><div class="color-swatch-role">lorem ipsum dolor</div></div></div>
+  </div>
+
+  <div class="color-group-label">Tag (Category)</div>
+  <div class="color-grid">
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#4da262"></div><div class="color-swatch-info"><div class="color-swatch-name">Tag Green</div><div class="color-swatch-hex">#4DA262</div><div class="color-swatch-role">lorem ipsum dolor</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#4a94bd"></div><div class="color-swatch-info"><div class="color-swatch-name">Tag Blue</div><div class="color-swatch-hex">#4A94BD</div><div class="color-swatch-role">lorem ipsum dolor</div></div></div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- TYPOGRAPHY -->
+<section class="section" id="typography">
+  <div class="section-eyebrow">Typography</div>
+  <h2 class="section-title">lorem ipsum dolor sit</h2>
+
+  <div class="type-sample">
+    <div style="font-family: var(--font-en-only); font-size:58px; font-weight:700; line-height:1;">TOPICS</div>
+    <div class="type-meta">Century Gothic / 58px / 700 / lh: normal / ls: normal<span class="type-context">lorem ipsum dolor</span></div>
+  </div>
+
+  <div class="type-sample">
+    <div style="font-family: var(--font-en-only); font-size:46px; font-weight:700; line-height:1;">NEWS</div>
+    <div class="type-meta">Century Gothic / 46px / 700 / lh: normal<span class="type-context">lorem ipsum dolor sit</span></div>
+  </div>
+
+  <div class="type-sample">
+    <div style="font-family: var(--font-en-only); font-size:40px; font-weight:700; line-height:1;">SUSTAINABILITY</div>
+    <div class="type-meta">Century Gothic / 40px / 700 / lh: normal<span class="type-context">lorem ipsum dolor sit(lorem)</span></div>
+  </div>
+
+  <div class="type-sample">
+    <div style="font-family: var(--font-h1); font-size:34px; font-weight:700; line-height:47.6px;">lorem ipsum dolor sit amet consectetur</div>
+    <div class="type-meta">Noto Sans JP / 34px / 700 / lh: 47.6px (×1.4)<span class="type-context">lorem ipsum dolor H1</span></div>
+  </div>
+
+  <div class="type-sample">
+    <div style="font-family: var(--font-content); font-size:28px; font-weight:700; line-height:39.2px;">lorem ipsum dolor, lorem ipsum dolor.</div>
+    <div class="type-meta">Noto Sans JP / 28px / 700 / lh: 39.2px (×1.4)<span class="type-context">lorem ipsum dolor H2</span></div>
+  </div>
+
+  <div class="type-sample">
+    <div style="font-family: var(--font-content); font-size:24px; font-weight:700; line-height:33.6px;">lorem ipsum dolor</div>
+    <div class="type-meta">Noto Sans JP / 24px / 700 / lh: 33.6px (×1.4)<span class="type-context">lorem ipsum dolor sit</span></div>
+  </div>
+
+  <div class="type-sample">
+    <div style="font-family: var(--font-content); font-size:22px; font-weight:700; line-height:30.8px; color: var(--beige-accent);">lorem ipsum dolor sit amet consectetur adipiscing DNA</div>
+    <div class="type-meta">Noto Sans JP / 22px / 700 / lh: 30.8px / color: #9F9889<span class="type-context">lorem / lorem ipsum</span></div>
+  </div>
+
+  <div class="type-sample">
+    <div style="font-family: var(--font-content); font-size:18px; font-weight:700; line-height:25.2px;">lorem ipsum dolor</div>
+    <div class="type-meta">Noto Sans JP / 18px / 700 / lh: 25.2px (×1.4)<span class="type-context">lorem ipsum dolor sit amet</span></div>
+  </div>
+
+  <div class="type-sample">
+    <div style="font-family: var(--font-content); font-size:16px; font-weight:400; line-height:32px;">lorem ipsum dolor sit, lorem ipsum“lorem ipsum dolor sit amet”lorem ipsum dolor sit, lorem ipsum dolor sit amet consectetur adipiscing. lorem line-height 32px (×2.0) lorem ipsum dolor, lorem ipsum dolor sit amet consectetur adipiscing.</div>
+    <div class="type-meta">Noto Sans JP / 16px / 400 / lh: 32px (×2.0)<span class="type-context">lorem(lorem)</span></div>
+  </div>
+
+  <div class="type-sample">
+    <div style="font-family: var(--font-content); font-size:16px; font-weight:400; line-height:25.6px;">lorem ipsum dolor sit amet consectetur line-height 25.6px (×1.6) lorem ipsum dolor sit amet consectetur adipiscing.</div>
+    <div class="type-meta">Noto Sans JP / 16px / 400 / lh: 25.6px (×1.6)<span class="type-context">lorem(lorem)</span></div>
+  </div>
+
+  <div class="type-sample">
+    <div style="font-family: var(--font-en-only); font-size:24px; font-weight:400; line-height:normal; color:#999;">Our Business</div>
+    <div class="type-meta">Century Gothic / 24px / 400 / color: #999<span class="type-context">lorem ipsum dolor</span></div>
+  </div>
+
+  <div class="type-sample">
+    <div style="font-family: var(--font-en-only); font-size:12px; font-weight:400; color:#404040;">HOME &gt; NEWS &gt; PRESS RELEASE</div>
+    <div class="type-meta">Century Gothic / 12px / 400 / color: #404040<span class="type-context">lorem ipsum / lorem</span></div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ARTICLE / CORPORATE -->
+<section class="section" id="article">
+  <div class="section-eyebrow">Article Sample</div>
+  <h2 class="section-title">lorem / lorem ipsum dolor sit amet consectetur</h2>
+
+  <article class="article">
+    <div class="article-meta">2026.04.25 — Press Release</div>
+    <h2 style="margin-top:0;">“lorem ipsum dolor sit. ”lorem TVCM lorem ipsum dolor sit</h2>
+
+    <p class="article-lead">lorem, lorem. lorem, lorem. lorem ipsum dolor sit, lorem ipsum dolor sit amet consectetur adipiscing elit, lorem ipsum dolor sit amet consectetur.</p>
+
+    <p>lorem ipsum dolor(lorem: lorem ipsum dolor, lorem ipsum: lorem)lorem, lorem ipsum dolor sit amet“lorem, lorem. lorem, lorem. ”lorem, lorem TVCM lorem 2026 lorem 4 lorem 25 lorem(lorem)lorem ipsum dolor sit amet consectetur.</p>
+
+    <h3>lorem TVCM lorem ipsum</h3>
+    <p>lorem CM lorem, lorem ipsum dolor sit amet consectetur adipiscing, lorem ipsum dolor sit amet consectetur. lorem ipsum dolor sit, lorem ipsum dolor sit amet consectetur, lorem ipsum dolor sit amet consectetur.</p>
+
+    <div class="info-card">
+      <p><strong>lorem ipsum</strong>: 2026 lorem 4 lorem 25 lorem(lorem) – 2026 lorem 6 lorem 30 lorem(lorem)<br><strong>lorem ipsum</strong>: lorem ipsum<br><strong>lorem</strong>: lorem ipsum / BS lorem</p>
+    </div>
+
+    <h3>lorem ipsum dolor sit amet consectetur</h3>
+    <p>lorem ipsum dolor sit, lorem / lorem / lorem ipsum dolor sit, lorem 100 lorem ipsum dolor sit amet consectetur. lorem ipsum, lorem, lorem, lorem, lorem, lorem ipsum, lorem ipsum dolor sit amet consectetur.</p>
+
+    <p class="compact">lorem ipsum dolor sit amet consectetur, lorem ipsum dolor lorem ipsum dolor sit amet consectetur.</p>
+  </article>
+</section>
+
+<hr class="section-divider">
+
+<!-- DISPLAY EN SECTION SHOWCASE -->
+<section class="section">
+  <div class="section-eyebrow">Display Headlines</div>
+  <h2 class="section-title">lorem ipsum dolor sit amet consectetur</h2>
+  <div class="display-en">TOPICS</div>
+  <p style="font-family: var(--font-content); color: var(--text-tertiary); margin-bottom: 48px; line-height: 1.8;">lorem ipsum dolor sit amet consectetur.</p>
+  <div class="display-en size-l">NEWS</div>
+  <p style="font-family: var(--font-content); color: var(--text-tertiary); margin-bottom: 48px; line-height: 1.8;">lorem ipsum dolor sit amet consectetur.</p>
+  <div class="display-en size-m">SUSTAINABILITY</div>
+  <p style="font-family: var(--font-content); color: var(--text-tertiary); line-height: 1.8;">lorem ipsum dolor sit amet consectetur.</p>
+</section>
+
+<hr class="section-divider">
+
+<!-- BUTTONS -->
+<section class="section" id="buttons">
+  <div class="section-eyebrow">Buttons</div>
+  <h2 class="section-title">lorem ipsum dolor</h2>
+
+  <div class="button-row">
+    <div class="button-item">
+      <button class="btn-cta-pill">lorem ipsum</button>
+      <div class="button-label">CTA Pill<br>bg: #DC000C / radius: 50px</div>
+    </div>
+    <div class="button-item">
+      <button class="btn-search">lorem ipsum</button>
+      <div class="button-label">Search<br>bg: #DC000C / radius: 32px / 22px</div>
+    </div>
+    <div class="button-item">
+      <button class="btn-tag">lorem ipsum dolor</button>
+      <div class="button-label">Filter Tag<br>bg: #EFEFEF / radius: 0</div>
+    </div>
+    <div class="button-item">
+      <button class="btn-clear">lorem ipsum dolor</button>
+      <div class="button-label">Clear (text)<br>color: #DC000C</div>
+    </div>
+    <div class="button-item">
+      <button class="btn-modal-close">×</button>
+      <div class="button-label">Modal Close<br>radius: 50%</div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- CARDS -->
+<section class="section" id="cards">
+  <div class="section-eyebrow">Cards</div>
+  <h2 class="section-title">lorem ipsum dolor</h2>
+
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-tag red">PRESS RELEASE</div>
+      <div class="card-date">2026.04.25</div>
+      <h3>“lorem ipsum dolor sit. ”lorem TVCM lorem ipsum</h3>
+      <p>lorem ipsum dolor sit amet consectetur, lorem TVCM lorem ipsum dolor sit amet consectetur.</p>
+    </div>
+    <div class="card">
+      <div class="card-tag green">SUSTAINABILITY</div>
+      <div class="card-date">2026.04.18</div>
+      <h3>lorem ipsum dolor sit amet consectetur adipiscing</h3>
+      <p>2030 lorem ipsum dolor sit amet consectetur adipiscing elit.</p>
+    </div>
+    <div class="card">
+      <div class="card-tag blue">OFFICE</div>
+      <div class="card-date">2026.04.10</div>
+      <h3>lorem ipsum dolor sit lorem ipsum dolor sit</h3>
+      <p>lorem ipsum dolor sit amet consectetur adipiscing.</p>
+    </div>
+  </div>
+
+  <h3 style="font-family: var(--font-content); font-size: 22px; font-weight: 700; line-height: 30.8px; margin-top: 64px; margin-bottom: 24px;">lorem ipsum dolor</h3>
+
+  <div class="service-grid">
+    <a href="#" class="service-item" style="text-decoration:none;">
+      <div class="service-item-en">OFFICE</div>
+      <h3>lorem ipsum dolor</h3>
+    </a>
+    <a href="#" class="service-item" style="text-decoration:none;">
+      <div class="service-item-en">SHOPPING</div>
+      <h3>lorem ipsum dolor</h3>
+    </a>
+    <a href="#" class="service-item" style="text-decoration:none;">
+      <div class="service-item-en">RESIDENTIAL</div>
+      <h3>lorem ipsum</h3>
+    </a>
+    <a href="#" class="service-item" style="text-decoration:none;">
+      <div class="service-item-en">HOTEL</div>
+      <h3>lorem ipsum</h3>
+    </a>
+    <a href="#" class="service-item" style="text-decoration:none;">
+      <div class="service-item-en">AIRPORT</div>
+      <h3>lorem ipsum</h3>
+    </a>
+    <a href="#" class="service-item" style="text-decoration:none;">
+      <div class="service-item-en">LOGISTIC</div>
+      <h3>lorem ipsum dolor</h3>
+    </a>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- FORMS -->
+<section class="section" id="forms">
+  <div class="section-eyebrow">Forms</div>
+  <h2 class="section-title">lorem ipsum</h2>
+
+  <form class="form-grid" onsubmit="return false;">
+    <div class="form-field">
+      <label class="form-label">lorem<span class="form-required">lorem</span></label>
+      <input type="text" class="form-input" value="山田 太郎">
+      <div class="form-help">lorem ipsum dolor sit amet consectetur</div>
+    </div>
+
+    <div class="form-field">
+      <label class="form-label">lorem ipsum dolor<span class="form-required">lorem</span></label>
+      <input type="email" class="form-input" value="example@" placeholder="example@mec.co.jp">
+      <div class="form-help">lorem ipsum dolor sit(border: lorem)</div>
+    </div>
+
+    <div class="form-field">
+      <label class="form-label">lorem ipsum<span class="form-required">lorem</span></label>
+      <input type="tel" class="form-input error" value="abc">
+      <div class="form-error-text">lorem ipsum dolor sit amet</div>
+    </div>
+
+    <div style="margin-top: 16px;">
+      <button class="btn-cta-pill">lorem ipsum</button>
+    </div>
+  </form>
+</section>
+
+<hr class="section-divider">
+
+<!-- ELEVATION -->
+<section class="section">
+  <div class="section-eyebrow">Elevation</div>
+  <h2 class="section-title">lorem ipsum</h2>
+  <p style="font-family: var(--font-content); color: var(--text-tertiary); margin-bottom: 32px; line-height: 1.8;">lorem ipsum dolor sit amet consectetur. box-shadow lorem ipsum, lorem ipsum(lorem ipsum)lorem ipsum dolor sit amet consectetur.</p>
+  <div class="elevation-grid">
+    <div class="elev-block flat">FLAT<br><span style="color: var(--text-meta); font-size: 12px;">border 1px</span></div>
+    <div class="elev-block tonal">TONAL (Beige)<br><span style="color: var(--text-meta); font-size: 12px;">bg #F2F1EC</span></div>
+    <div class="elev-block subtle">TONAL (Subtle)<br><span style="color: var(--text-meta); font-size: 12px;">bg #EFEFEF</span></div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- LAYOUT -->
+<section class="section">
+  <div class="section-eyebrow">Layout</div>
+  <h2 class="section-title">lorem ipsum dolor</h2>
+  <div class="layout-demo"><strong>HEADER:</strong> lorem / lorem 110px / bg #FFFFFF / lorem nav + lorem ipsum dolor CTA</div>
+  <div class="layout-demo"><strong>PAGE TITLE BAR:</strong> bg #F7F6F6 / H1 Noto Sans JP 34px 700 / lorem ipsum dolor</div>
+  <div class="layout-demo"><strong>CONTENT:</strong> lorem ipsum / max-width lorem 1200px / lorem ipsum dolor / lorem ipsum dolor sit 80px+</div>
+  <div class="layout-demo"><strong>GRID:</strong> 2-4 lorem ipsum dolor sit / lorem ipsum dolor sit amet consectetur</div>
+</section>
+
+<hr class="section-divider">
+
+<!-- FONT NOTE -->
+<section class="section">
+  <div class="section-eyebrow">Font Note</div>
+  <h2 class="section-title">lorem ipsum dolor</h2>
+  <div class="font-note">
+    <p style="margin-bottom: 16px;">lorem ipsum dolor sit amet consectetur<strong>Century Gothic</strong> lorem ipsum dolor sit amet consectetur. Century Gothic lorem macOS / Windows lorem ipsum dolor sit amet consectetur adipiscing, Linux lorem(puppeteer lorem headless Chrome lorem)lorem ipsum dolor sit amet consectetur, lorem ipsum dolor sit<strong>Jost</strong>(Google Fonts)lorem Century Gothic lorem ipsum dolor sit amet consectetur.</p>
+    <p style="margin-bottom: 16px;">lorem<strong>Noto Sans JP</strong> lorem Google Fonts lorem weight 400 / 500 / 700 lorem ipsum dolor sit. lorem ipsum dolor sit amet<strong>Noto Sans JP lorem</strong>, lorem ipsum / lorem / lorem ipsum dolor sit amet<strong>Century Gothic lorem</strong> lorem stack lorem ipsum dolor sit.</p>
+    <p>letter-spacing lorem ipsum normal, font-feature-settings lorem normal. lorem ipsum dolor(palt)lorem ipsum, lorem ipsum dolor sit amet. lorem ipsum dolor sit<strong>font-size × 1.4</strong>, lorem<strong>× 1.6〜2.0</strong> lorem ipsum dolor.</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <p>Generated from <a href="https://www.mec.co.jp">mec.co.jp</a> DESIGN.md — <a href="https://github.com/kzhrknt/awesome-design-md-jp">awesome-design-md-jp</a></p>
+</footer>
+
+</body>
+</html>

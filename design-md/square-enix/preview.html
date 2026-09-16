@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design System Preview: Square Enix</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!--
+  Web フォント方針（DESIGN.md §3.3 注記参照）:
+  - 実サイトは Helvetica / メイリオ / ヒラギノ角ゴ等の OS フォントのみ使用
+  - preview.html では Noto Sans JP を代替として読み込み、ローカル環境での表示を担保
+-->
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* === Colors: DESIGN.md §2 実測値ベース === */
+    --sqex-red: #c80000;
+    --black: #000000;
+    --white: #ffffff;
+    --nav-dark: #333333;
+    --footer-grey: #e5e5e5;
+    --dark-grey: #444444;
+    --text-subtle: #60676f;
+    --hero-overlay: rgba(0, 0, 0, 0.8);
+    --search-bg: #ededed;
+    --search-border: #dedede;
+    --surface-card: #e5e5e5;
+
+    /* === Elevation === */
+    --elevation-0: none;
+
+    /* === Fonts === */
+    --font-system: Helvetica, Arial, "Noto Sans JP", メイリオ, Meiryo,
+                   "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", sans-serif;
+    --font-mono: SFMono-Regular, Consolas, Menlo, Courier, monospace;
+
+    /* === Radius (全要素 0px) === */
+    --radius: 0px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--white);
+    color: var(--black);
+    font-family: var(--font-system);
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.125;
+    letter-spacing: normal;
+    font-feature-settings: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  a { text-decoration: none; }
+  ul { list-style: none; }
+
+  /* === NAV (White header + dark nav bar) === */
+  .header {
+    background: var(--white);
+    border-bottom: 1px solid #ddd;
+  }
+  .header-top {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 32px; max-width: 960px; margin: 0 auto;
+  }
+  .header-brand {
+    font-family: var(--font-system);
+    font-size: 18px; font-weight: 700;
+    color: var(--black);
+    letter-spacing: 0.02em;
+  }
+  .header-search {
+    display: flex; align-items: center; gap: 0;
+  }
+  .header-search input {
+    font-family: var(--font-system);
+    font-size: 14px; color: var(--black);
+    background: var(--search-bg);
+    border: 1px solid var(--search-border);
+    border-radius: 2px;
+    padding: 6px 10px 6px 12px;
+    width: 180px;
+    outline: none;
+  }
+  .header-search button {
+    font-family: var(--font-system);
+    font-size: 12px; color: var(--black);
+    background: var(--search-bg);
+    border: 1px solid var(--search-border);
+    border-left: none;
+    border-radius: var(--radius);
+    padding: 6px 12px;
+    cursor: pointer;
+  }
+  .nav-bar {
+    background: var(--nav-dark);
+    display: flex; align-items: center; justify-content: center;
+    gap: 0; height: 44px;
+  }
+  .nav-bar a {
+    font-family: var(--font-system);
+    font-size: 14px; font-weight: 400;
+    color: rgba(255, 255, 255, 0.85);
+    padding: 0 20px; height: 100%;
+    display: flex; align-items: center;
+    transition: color 0.15s, background 0.15s;
+    border-radius: var(--radius);
+  }
+  .nav-bar a:hover { color: var(--white); background: rgba(255,255,255,0.08); }
+  .nav-bar a.active { color: var(--sqex-red); }
+
+  /* === HERO (dark bg with overlay caption) === */
+  .hero {
+    background: var(--black);
+    padding: 80px 32px 64px;
+    text-align: center;
+    position: relative;
+  }
+  .hero h1 {
+    font-family: var(--font-system);
+    font-size: 36px; font-weight: 700;
+    line-height: 1.2;
+    color: var(--white);
+    margin-bottom: 12px;
+  }
+  .hero-caption {
+    display: inline-block;
+    font-family: var(--font-system);
+    font-size: 14px; font-weight: 400;
+    line-height: 1.5;
+    color: var(--white);
+    background: var(--hero-overlay);
+    padding: 8px 16px;
+    border-radius: var(--radius);
+    max-width: 640px;
+    margin-bottom: 32px;
+  }
+  .hero-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+  /* === BUTTONS === */
+  .btn-primary {
+    display: inline-block;
+    background: var(--sqex-red);
+    color: var(--white);
+    padding: 0 40px;
+    border: none;
+    border-radius: var(--radius);
+    font-family: var(--font-system);
+    font-size: 22.12px; font-weight: 400;
+    line-height: 50px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+  .btn-primary:hover { opacity: 0.85; }
+  .btn-primary--small {
+    font-size: 14px;
+    padding: 0 20px;
+    line-height: 36px;
+  }
+  .btn-secondary {
+    display: inline-block;
+    background: var(--surface-card);
+    color: var(--nav-dark);
+    padding: 0 24px;
+    border: none;
+    border-radius: var(--radius);
+    font-family: var(--font-system);
+    font-size: 14px; font-weight: 400;
+    line-height: 36px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+  .btn-secondary:hover { opacity: 0.85; }
+  .btn-outline {
+    display: inline-block;
+    background: transparent;
+    color: var(--white);
+    padding: 0 24px;
+    border: 1px solid rgba(255,255,255,0.4);
+    border-radius: var(--radius);
+    font-family: var(--font-system);
+    font-size: 14px; font-weight: 400;
+    line-height: 36px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: border-color 0.15s;
+  }
+  .btn-outline:hover { border-color: var(--white); }
+
+  /* === SECTIONS === */
+  .section {
+    padding: 64px 32px;
+    max-width: 960px;
+    margin: 0 auto;
+  }
+  .section-dark {
+    background: var(--black);
+    color: var(--white);
+    padding: 64px 32px;
+  }
+  .section-dark .section-inner { max-width: 960px; margin: 0 auto; }
+  .section-grey {
+    background: var(--footer-grey);
+    color: var(--black);
+    padding: 64px 32px;
+  }
+  .section-grey .section-inner { max-width: 960px; margin: 0 auto; }
+  .section-divider {
+    border: none;
+    border-top: 1px solid #ddd;
+    margin: 0;
+  }
+  .section-divider--dark {
+    border: none;
+    border-top: 1px solid #333;
+    margin: 0;
+  }
+  .section-label {
+    font-family: var(--font-system);
+    font-size: 12px; font-weight: 700;
+    color: var(--text-subtle);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    letter-spacing: 0.08em;
+  }
+  .section-label--light { color: rgba(255,255,255,0.5); }
+  .section-title {
+    font-family: var(--font-system);
+    font-size: 22.12px; font-weight: 700;
+    line-height: 1.3;
+    color: var(--text-subtle);
+    margin-bottom: 32px;
+  }
+  .section-title--white { color: var(--white); }
+  .section-title--black { color: var(--black); }
+
+  /* === COLORS === */
+  .color-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .color-swatch {
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--white);
+    border: 1px solid #ddd;
+  }
+  .color-swatch-block { height: 72px; width: 100%; }
+  .color-swatch-info { padding: 10px 12px; }
+  .color-swatch-name {
+    font-size: 13px; font-weight: 700;
+    margin-bottom: 2px; color: var(--black);
+  }
+  .color-swatch-hex {
+    font-size: 12px; color: var(--text-subtle);
+    font-family: var(--font-mono);
+  }
+  .color-swatch-role {
+    font-size: 11px; color: var(--text-subtle);
+    margin-top: 3px;
+  }
+  .color-group-label {
+    font-size: 14px; font-weight: 700;
+    color: var(--text-subtle);
+    margin: 24px 0 10px;
+  }
+
+  /* === TYPOGRAPHY === */
+  .type-sample {
+    margin-bottom: 28px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid #ddd;
+  }
+  .type-sample:last-child { border-bottom: none; }
+  .type-meta {
+    font-family: var(--font-mono);
+    font-size: 12px; font-weight: 400;
+    color: var(--text-subtle);
+    margin-top: 8px;
+  }
+  .type-context {
+    display: inline-block;
+    background: #f0f0f0;
+    color: var(--text-subtle);
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: var(--radius);
+    margin-left: 8px;
+    font-family: var(--font-system);
+  }
+
+  /* === ARTICLE / GAME PRODUCT === */
+  .article-preview {
+    max-width: 680px;
+    margin: 0 auto;
+  }
+  .article-preview h1 {
+    font-family: var(--font-system);
+    font-size: 22.12px; font-weight: 700;
+    line-height: 1.3; color: var(--white);
+    margin-bottom: 16px;
+  }
+  .article-preview .meta {
+    font-family: var(--font-system);
+    font-size: 12px; color: rgba(255,255,255,0.5);
+    margin-bottom: 32px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #333;
+  }
+  .article-preview p {
+    font-family: var(--font-system);
+    font-size: 14px; font-weight: 400;
+    line-height: 1.75;
+    color: rgba(255,255,255,0.9);
+    margin-bottom: 16px;
+  }
+  .article-preview h2 {
+    font-family: var(--font-system);
+    font-size: 18px; font-weight: 700;
+    line-height: 1.3; color: var(--white);
+    margin: 32px 0 12px;
+  }
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-top: 32px;
+  }
+  .product-card {
+    background: var(--surface-card);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .product-card-image {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    display: flex; align-items: center; justify-content: center;
+    color: rgba(255,255,255,0.6);
+    font-family: var(--font-system);
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .product-card-image.tone-2 { background: linear-gradient(135deg, #2d1b2e 0%, #3d1e3e 50%, #5c2d60 100%); }
+  .product-card-image.tone-3 { background: linear-gradient(135deg, #1a2e1a 0%, #1e3e21 50%, #2d603b 100%); }
+  .product-card-body {
+    padding: 16px 20px;
+  }
+  .product-platform {
+    font-family: var(--font-system);
+    font-size: 11px; font-weight: 700;
+    color: var(--text-subtle);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 4px;
+  }
+  .product-name {
+    font-family: var(--font-system);
+    font-size: 16.1px; font-weight: 700;
+    line-height: 1.4;
+    color: var(--black);
+    margin-bottom: 8px;
+  }
+  .product-price {
+    font-family: var(--font-system);
+    font-size: 16.1px; font-weight: 700;
+    color: var(--sqex-red);
+  }
+  .product-price small {
+    font-size: 12px; font-weight: 400;
+    color: var(--text-subtle);
+  }
+
+  /* === TOPIC / NEWS LIST === */
+  .news-list { list-style: none; }
+  .news-item {
+    display: flex; align-items: flex-start; gap: 16px;
+    padding: 16px 0; border-bottom: 1px solid #333;
+  }
+  .news-item:first-child { padding-top: 0; }
+  .news-date {
+    font-size: 13px; color: rgba(255,255,255,0.5);
+    white-space: nowrap; min-width: 90px;
+    line-height: 1.75;
+  }
+  .news-badge {
+    display: inline-block;
+    font-size: 11px; font-weight: 700;
+    color: var(--white);
+    background: var(--sqex-red);
+    padding: 3px 8px;
+    border-radius: var(--radius);
+    white-space: nowrap;
+    min-width: 56px; text-align: center;
+  }
+  .news-badge--game { background: var(--nav-dark); }
+  .news-badge--manga { background: var(--text-subtle); }
+  .news-title {
+    font-size: 14px; font-weight: 400;
+    line-height: 1.75;
+  }
+  .news-title a {
+    color: rgba(255,255,255,0.9);
+    text-decoration: none;
+  }
+  .news-title a:hover { color: var(--sqex-red); }
+
+  /* === CARD GRID === */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+  }
+  .card {
+    background: var(--surface-card);
+    border: none;
+    border-radius: var(--radius);
+    padding: 20px;
+    transition: opacity 0.15s;
+  }
+  .card:hover { opacity: 0.9; }
+  .card-badge { margin-bottom: 10px; }
+  .card h3 {
+    font-size: 16.1px; font-weight: 700;
+    line-height: 1.4;
+    margin-bottom: 8px;
+    color: var(--black);
+  }
+  .card p {
+    font-size: 14px; color: var(--text-subtle);
+    line-height: 1.6;
+  }
+  .card-link {
+    font-size: 14px; color: var(--sqex-red);
+    text-decoration: none;
+    margin-top: 12px; display: inline-block;
+    font-weight: 700;
+  }
+  .card-link:hover { text-decoration: underline; }
+
+  /* === FORMS === */
+  .form-group {
+    margin-bottom: 24px;
+    max-width: 420px;
+  }
+  .form-label {
+    display: block;
+    font-size: 14px; font-weight: 700;
+    color: var(--black);
+    margin-bottom: 8px;
+  }
+  .form-input {
+    width: 100%;
+    background: var(--search-bg);
+    color: var(--black);
+    border: 1px solid var(--search-border);
+    border-radius: var(--radius);
+    padding: 10px 12px;
+    font-family: var(--font-system);
+    font-size: 14px;
+    height: 44px;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .form-input::placeholder { color: var(--text-subtle); }
+  .form-input:focus,
+  .form-input--focus {
+    border-color: var(--nav-dark);
+    box-shadow: 0 0 0 2px rgba(51,51,51,0.15);
+  }
+  .form-input--error {
+    border-color: var(--sqex-red);
+    box-shadow: 0 0 0 2px rgba(200,0,0,0.15);
+  }
+  .form-state-label {
+    font-family: var(--font-mono);
+    font-size: 11px; color: var(--text-subtle);
+    margin-top: 6px;
+  }
+  .form-state-label.error { color: var(--sqex-red); }
+
+  /* === ELEVATION === */
+  .elevation-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+  }
+  .elevation-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 24px;
+    text-align: center;
+    border: 1px solid #ddd;
+  }
+  .elevation-label {
+    font-size: 14px; font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .elevation-desc {
+    font-family: var(--font-mono);
+    font-size: 11px; color: var(--text-subtle);
+    word-break: break-all;
+  }
+
+  /* === LAYOUT === */
+  .width-bar {
+    height: 32px;
+    background: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: var(--radius);
+    margin-bottom: 8px;
+    overflow: hidden;
+  }
+  .width-bar-inner {
+    height: 100%;
+    background: var(--sqex-red);
+    opacity: 0.25;
+  }
+  .width-bar-label {
+    font-size: 13px; font-weight: 700;
+    color: var(--black);
+    margin-bottom: 4px;
+  }
+  .width-bar-value {
+    font-family: var(--font-mono);
+    font-size: 12px; color: var(--text-subtle);
+  }
+
+  /* === FOOTER === */
+  .footer {
+    background: var(--footer-grey);
+    color: var(--black);
+    padding: 40px 32px;
+    font-size: 12px;
+    line-height: 1.75;
+  }
+  .footer-inner {
+    max-width: 960px; margin: 0 auto;
+  }
+  .footer-brand {
+    font-family: var(--font-system);
+    font-size: 16px; font-weight: 700;
+    color: var(--black);
+    margin-bottom: 16px;
+    letter-spacing: 0.02em;
+  }
+  .footer-links {
+    display: flex; gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+  .footer-links a {
+    color: var(--text-subtle);
+    font-size: 12px; font-weight: 700;
+    text-decoration: none;
+  }
+  .footer-links a:hover { color: var(--sqex-red); }
+  .footer-bottom {
+    padding-top: 16px;
+    border-top: 1px solid #ccc;
+    color: var(--text-subtle);
+    font-size: 11px;
+  }
+  .footer-bottom a {
+    color: var(--sqex-red);
+    text-decoration: underline;
+  }
+
+  /* === RESPONSIVE === */
+  @media (max-width: 767px) {
+    .header-top { padding: 12px 16px; }
+    .header-search { display: none; }
+    .nav-bar { overflow-x: auto; justify-content: flex-start; padding: 0 8px; }
+    .nav-bar a { white-space: nowrap; font-size: 13px; padding: 0 12px; }
+    .hero { padding: 48px 20px 40px; }
+    .hero h1 { font-size: 26px; }
+    .section { padding: 48px 20px; }
+    .section-dark { padding: 48px 20px; }
+    .section-grey { padding: 48px 20px; }
+    .card-grid { grid-template-columns: 1fr; }
+    .product-grid { grid-template-columns: 1fr; }
+    .news-item { flex-direction: column; gap: 8px; }
+    .news-date { min-width: auto; }
+    .footer { padding: 32px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-top">
+    <a class="header-brand" href="#">SQUARE ENIX</a>
+    <div class="header-search">
+      <input type="text" placeholder="キーワードを入力">
+      <button>lorem</button>
+    </div>
+  </div>
+  <nav class="nav-bar">
+    <a href="#colors" class="active">lorem</a>
+    <a href="#typography">lorem ipsum&lorem ipsum</a>
+    <a href="#article">lorem ipsum dolor</a>
+    <a href="#buttons">lorem</a>
+    <a href="#cards">lorem ipsum</a>
+    <a href="#forms">lorem</a>
+    <a href="#elevation">lorem</a>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <h1>DESIGN SYSTEM PREVIEW<br>Square Enix</h1>
+  <div class="hero-caption">DESIGN.md lorem ipsum dolor sit amet consectetur adipiscing. lorem, lorem ipsum, lorem ipsum dolor, lorem ipsum dolor sit amet consectetur. computed style lorem ipsum dolor.</div>
+  <div class="hero-buttons">
+    <a class="btn-primary btn-primary--small" href="#">lorem ipsum dolor</a>
+    <a class="btn-outline" href="#">DESIGN.md lorem</a>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- COLORS -->
+<section class="section" id="colors">
+  <div class="section-label">01 / Colors</div>
+  <h2 class="section-title section-title--black">lorem ipsum dolor</h2>
+
+  <div class="color-group-label">Brand</div>
+  <div class="color-grid">
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#c80000"></div><div class="color-swatch-info"><div class="color-swatch-name">Square Enix Red</div><div class="color-swatch-hex">#c80000</div><div class="color-swatch-role">CTA / lorem / lorem ipsum dolor</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#000000"></div><div class="color-swatch-info"><div class="color-swatch-name">Black</div><div class="color-swatch-hex">#000000</div><div class="color-swatch-role">lorem ipsum dolor sit</div></div></div>
+  </div>
+
+  <div class="color-group-label">Navigation / Structure</div>
+  <div class="color-grid">
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#333333"></div><div class="color-swatch-info"><div class="color-swatch-name">Nav Dark</div><div class="color-swatch-hex">#333333</div><div class="color-swatch-role">lorem ipsum dolor sit</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#e5e5e5"></div><div class="color-swatch-info"><div class="color-swatch-name">Footer Grey</div><div class="color-swatch-hex">#e5e5e5</div><div class="color-swatch-role">lorem ipsum / lorem ipsum / lorem ipsum dolor</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#444444"></div><div class="color-swatch-info"><div class="color-swatch-name">Dark Grey</div><div class="color-swatch-hex">#444444</div><div class="color-swatch-role">lorem ipsum dolor</div></div></div>
+  </div>
+
+  <div class="color-group-label">Text</div>
+  <div class="color-grid">
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#000000"></div><div class="color-swatch-info"><div class="color-swatch-name">Text Primary</div><div class="color-swatch-hex">#000000</div><div class="color-swatch-role">lorem ipsum dolor</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#ffffff; border-bottom:1px solid #ddd"></div><div class="color-swatch-info"><div class="color-swatch-name">Text White</div><div class="color-swatch-hex">#ffffff</div><div class="color-swatch-role">lorem ipsum dolor</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#60676f"></div><div class="color-swatch-info"><div class="color-swatch-name">Text Subtle</div><div class="color-swatch-hex">#60676f</div><div class="color-swatch-role">lorem ipsum dolor</div></div></div>
+  </div>
+
+  <div class="color-group-label">Surface</div>
+  <div class="color-grid">
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#ffffff; border-bottom:1px solid #ddd"></div><div class="color-swatch-info"><div class="color-swatch-name">Header BG</div><div class="color-swatch-hex">#ffffff</div><div class="color-swatch-role">lorem ipsum dolor</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:rgba(0,0,0,0.8)"></div><div class="color-swatch-info"><div class="color-swatch-name">Hero Overlay</div><div class="color-swatch-hex">rgba(0,0,0,0.8)</div><div class="color-swatch-role">lorem ipsum dolor sit amet</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#ededed"></div><div class="color-swatch-info"><div class="color-swatch-name">Search BG</div><div class="color-swatch-hex">#ededed</div><div class="color-swatch-role">lorem ipsum dolor sit</div></div></div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- TYPOGRAPHY -->
+<section class="section" id="typography">
+  <div class="section-label">02 / Typography</div>
+  <h2 class="section-title section-title--black">lorem ipsum dolor sit</h2>
+
+  <div class="type-sample">
+    <div style="font-family:var(--font-system); font-size:40.32px; font-weight:700; line-height:1.2; color:var(--white); background:var(--hero-overlay); padding:8px 16px; display:inline-block;">lorem RPG lorem ipsum dolor</div>
+    <div class="type-meta">40.32px / 700 / line-height: 1.2 / white on rgba(0,0,0,0.8)<span class="type-context">lorem ipsum</span></div>
+  </div>
+
+  <div class="type-sample">
+    <div style="font-family:var(--font-system); font-size:24.08px; font-weight:700; line-height:1.0; color:var(--black);">lorem ipsum dolor (h1)</div>
+    <div class="type-meta">24.08px / 700 / line-height: 1.0<span class="type-context">h1</span></div>
+  </div>
+
+  <div class="type-sample">
+    <div style="font-family:var(--font-system); font-size:22.12px; font-weight:700; line-height:1.3; color:var(--text-subtle);">lorem ipsum dolor (h3)</div>
+    <div class="type-meta">22.12px / 700 / line-height: 1.3 / color: #60676f<span class="type-context">lorem ipsum</span></div>
+  </div>
+
+  <div class="type-sample">
+    <div style="font-family:var(--font-system); font-size:18.06px; font-weight:700; line-height:1.0; color:var(--white); background:var(--nav-dark); padding:5px 10px; display:inline-block;">lorem ipsum dolor sit (h2)</div>
+    <div class="type-meta">18.06px / 700 / line-height: 1.0 / white on #333333<span class="type-context">h2</span></div>
+  </div>
+
+  <div class="type-sample">
+    <div style="font-family:var(--font-system); font-size:16.1px; font-weight:700; line-height:1.4; color:var(--black);">lorem ipsum dolor sit — lorem ipsum dolor sit amet consectetur. lorem ipsum dolor sit amet consectetur adipiscing.</div>
+    <div class="type-meta">16.1px / 700 / line-height: 1.4<span class="type-context">lorem ipsum</span></div>
+  </div>
+
+  <div class="type-sample">
+    <div style="font-family:var(--font-system); font-size:14px; font-weight:400; line-height:1.125; color:var(--black);">lorem ipsum dolor — line-height: 1.125 lorem ipsum dolor sit. lorem ipsum dolor sit amet consectetur adipiscing. letter-spacing lorem normal, palt lorem ipsum dolor. OS lorem ipsum(Helvetica / lorem ipsum / lorem ipsum)lorem. ABCabc 123</div>
+    <div class="type-meta">14px / 400 / line-height: 1.125 / letter-spacing: normal / palt: lorem<span class="type-context">body</span></div>
+  </div>
+
+  <div class="type-sample">
+    <div style="font-family:var(--font-system); font-size:16.1px; font-weight:700; line-height:1.75; color:var(--sqex-red);">5,478 lorem(lorem)</div>
+    <div class="type-meta">16.1px / 700 / line-height: 1.75 / color: #c80000<span class="type-context">lorem</span></div>
+  </div>
+
+  <div class="type-sample">
+    <div style="font-family:var(--font-system); font-size:12px; font-weight:700; line-height:1.75; color:var(--text-subtle);">lorem ipsum dolor sit amet</div>
+    <div class="type-meta">12px / 700 / line-height: 1.75 / color: #60676f<span class="type-context">lorem ipsum</span></div>
+  </div>
+
+  <p style="font-family:var(--font-mono); font-size:11px; color:var(--text-subtle); margin-top:24px; line-height:1.7;">
+ Web lorem ipsum dolor: lorem ipsum Helvetica / lorem ipsum / lorem ipsum dolor OS lorem ipsum dolor.<br>
+ preview.html lorem<code>Noto Sans JP</code>(Google Fonts)lorem ipsum dolor sit.<br>
+ CSS Custom Properties lorem ipsum(lorem ipsum dolor).
+</p>
+</section>
+
+<hr class="section-divider">
+
+<!-- ARTICLE / GAME PRODUCT -->
+<section class="section-dark" id="article">
+<div class="section-inner">
+  <div class="section-label section-label--light">03 / Article & Product</div>
+  <h2 class="section-title section-title--white">lorem ipsum dolor sit amet</h2>
+
+  <div class="article-preview">
+    <h1>lorem RPG lorem ipsum -- lorem ipsum dolor sit amet consectetur</h1>
+    <div class="meta">2026.06.15 / GAME / Reading time: 5 min</div>
+
+    <p>lorem ipsum dolor sit, lorem ipsum dolor sit. lorem ipsum dolor sit amet consectetur adipiscing elit, lorem ipsum dolor sit amet consectetur adipiscing. lorem ipsum dolor, lorem ipsum dolor sit amet consectetur adipiscing, lorem ipsum dolor sit amet consectetur.</p>
+
+    <h2>lorem ipsum dolor sit</h2>
+    <p>lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor, lorem ipsum dolor sit amet consectetur adipiscing. lorem ipsum dolor sit amet consectetur adipiscing elit, lorem ipsum dolor sit amet consectetur.</p>
+
+    <div class="product-grid">
+      <div class="product-card">
+        <div class="product-card-image">RPG</div>
+        <div class="product-card-body">
+          <div class="product-platform">PS5 / PC</div>
+          <div class="product-name">lorem ipsum dolor sit amet consectetur</div>
+          <div class="product-price">9,878 lorem<small>(lorem)</small></div>
+        </div>
+      </div>
+      <div class="product-card">
+        <div class="product-card-image tone-2">ACTION</div>
+        <div class="product-card-body">
+          <div class="product-platform">PS5 / Xbox / PC</div>
+          <div class="product-name">lorem ipsum dolor sit amet consectetur</div>
+          <div class="product-price">8,778 lorem<small>(lorem)</small></div>
+        </div>
+      </div>
+      <div class="product-card">
+        <div class="product-card-image tone-3">ONLINE</div>
+        <div class="product-card-body">
+          <div class="product-platform">PS5 / PC / Mac</div>
+          <div class="product-name">lorem ipsum RPG lorem ipsum dolor</div>
+          <div class="product-price">5,478 lorem<small>(lorem)</small></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:32px; text-align:center;">
+      <a class="btn-primary" href="#">e-STORE lorem</a>
+    </div>
+  </div>
+</div>
+</section>
+
+<hr class="section-divider--dark">
+
+<!-- TOPICS / NEWS -->
+<section class="section-dark">
+<div class="section-inner">
+  <div class="section-label section-label--light">03b / Topics</div>
+  <h2 class="section-title section-title--white">lorem ipsum</h2>
+
+  <ul class="news-list">
+    <li class="news-item">
+      <span class="news-date">2026.06.15</span>
+      <span class="news-badge">lorem</span>
+      <span class="news-title"><a href="#">lorem ipsum dolor sit amet consectetur. lorem ipsum dolor sit amet consectetur</a></span>
+    </li>
+    <li class="news-item">
+      <span class="news-date">2026.06.10</span>
+      <span class="news-badge news-badge--manga">lorem</span>
+      <span class="news-title"><a href="#">lorem ipsum dolor 7 lorem ipsum dolor. lorem ipsum dolor 2 lorem ipsum dolor</a></span>
+    </li>
+    <li class="news-item">
+      <span class="news-date">2026.06.05</span>
+      <span class="news-badge news-badge--game">lorem ipsum</span>
+      <span class="news-title"><a href="#">lorem ipsum dolor sit amet consectetur adipiscing. lorem ipsum dolor sit amet consectetur</a></span>
+    </li>
+    <li class="news-item">
+      <span class="news-date">2026.06.01</span>
+      <span class="news-badge">lorem</span>
+      <span class="news-title"><a href="#">lorem ipsum RPG lorem ipsum dolor sit amet. lorem ipsum dolor sit amet consectetur</a></span>
+    </li>
+    <li class="news-item">
+      <span class="news-date">2026.05.28</span>
+      <span class="news-badge news-badge--manga">lorem</span>
+      <span class="news-title"><a href="#">lorem ipsum dolor sit amet consectetur adipiscing. e-STORE lorem ipsum dolor</a></span>
+    </li>
+  </ul>
+
+  <div style="text-align:center; margin-top:32px;">
+    <a class="btn-primary" href="#">lorem ipsum dolor</a>
+  </div>
+</div>
+</section>
+
+<hr class="section-divider">
+
+<!-- BUTTONS -->
+<section class="section" id="buttons">
+  <div class="section-label">04 / Buttons</div>
+  <h2 class="section-title section-title--black">lorem ipsum dolor sit</h2>
+  <p style="font-size:14px; color:var(--text-subtle); margin-bottom:32px; line-height:1.7;">
+ lorem ipsum<code style="font-family:var(--font-mono); font-size:13px;">border-radius: 0px</code> lorem. lorem ipsum dolor sit amet consectetur adipiscing elit. lorem CTA lorem line-height: 50px lorem ipsum.
+</p>
+  <div style="display:flex; gap:20px; flex-wrap:wrap; align-items:flex-end;">
+    <div style="text-align:center;">
+      <a class="btn-primary" href="#">lorem ipsum dolor</a>
+      <div style="font-family:var(--font-mono); font-size:11px; color:var(--text-subtle); margin-top:8px;">Primary CTA (#c80000)<br>22.12px / 400 / lh: 50px</div>
+    </div>
+    <div style="text-align:center;">
+      <a class="btn-primary btn-primary--small" href="#">lorem ipsum dolor</a>
+      <div style="font-family:var(--font-mono); font-size:11px; color:var(--text-subtle); margin-top:8px;">Primary Small (#c80000)<br>14px / 400 / lh: 36px</div>
+    </div>
+    <div style="text-align:center;">
+      <a class="btn-secondary" href="#">lorem ipsum</a>
+      <div style="font-family:var(--font-mono); font-size:11px; color:var(--text-subtle); margin-top:8px;">Secondary (#e5e5e5)<br>14px / 400 / lh: 36px</div>
+    </div>
+    <div style="text-align:center;">
+      <a href="#" style="display:inline-block; background:var(--nav-dark); color:rgba(255,255,255,0.85); padding:0 20px; line-height:44px; font-size:14px; text-decoration:none; border-radius:var(--radius);">lorem</a>
+      <div style="font-family:var(--font-mono); font-size:11px; color:var(--text-subtle); margin-top:8px;">Nav Button (#333333)<br>14px / 400 / lh: 44px</div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- CARDS -->
+<section class="section-grey" id="cards">
+<div class="section-inner">
+  <div class="section-label">05 / Cards</div>
+  <h2 class="section-title section-title--black">lorem ipsum dolor sit</h2>
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-badge"><span class="news-badge">lorem</span></div>
+      <h3>lorem RPG lorem ipsum dolor</h3>
+      <p>lorem ipsum dolor sit amet consectetur RPG lorem ipsum dolor, lorem ipsum dolor sit amet consectetur adipiscing.</p>
+      <a class="card-link" href="#">lorem ipsum</a>
+    </div>
+    <div class="card">
+      <div class="card-badge"><span class="news-badge news-badge--manga">lorem</span></div>
+      <h3>lorem ipsum dolor sit</h3>
+      <p>lorem ipsum dolor, lorem ipsum dolor sit amet consectetur. lorem / lorem ipsum dolor sit amet consectetur.</p>
+      <a class="card-link" href="#">lorem ipsum</a>
+    </div>
+    <div class="card">
+      <div class="card-badge"><span class="news-badge news-badge--game">lorem ipsum</span></div>
+      <h3>lorem ipsum dolor sit amet</h3>
+      <p>lorem ipsum dolor sit amet consectetur. lorem ipsum dolor sit amet consectetur adipiscing.</p>
+      <a class="card-link" href="#">lorem ipsum</a>
+    </div>
+  </div>
+</div>
+</section>
+
+<hr class="section-divider">
+
+<!-- FORMS -->
+<section class="section" id="forms">
+  <div class="section-label">06 / Forms</div>
+  <h2 class="section-title section-title--black">lorem ipsum dolor(3 lorem)</h2>
+  <p style="font-size:14px; color:var(--text-subtle); margin-bottom:32px; line-height:1.7;">
+ lorem ipsum dolor(<code style="font-family:var(--font-mono);">border-radius: 0px</code>). lorem ipsum dolor sit<code style="font-family:var(--font-mono);">2px</code>.
+ lorem<code style="font-family:var(--font-mono);">#ededed</code> lorem.
+</p>
+
+  <div class="form-group">
+    <label class="form-label">lorem ipsum dolor</label>
+    <input class="form-input" type="text" placeholder="name@example.com">
+    <div class="form-state-label">lorem ipsum -- border: 1px solid #dedede / radius: 0px / bg: #ededed / height: 44px</div>
+  </div>
+  <div class="form-group">
+    <label class="form-label">lorem ipsum</label>
+    <input class="form-input form-input--focus" type="password" value="password1234">
+    <div class="form-state-label">lorem ipsum -- border: 1px solid #333333 / box-shadow: 0 0 0 2px rgba(51,51,51,0.15)</div>
+  </div>
+  <div class="form-group">
+    <label class="form-label">lorem ipsum dolor</label>
+    <input class="form-input form-input--error" type="text" value="invalid@">
+    <div class="form-state-label error">lorem -- border: 1px solid #c80000 / box-shadow: 0 0 0 2px rgba(200,0,0,0.15)</div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ELEVATION -->
+<section class="section" id="elevation">
+  <div class="section-label">07 / Elevation</div>
+  <h2 class="section-title section-title--black">Depth & Elevation</h2>
+  <div class="elevation-grid">
+    <div class="elevation-card">
+      <div class="elevation-label">Level 0: Flat</div>
+      <div class="elevation-desc">box-shadow: none(lorem)</div>
+    </div>
+    <div class="elevation-card" style="background:var(--black); color:var(--white);">
+      <div class="elevation-label" style="color:var(--white);">Black Surface</div>
+      <div class="elevation-desc" style="color:rgba(255,255,255,0.5);">bg #000000 -- lorem ipsum dolor</div>
+    </div>
+    <div class="elevation-card" style="background:var(--nav-dark); color:var(--white);">
+      <div class="elevation-label" style="color:var(--white);">Nav Surface</div>
+      <div class="elevation-desc" style="color:rgba(255,255,255,0.5);">bg #333333 -- lorem ipsum dolor</div>
+    </div>
+    <div class="elevation-card" style="background:var(--surface-card);">
+      <div class="elevation-label">Card Surface</div>
+      <div class="elevation-desc">bg #e5e5e5 -- lorem ipsum / lorem</div>
+    </div>
+  </div>
+  <p style="font-family:var(--font-mono); font-size:11px; color:var(--text-subtle); margin-top:16px; line-height:1.7;">
+ lorem ipsum dolor box-shadow: none. Square Enix lorem ipsum dolor sit amet.<br>
+ lorem ipsum dolor sit amet consectetur: lorem ipsum → lorem ipsum → lorem ipsum dolor.
+</p>
+</section>
+
+<hr class="section-divider">
+
+<!-- LAYOUT -->
+<section class="section" id="layout">
+  <div class="section-label">08 / Layout</div>
+  <h2 class="section-title section-title--black">lorem ipsum</h2>
+  <div style="margin-bottom:16px"><div class="width-bar-label">Main Content <span class="width-bar-value">960px</span></div><div class="width-bar"><div class="width-bar-inner" style="width:100%"></div></div></div>
+  <div style="margin-bottom:16px"><div class="width-bar-label">Article <span class="width-bar-value">680px</span></div><div class="width-bar"><div class="width-bar-inner" style="width:70.8%"></div></div></div>
+  <div style="margin-bottom:16px"><div class="width-bar-label">Card Grid <span class="width-bar-value">960px (3-col)</span></div><div class="width-bar"><div class="width-bar-inner" style="width:100%"></div></div></div>
+
+  <div class="color-group-label" style="margin-top:32px;">Breakpoints</div>
+  <p style="font-family:var(--font-system); font-size:14px; color:var(--text-subtle); line-height:1.7;">
+    <strong>Mobile</strong>: &lt;= 767px /
+    <strong>Tablet</strong>: &lt;= 1024px /
+    <strong>Desktop</strong>: &gt; 1024px<br>
+ CTA lorem ipsum line-height: 50px lorem ipsum dolor sit 44px lorem ipsum dolor.
+</p>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">SQUARE ENIX</div>
+    <div class="footer-links">
+      <a href="#">lorem</a>
+      <a href="#">lorem ipsum&lorem ipsum</a>
+      <a href="#">lorem ipsum dolor</a>
+      <a href="#">lorem</a>
+      <a href="#">lorem ipsum</a>
+      <a href="#">lorem ipsum</a>
+      <a href="#">lorem ipsum dolor</a>
+    </div>
+    <div class="footer-bottom">
+      Generated from <a href="https://www.jp.square-enix.com/">jp.square-enix.com</a> DESIGN.md -- awesome-design-md-jp / computed style lorem<br>
+ Font: Helvetica, Arial, Noto Sans JP (Google Fonts) / OS fallback: lorem ipsum, lorem ipsum dolor Pro W3
+</div>
+  </div>
+</footer>
+
+</body>
+</html>

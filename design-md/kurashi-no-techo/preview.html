@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design System Preview: lorem ipsum (Kurashi no Techo)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600&family=Zen+Kaku+Gothic+New:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* === Colors: 暮しの手帖 実測値 === */
+    --bg:            #ffffff;  /* 純白（body 実測 / --wp--preset--color--white） */
+    --surface:       #ffffff;
+    --ink:           #000000;  /* body / header / footer の基準色・罫 */
+    --text:          #222222;  /* 実効文字色 rgb(34,34,34) */
+    --border:        #000000;  /* 1px 黒罫のみ */
+    --line-soft:     #e0e0d8;  /* プレビュー用の淡い区切り */
+    --white:         #ffffff;
+
+    /* 刷り色（セクション単位のベタ面） */
+    --techo-yellow:  #fae67a;  /* 最新号パネル / もっと見る帯（最頻出） */
+    --pale-yellow:   #f8f89c;  /* トピックス pill */
+    --pale-blue:     #cadfe5;  /* 手帖通信セクション */
+    --eggshell:      #efefe2;  /* 書影の台紙 */
+    --off-white:     #f8f8f8;  /* 囲み罫ボックス */
+
+    /* バッジ（円形の刷り色） */
+    --badge-red:     #df2016;  /* 最新刊 */
+    --badge-blue:    #73bed3;  /* 近刊予定 */
+
+    /* === Fonts ===
+       明朝（主）: dnp-shuei-mincho-pr6n, serif   → Shippori Mincho で代替
+       ゴシック（従）: dnp-shuei-gothic-gin-std, sans-serif → Zen Kaku Gothic New で代替 */
+    --font-mincho: "Shippori Mincho", "ヒラギノ明朝 ProN", "Yu Mincho", serif;
+    --font-gothic: "Zen Kaku Gothic New", "ヒラギノ角ゴ ProN", sans-serif;
+
+    /* Elevation */
+    --shadow-book: 0 3px 6px rgba(0, 0, 0, 0.16);
+    --shadow-overlay: 0 8px 24px rgba(0, 0, 0, 0.16);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-mincho);
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1.75;
+    letter-spacing: normal;
+    font-feature-settings: normal;  /* palt off */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  .wrap { max-width: 1400px; margin: 0 auto; padding: 0 70px; }
+
+  /* 左サイドバー型ヘッダー */
+  header.site {
+    display: flex; align-items: flex-start; gap: 60px;
+    padding: 40px 70px 36px;
+  }
+  header.site .logo {
+    font-family: var(--font-mincho); font-size: 34px; font-weight: 600;
+    line-height: 1.3; color: var(--text); letter-spacing: normal; flex: none;
+  }
+  header.site nav { display: flex; gap: 30px; align-items: center; flex-wrap: wrap; padding-top: 8px; }
+  header.site nav a {
+    font-family: var(--font-mincho); color: var(--text); text-decoration: none;
+    font-size: 20px; font-weight: 400; line-height: 1.75; letter-spacing: normal;
+  }
+  header.site nav a:hover { opacity: 0.55; }
+  header.site .topics { margin-left: auto; }
+
+  .section { padding: 80px 0; border-bottom: 1px solid var(--line-soft); }
+  .section-label {
+    font-family: var(--font-gothic); font-size: 14px; line-height: 1.5;
+    color: var(--text); opacity: 0.6; margin-bottom: 28px;
+  }
+
+  /* 縦書きセクションタイトル（このサイトの署名） */
+  .vtitle {
+    writing-mode: vertical-rl; text-orientation: mixed;
+    font-family: var(--font-mincho); font-size: 27px; font-weight: 400;
+    line-height: 1.75; letter-spacing: normal; color: var(--text);
+    border: 1px solid var(--border); padding: 24px 12px;
+    line-break: strict; flex: none;
+  }
+  .with-vtitle { display: flex; gap: 48px; align-items: flex-start; }
+  .with-vtitle > .col-main { flex: 1; min-width: 0; }
+
+  /* Colors */
+  .swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px,1fr)); gap: 20px; }
+  .swatch { border: 1px solid var(--border); border-radius: 0; overflow: hidden; background: var(--surface); }
+  .swatch .chip { height: 88px; }
+  .swatch .meta { padding: 10px 12px; }
+  .swatch .meta .name { font-family: var(--font-mincho); font-size: 14px; line-height: 1.6; }
+  .swatch .meta .hex { font-family: var(--font-gothic); font-size: 12px; line-height: 1.5; opacity: 0.65; }
+
+  /* Typography */
+  .type-row { display: flex; align-items: baseline; gap: 28px; padding: 18px 0; border-bottom: 1px solid var(--line-soft); }
+  .type-row .tag { font-family: var(--font-gothic); width: 210px; flex: none; font-size: 12px; line-height: 1.5; opacity: 0.6; }
+  .t-cover   { font-family: var(--font-mincho); font-size: 36px; font-weight: 400; line-height: 1.5; writing-mode: vertical-rl; text-orientation: mixed; height: 520px; line-break: strict; }
+  /* 縦中横: 縦書き中の半角数字を横に組む */
+  .tcy { text-combine-upright: all; -webkit-text-combine: horizontal; }
+  .t-feature { font-family: var(--font-mincho); font-size: 40px; font-weight: 400; line-height: 1.4; }
+  .t-sub     { font-family: var(--font-mincho); font-size: 28px; font-weight: 400; line-height: 1.4; }
+  .t-section { font-family: var(--font-mincho); font-size: 27px; font-weight: 400; line-height: 1.75; }
+  .t-nav     { font-family: var(--font-mincho); font-size: 24px; font-weight: 400; line-height: 1.75; }
+  .t-footer  { font-family: var(--font-mincho); font-size: 22px; font-weight: 500; line-height: 1.75; }
+  .t-lead    { font-family: var(--font-mincho); font-size: 20px; font-weight: 400; line-height: 1.5; }
+  .t-body    { font-family: var(--font-mincho); font-size: 18px; font-weight: 400; line-height: 1.75; }
+  .t-price   { font-family: var(--font-gothic); font-size: 14px; font-weight: 400; line-height: 1.5; }
+  .t-badge   { font-family: var(--font-mincho); font-size: 12px; font-weight: 400; line-height: 1.75; }
+
+  /* Article / prose */
+  .prose { max-width: 720px; }
+  .prose .kicker { font-family: var(--font-gothic); font-size: 14px; line-height: 1.5; opacity: 0.65; margin-bottom: 12px; }
+  .prose h3 { font-family: var(--font-mincho); font-size: 40px; font-weight: 400; line-height: 1.4; margin-bottom: 8px; letter-spacing: normal; }
+  .prose h4 { font-family: var(--font-mincho); font-size: 28px; font-weight: 400; line-height: 1.4; margin: 36px 0 14px; }
+  .prose .lead { font-family: var(--font-mincho); font-size: 20px; line-height: 1.5; margin-bottom: 28px; }
+  .prose p { font-family: var(--font-mincho); font-size: 18px; line-height: 1.75; margin-bottom: 22px; line-break: strict; overflow-wrap: break-word; }
+
+  /* 囲み罫ボックス（今日の献立） */
+  .rule-box { background: var(--off-white); border: 1px solid var(--border); border-radius: 0; padding: 50px 70px; }
+  .rule-box .rb-ttl { font-family: var(--font-mincho); font-size: 28px; line-height: 1.4; margin-bottom: 14px; }
+  .rule-box p { font-family: var(--font-mincho); font-size: 18px; line-height: 1.75; margin: 0; }
+  .rule-box .date { font-family: var(--font-gothic); font-size: 14px; line-height: 1.5; opacity: 0.65; margin-top: 16px; }
+
+  /* 刷り色パネル */
+  .fill-panel { background: var(--techo-yellow); border-radius: 0; padding: 50px 40px 48px 70px; }
+  .fill-panel.blue { background: var(--pale-blue); padding: 60px 70px 60px 84px; }
+  .fill-panel ul { list-style: none; }
+  .fill-panel li { font-family: var(--font-mincho); font-size: 18px; line-height: 1.75; padding: 6px 0; }
+
+  /* Topics pill / Badges / More bar */
+  .pill {
+    display: inline-block; background: var(--pale-yellow); color: var(--text);
+    font-family: var(--font-mincho); font-size: 18px; font-weight: 400; line-height: 1.6;
+    border: none; border-radius: 20px; padding: 5px 16px; letter-spacing: normal;
+  }
+  .badge {
+    display: inline-flex; align-items: center; justify-content: center; text-align: center;
+    width: 72px; height: 72px; border-radius: 50%; color: var(--white);
+    font-family: var(--font-mincho); font-size: 12px; font-weight: 400; line-height: 1.75; letter-spacing: normal;
+  }
+  .badge.red  { background: var(--badge-red); }
+  .badge.blue { background: var(--badge-blue); }
+  .more-bar {
+    display: inline-block; background: var(--techo-yellow); color: var(--text);
+    font-family: var(--font-gothic); font-size: 18px; font-weight: 400; line-height: 1.75;
+    border: none; border-radius: 0; padding: 18px 44px; cursor: pointer; letter-spacing: normal;
+  }
+  .more-bar.blue { background: var(--pale-blue); }
+  .more-bar:hover { opacity: 0.75; }
+  .btn-outline {
+    display: inline-block; background: transparent; color: var(--text);
+    font-family: var(--font-mincho); font-size: 18px; font-weight: 400; line-height: 1.75;
+    border: 1px solid var(--border); border-radius: 0; padding: 16px 20px; cursor: pointer; letter-spacing: normal;
+  }
+  .btn-outline:hover { background: var(--ink); color: var(--white); }
+  .btns { display: flex; gap: 28px; flex-wrap: wrap; align-items: center; }
+
+  /* Cards（書影 / 商品カード） */
+  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px,1fr)); gap: 40px; }
+  .card { background: transparent; border: none; border-radius: 0; }
+  .card .plate {
+    background: var(--eggshell); border-radius: 0; height: 250px;
+    display: flex; align-items: center; justify-content: center; position: relative;
+  }
+  .card .plate .book {
+    width: 130px; height: 186px; box-shadow: var(--shadow-book);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-mincho); font-size: 14px; line-height: 1.6; color: var(--text);
+    text-align: center; padding: 8px;
+  }
+  .card .plate .badge { position: absolute; top: -12px; left: -12px; }
+  .card .c-ttl  { font-family: var(--font-mincho); font-size: 18px; line-height: 1.75; margin-top: 16px; }
+  .card .c-date { font-family: var(--font-gothic); font-size: 14px; line-height: 1.5; opacity: 0.65; margin-top: 6px; }
+  .card .c-price{ font-family: var(--font-gothic); font-size: 14px; line-height: 1.5; margin-top: 10px; }
+
+  /* Forms */
+  .field { margin-bottom: 26px; max-width: 460px; }
+  .field label { display: block; font-family: var(--font-mincho); font-size: 14px; line-height: 1.6; opacity: 0.7; margin-bottom: 8px; letter-spacing: normal; }
+  .field input {
+    width: 100%; font-family: var(--font-mincho); font-size: 18px; line-height: 1.75;
+    padding: 12px 16px; border: 1px solid var(--border); border-radius: 0;
+    background: var(--white); color: var(--text); letter-spacing: normal;
+  }
+  .field input:focus { outline: none; border: 2px solid var(--border); padding: 11px 15px; }
+  .field.err input { border-color: var(--badge-red); }
+  .field.err .msg { color: var(--badge-red); font-family: var(--font-mincho); font-size: 14px; line-height: 1.6; margin-top: 8px; }
+
+  /* Elevation */
+  .elevs { display: flex; gap: 32px; flex-wrap: wrap; }
+  .elev {
+    width: 200px; height: 120px; background: var(--white); border: 1px solid var(--line-soft); border-radius: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-gothic); font-size: 13px; line-height: 1.5; opacity: 0.85; text-align: center;
+  }
+  .elev.e1 { box-shadow: var(--shadow-book); }
+  .elev.e2 { box-shadow: var(--shadow-overlay); }
+
+  /* Layout */
+  .layout-demo { display: grid; grid-template-columns: repeat(12, 1fr); gap: 40px; }
+  .layout-demo .col {
+    background: var(--eggshell); grid-column: span 4; height: 80px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-gothic); font-size: 13px; line-height: 1.5; opacity: 0.85; border-radius: 0;
+  }
+  .space-scale { display: flex; gap: 16px; align-items: flex-end; flex-wrap: wrap; margin-top: 32px; }
+  .space-scale div { background: var(--techo-yellow); font-family: var(--font-gothic); font-size: 12px; line-height: 1.5; text-align: center; padding-bottom: 4px; }
+
+  footer {
+    padding: 80px 100px; font-family: var(--font-mincho); font-size: 18px;
+    line-height: 1.75; text-align: center; color: var(--text);
+  }
+  footer .note { font-family: var(--font-gothic); font-size: 14px; line-height: 1.6; opacity: 0.65; margin-top: 12px; }
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="logo">lorem ipsum</div>
+  <nav>
+    <a href="#">lorem / lorem ipsum</a><a href="#">lorem ipsum</a><a href="#">lorem ipsum dolor</a><a href="#">lorem ipsum lorem</a>
+  </nav>
+  <div class="topics"><span class="pill">【7 lorem 28 lorem!】lorem ipsum dolor sit</span></div>
+</header>
+
+<div class="wrap">
+
+  <section class="section">
+    <div class="section-label">01 — Colors(lorem × lorem × lorem ipsum dolor sit amet)</div>
+    <div class="swatches">
+      <div class="swatch"><div class="chip" style="background:#ffffff;border-bottom:1px solid var(--line-soft)"></div><div class="meta"><div class="name">Background lorem</div><div class="hex">#ffffff</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#222222"></div><div class="meta"><div class="name">Text Primary lorem</div><div class="hex">#222222</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#000000"></div><div class="meta"><div class="name">Ink / 1px lorem</div><div class="hex">#000000</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#fae67a"></div><div class="meta"><div class="name">Techo Yellow lorem</div><div class="hex">#fae67a</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#f8f89c"></div><div class="meta"><div class="name">Pale Yellow lorem ipsum</div><div class="hex">#f8f89c</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#cadfe5"></div><div class="meta"><div class="name">Pale Blue lorem ipsum</div><div class="hex">#cadfe5</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#efefe2"></div><div class="meta"><div class="name">Eggshell lorem ipsum</div><div class="hex">#efefe2</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#f8f8f8;border-bottom:1px solid var(--line-soft)"></div><div class="meta"><div class="name">Off White lorem</div><div class="hex">#f8f8f8</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#df2016"></div><div class="meta"><div class="name">Badge Red lorem</div><div class="hex">#df2016</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#73bed3"></div><div class="meta"><div class="name">Badge Blue lorem ipsum</div><div class="hex">#73bed3</div></div></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-label">02 — Typography(lorem ipsum / lorem 18px / line-height 1.75 / lorem normal / palt off / weight 400)</div>
+    <div class="type-row"><div class="tag">Cover Title lorem 36 / 1.5</div><div class="t-cover">lorem ipsum　lorem<span class="tcy">5</span>lorem<span class="tcy">42</span>lorem</div></div>
+    <div class="type-row"><div class="tag">Feature Title 40 / 1.4</div><div class="t-feature">lorem ipsum dolor, lorem ipsum?</div></div>
+    <div class="type-row"><div class="tag">Sub Feature 28 / 1.4</div><div class="t-sub">lorem ipsum dolor　lorem ipsum dolor sit amet</div></div>
+    <div class="type-row"><div class="tag">Section Title 27 / 1.75</div><div class="t-section">lorem / lorem ipsum</div></div>
+    <div class="type-row"><div class="tag">Nav 24 / 1.75</div><div class="t-nav">lorem ipsum dolor</div></div>
+    <div class="type-row"><div class="tag">Footer Link 22 / 500</div><div class="t-footer">lorem ipsum lorem</div></div>
+    <div class="type-row"><div class="tag">Lead 20 / 1.5</div><div class="t-lead">lorem ipsum“lorem　lorem ipsum”</div></div>
+    <div class="type-row"><div class="tag">Body 18 / 1.75</div><div class="t-body">lorem ipsum dolor, lorem ipsum dolor sit. lorem ipsum dolor, lorem ipsum dolor.</div></div>
+    <div class="type-row"><div class="tag">Price lorem ipsum 14 / 1.5</div><div class="t-price">1,980 lorem(lorem)</div></div>
+    <div class="type-row"><div class="tag">Badge 12 / 1.75</div><div class="t-badge">lorem</div></div>
+  </section>
+
+  <section class="section">
+    <div class="section-label">03 — Article(lorem ipsum dolor sit amet＋lorem ipsum)</div>
+    <div class="with-vtitle">
+      <div class="vtitle">lorem ipsum</div>
+      <div class="col-main">
+        <div class="prose">
+          <p class="kicker">lorem ipsum　lorem 12 lorem</p>
+          <h3>lorem ipsum dolor</h3>
+          <p class="lead">lorem ipsum dolor sit, lorem ipsum dolor sit amet consectetur adipiscing.</p>
+          <p>lorem ipsum dolor sit amet consectetur adipiscing, lorem ipsum dolor sit, lorem ipsum dolor sit amet consectetur adipiscing. lorem ipsum dolor sit amet consectetur. lorem ipsum dolor sit, lorem ipsum dolor sit amet consectetur. lorem ipsum, lorem ipsum dolor sit amet consectetur.</p>
+          <h4>lorem ipsum dolor</h4>
+          <p>lorem ipsum dolor sit amet, lorem ipsum dolor sit amet consectetur. lorem ipsum dolor sit amet consectetur, lorem ipsum dolor. lorem ipsum dolor sit amet consectetur, lorem ipsum dolor sit amet consectetur.</p>
+          <p>lorem ipsum dolor sit amet consectetur, lorem ipsum dolor sit amet consectetur adipiscing. lorem ipsum dolor, lorem ipsum dolor. lorem ipsum dolor sit amet consectetur adipiscing.</p>
+        </div>
+        <div class="rule-box" style="margin-top:40px">
+          <div class="rb-ttl">lorem ipsum</div>
+          <p>lorem ipsum dolor／lorem ipsum dolor sit amet consectetur／lorem ipsum dolor sit／lorem</p>
+          <div class="date">2026 lorem 06 lorem 10 lorem</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-label">04 — Buttons & Badges(lorem pill 20px lorem ipsum 50% lorem)</div>
+    <div class="btns" style="margin-bottom:36px">
+      <span class="pill">【7 lorem 28 lorem!】lorem ipsum dolor sit</span>
+      <span class="badge red">lorem</span>
+      <span class="badge blue">lorem ipsum</span>
+    </div>
+    <div class="btns">
+      <button class="more-bar">lorem ipsum　→</button>
+      <button class="more-bar blue">lorem ipsum dolor　→</button>
+      <button class="btn-outline">lorem ipsum dolor sit amet. 　→</button>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-label">05 — Panels & Cards(lorem ipsum dolor／lorem ipsum＋lorem)</div>
+    <div class="with-vtitle" style="margin-bottom:48px">
+      <div class="col-main">
+        <div class="fill-panel">
+          <div class="t-sub" style="margin-bottom:20px">lorem ipsum　lorem 5 lorem 42 lorem</div>
+          <ul>
+            <li>lorem ipsum“lorem　lorem ipsum”</li>
+            <li>lorem ipsum dolor sit amet</li>
+            <li>lorem / lorem ipsum dolor sit amet</li>
+            <li>lorem ipsum dolor</li>
+            <li>lorem / lorem / lorem ipsum dolor sit</li>
+          </ul>
+          <div style="margin-top:28px"><button class="more-bar">lorem ipsum　→</button></div>
+        </div>
+      </div>
+      <div class="vtitle">lorem / lorem ipsum</div>
+    </div>
+
+    <div class="cards">
+      <div class="card">
+        <div class="plate"><span class="badge red">lorem</span><div class="book" style="background:#e8eef0">lorem ipsum<br>lorem 5 lorem 42 lorem</div></div>
+        <div class="c-ttl">lorem ipsum　lorem 5 lorem 42 lorem</div>
+        <div class="c-date">2026 lorem 6 lorem ipsum</div>
+        <div class="c-price">1,100 lorem(lorem)</div>
+      </div>
+      <div class="card">
+        <div class="plate"><span class="badge blue">lorem ipsum</span><div class="book" style="background:#f0ece0">lorem ipsum<br>lorem ipsum dolor sit</div></div>
+        <div class="c-ttl">lorem ipsum dolor sit amet consectetur　lorem ipsum dolor sit</div>
+        <div class="c-date">2026 lorem 4 lorem</div>
+        <div class="c-price">1,980 lorem(lorem)</div>
+      </div>
+      <div class="card">
+        <div class="plate"><div class="book" style="background:#dfe6d8">lorem ipsum<br>lorem ipsum</div></div>
+        <div class="c-ttl">lorem ipsum dolor sit</div>
+        <div class="c-date">2022 lorem 1 lorem ipsum</div>
+        <div class="c-price">2,200 lorem(lorem)</div>
+      </div>
+      <div class="card">
+        <div class="plate"><div class="book" style="background:#e6e0d6">lorem ipsum<br>lorem ipsum</div></div>
+        <div class="c-ttl">lorem ipsum dolor sit</div>
+        <div class="c-date">1969 lorem 8 lorem</div>
+        <div class="c-price">2,750 lorem(lorem)</div>
+      </div>
+    </div>
+
+    <div class="fill-panel blue" style="margin-top:48px">
+      <div class="t-sub" style="margin-bottom:12px">lorem 15 lorem　lorem ipsum dolor sit amet consectetur</div>
+      <p class="t-body" style="max-width:720px">lorem ipsum dolor sit amet consectetur, lorem ipsum dolor sit amet consectetur. lorem ipsum dolor sit amet consectetur, lorem ipsum dolor sit amet consectetur, lorem ipsum dolor sit amet consectetur.</p>
+      <div style="margin-top:24px"><button class="more-bar blue">lorem ipsum　→</button></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-label">06 — Forms(lorem 0 / lorem ipsum dolor sit / lorem ipsum #df2016)</div>
+    <div class="field"><label>lorem ipsum dolor</label><input type="email" placeholder="you@example.com"></div>
+    <div class="field"><label>lorem</label><input type="text" value="山田 花子"></div>
+    <div class="field err"><label>lorem ipsum</label><input type="text" value="000"><div class="msg">lorem ipsum dolor sit amet consectetur</div></div>
+  </section>
+
+  <section class="section">
+    <div class="section-label">07 — Elevation(lorem ipsum dolor. UI lorem ipsum)</div>
+    <div class="elevs">
+      <div class="elev">Level 0 · Flat<br>lorem / lorem / lorem / lorem</div>
+      <div class="elev e1">Level 1 · lorem ipsum<br>0 3px 6px rgba(0,0,0,.16)</div>
+      <div class="elev e2">Level 2 · Overlay<br>0 8px 24px rgba(0,0,0,.16)</div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-label">08 — Layout(max-width 1400px / 12 col / gutter 40px / lorem ipsum dolor 80px)</div>
+    <div class="layout-demo">
+      <div class="col">4</div><div class="col">4</div><div class="col">4</div>
+    </div>
+    <div class="space-scale">
+      <div style="width:8px;height:8px"></div>
+      <div style="width:16px;height:16px"></div>
+      <div style="width:40px;height:40px">40</div>
+      <div style="width:50px;height:50px">50</div>
+      <div style="width:70px;height:70px">70</div>
+      <div style="width:80px;height:80px">80</div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+ lorem ipsum (Kurashi no Techo) — Design System Preview
+<div class="note">lorem ipsum dolor: Shippori Mincho(← DNP lorem ipsum Pr6N)／ Zen Kaku Gothic New(← DNP lorem ipsum dolor Std)</div>
+</footer>
+
+</body>
+</html>

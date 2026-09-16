@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design System Preview: AKOMEYA TOKYO</title>
+<style>
+  :root {
+    /* === AKOMEYA Color Tokens (実測値) === */
+    --akomeya-cream: #efebdd;        /* ヘッダー背景 */
+    --akomeya-sand: #f6f4ef;         /* フッター背景 */
+    --akomeya-list: #f5f5f5;         /* リスト面 */
+    --pure-white: #ffffff;
+
+    --akomeya-charcoal: #3c3c3c;     /* 最頻出 BG（メニュー帯） */
+    --akomeya-text: #444444;         /* 本文・標準 CTA */
+    --akomeya-strong: #222222;       /* 黒帯・最強調 */
+    --akomeya-black: #000000;        /* 明朝見出し */
+    --akomeya-soft-gray: #666666;    /* キャプション */
+    --akomeya-link-gray: #333333;    /* 控えめリンク */
+
+    --akomeya-gift-green: #41c395;   /* e ギフト CTA */
+    --akomeya-sale-red: #ed4831;     /* SALE / バッジ */
+
+    --soft-border: rgba(0, 0, 0, 0.08);
+
+    /* === Fonts === */
+    --font-mincho: "Yu Mincho", "游明朝", YuMincho, "Hiragino Mincho ProN", "Hiragino Mincho Pro", serif;
+    --font-gothic: "Yu Gothic", メイリオ, Meiryo, "Hiragino Kaku Gothic Pro W6", "ヒラギノ角ゴ Pro W6", sans-serif;
+    --font-caption: "Yu Gothic", "Hiragino Kaku Gothic Pro W3", "ヒラギノ角ゴ Pro W3", メイリオ, sans-serif;
+    --font-mono: SFMono-Regular, Consolas, Menlo, Courier, monospace;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--pure-white);
+    color: var(--akomeya-text);
+    font-family: var(--font-gothic);
+    font-size: 14px; font-weight: 500; line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* TOP STRONG BAR */
+  .strong-bar {
+    background: var(--akomeya-strong);
+    color: var(--pure-white);
+    font-family: var(--font-gothic);
+    font-size: 12px; font-weight: 500;
+    text-align: center;
+    padding: 8px 16px;
+    letter-spacing: 0;
+  }
+
+  /* HEADER (cream) */
+  .header {
+    background: var(--akomeya-cream);
+    color: var(--akomeya-text);
+    padding: 16px 24px;
+    display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 1px solid var(--soft-border);
+  }
+  .header-left { display: flex; gap: 16px; align-items: center; }
+  .header-message {
+    font-family: var(--font-gothic); font-size: 14px; font-weight: 500;
+    color: var(--akomeya-text);
+  }
+  .header-brand {
+    font-family: var(--font-mincho);
+    font-size: 28px; font-weight: 400;
+    color: var(--akomeya-black);
+    letter-spacing: 0.04em;
+  }
+  .header-right { display: flex; gap: 24px; align-items: center; }
+  .header-right a {
+    font-family: var(--font-gothic); font-size: 13px; font-weight: 700;
+    color: var(--akomeya-text);
+    text-decoration: none;
+  }
+
+  /* CHARCOAL NAV */
+  .nav {
+    background: var(--akomeya-charcoal);
+    padding: 14px 24px;
+    display: flex; gap: 32px; justify-content: center; flex-wrap: wrap;
+  }
+  .nav a {
+    font-family: var(--font-gothic);
+    font-size: 14px; font-weight: 500;
+    color: var(--pure-white);
+    text-decoration: none;
+    letter-spacing: 0.02em;
+  }
+
+  /* HERO */
+  .hero {
+    padding: 96px 24px 72px;
+    text-align: center;
+    background: var(--pure-white);
+    max-width: 1140px;
+    margin: 0 auto;
+  }
+  .hero-eyebrow {
+    font-family: var(--font-gothic);
+    font-size: 13px; font-weight: 700;
+    color: var(--akomeya-soft-gray);
+    margin-bottom: 16px;
+    letter-spacing: 0.1em;
+  }
+  .hero h1 {
+    font-family: var(--font-mincho);
+    font-size: 34px; font-weight: 400;
+    color: var(--akomeya-text);
+    margin-bottom: 24px;
+    line-height: 1.5;
+    letter-spacing: 0.02em;
+  }
+  .hero p {
+    font-family: var(--font-gothic);
+    font-size: 14px; font-weight: 500;
+    line-height: 1.7;
+    color: var(--akomeya-text);
+    max-width: 640px; margin: 0 auto 40px;
+  }
+  .hero-buttons { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+  .btn-standard {
+    display: inline-flex; align-items: center; justify-content: center;
+    background: var(--akomeya-text);
+    color: var(--pure-white);
+    padding: 12px 32px;
+    border: none;
+    border-radius: 2px;
+    font-family: var(--font-gothic);
+    font-size: 14px; font-weight: 400;
+    line-height: 1.5;
+    text-decoration: none; cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .btn-standard:hover { opacity: 0.85; }
+  .btn-large {
+    display: inline-flex; align-items: center; justify-content: center;
+    background: var(--akomeya-text);
+    color: var(--pure-white);
+    padding: 14px 40px;
+    border: none;
+    border-radius: 2px;
+    font-family: var(--font-gothic);
+    font-size: 16px; font-weight: 400;
+    line-height: 1.5;
+    text-decoration: none; cursor: pointer;
+  }
+  .btn-gift {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--akomeya-gift-green);
+    color: var(--pure-white);
+    padding: 8px 16px;
+    border: none;
+    border-radius: 0;
+    font-family: var(--font-gothic);
+    font-size: 13px; font-weight: 700;
+    line-height: 1.5;
+    text-decoration: none;
+  }
+  .btn-mincho-link {
+    display: inline-block;
+    background: transparent;
+    color: var(--akomeya-black);
+    padding: 0;
+    border: none;
+    border-bottom: 1px solid var(--akomeya-black);
+    font-family: var(--font-mincho);
+    font-size: 15px; font-weight: 400;
+    line-height: 1.0;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  /* SECTIONS */
+  .section { padding: 80px 24px; max-width: 1140px; margin: 0 auto; }
+  .section-eyebrow {
+    font-family: var(--font-gothic);
+    font-size: 12px; font-weight: 700;
+    color: var(--akomeya-soft-gray);
+    margin-bottom: 8px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .section-title {
+    font-family: var(--font-mincho);
+    font-size: 34px; font-weight: 400;
+    color: var(--akomeya-text);
+    margin-bottom: 48px;
+    line-height: 1.5;
+    letter-spacing: 0.02em;
+  }
+  .section-divider { border: none; height: 1px; background: var(--soft-border); margin: 0; }
+
+  /* COLORS */
+  .color-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; margin-bottom: 24px; }
+  .color-swatch { background: var(--pure-white); border: 1px solid var(--soft-border); overflow: hidden; }
+  .color-swatch-block { height: 80px; width: 100%; }
+  .color-swatch-info { padding: 12px 14px; }
+  .color-swatch-name {
+    font-family: var(--font-mincho);
+    font-size: 14px; font-weight: 700;
+    margin-bottom: 4px; color: var(--akomeya-text);
+  }
+  .color-swatch-hex { font-size: 11px; color: var(--akomeya-soft-gray); font-family: var(--font-mono); }
+  .color-swatch-role { font-size: 11px; color: var(--akomeya-soft-gray); margin-top: 4px; font-family: var(--font-gothic); letter-spacing: 0.04em; }
+  .color-group-label {
+    font-family: var(--font-mincho);
+    font-size: 18px; font-weight: 700;
+    color: var(--akomeya-text);
+    margin: 24px 0 10px;
+    letter-spacing: 0.04em;
+  }
+
+  /* TYPOGRAPHY */
+  .type-sample { margin-bottom: 32px; padding-bottom: 28px; border-bottom: 1px solid var(--soft-border); }
+  .type-sample:last-child { border-bottom: none; }
+  .type-meta { font-family: var(--font-mono); font-size: 11px; font-weight: 400; color: var(--akomeya-soft-gray); margin-top: 12px; }
+  .type-context { display: inline-block; background: var(--akomeya-charcoal); color: var(--pure-white); font-size: 10px; padding: 2px 8px; margin-left: 8px; letter-spacing: 0.04em; font-family: var(--font-gothic); }
+
+  /* PRODUCT CARDS */
+  .product-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px; }
+  .product-card {
+    background: var(--akomeya-list);
+    text-decoration: none; color: var(--akomeya-text);
+    display: flex; flex-direction: column;
+    overflow: hidden;
+    border-radius: 2px;
+  }
+  .product-card-image {
+    aspect-ratio: 1/1;
+    background: linear-gradient(135deg, #d6c9a3, #efebdd);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--akomeya-text);
+    font-family: var(--font-mincho);
+    font-size: 22px; font-weight: 400;
+    letter-spacing: 0.04em;
+    position: relative;
+  }
+  .product-card-image.b { background: linear-gradient(135deg, #c8b89a, #d8c9a8); }
+  .product-card-image.c { background: linear-gradient(135deg, #f6f4ef, #efebdd); }
+  .product-card-image.d { background: linear-gradient(135deg, #b8a07a, #cbb188); color: var(--pure-white); }
+  .product-card-badge {
+    position: absolute; top: 12px; left: 12px;
+    background: var(--akomeya-sale-red); color: var(--pure-white);
+    font-family: var(--font-gothic); font-size: 11px; font-weight: 700;
+    padding: 4px 10px;
+    letter-spacing: 0.04em;
+  }
+  .product-card-badge.gift { background: var(--akomeya-gift-green); }
+  .product-card-body { padding: 16px; background: var(--akomeya-list); }
+  .product-card h3 {
+    font-family: var(--font-gothic);
+    font-size: 14px; font-weight: 500;
+    line-height: 1.5; margin-bottom: 8px;
+    color: var(--akomeya-text);
+  }
+  .product-card .price { font-family: var(--font-gothic); font-size: 13px; font-weight: 700; color: var(--akomeya-text); }
+  .product-card p { font-family: var(--font-caption); font-size: 10px; font-weight: 500; line-height: 1.5; color: var(--akomeya-soft-gray); letter-spacing: 1px; margin-top: 4px; }
+
+  /* BUTTONS */
+  .button-row { display: flex; gap: 24px; flex-wrap: wrap; align-items: flex-start; }
+  .button-item { text-align: center; }
+  .button-label { font-family: var(--font-mono); font-size: 11px; font-weight: 400; color: var(--akomeya-soft-gray); margin-top: 12px; }
+
+  /* FEATURE COPY (cream banner) */
+  .feature-copy {
+    padding: 96px 24px;
+    background: var(--akomeya-cream);
+    text-align: center;
+  }
+  .feature-copy-eyebrow {
+    font-family: var(--font-gothic);
+    font-size: 12px; font-weight: 700;
+    color: var(--akomeya-text);
+    letter-spacing: 0.2em;
+    margin-bottom: 16px;
+  }
+  .feature-copy-large {
+    font-family: var(--font-mincho);
+    font-size: 32px; font-weight: 400;
+    line-height: 1.6;
+    color: var(--akomeya-text);
+    margin-bottom: 20px;
+    letter-spacing: 0.04em;
+  }
+  .feature-copy-sub {
+    font-family: var(--font-gothic);
+    font-size: 14px; font-weight: 500;
+    line-height: 1.8;
+    color: var(--akomeya-text);
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  /* FORM */
+  .form-group { margin-bottom: 20px; max-width: 480px; }
+  .form-label {
+    display: block;
+    font-family: var(--font-gothic);
+    font-size: 13px; font-weight: 700;
+    color: var(--akomeya-text);
+    margin-bottom: 8px;
+  }
+  .form-input {
+    width: 100%; background: var(--pure-white);
+    color: var(--akomeya-text);
+    border: 1px solid #cccccc;
+    padding: 10px 12px;
+    border-radius: 2px;
+    font-family: var(--font-gothic);
+    font-size: 14px; font-weight: 500;
+    line-height: 1.5;
+    outline: none;
+    transition: border-color 0.18s;
+  }
+  .form-input:focus, .form-input--focus { border-color: var(--akomeya-text); }
+  .form-input--error { border-color: var(--akomeya-sale-red); }
+  .form-state-label { font-size: 11px; color: var(--akomeya-soft-gray); margin-top: 6px; font-family: var(--font-mono); }
+
+  /* SPACING */
+  .spacing-row { display: flex; align-items: flex-end; gap: 16px; flex-wrap: wrap; margin-bottom: 24px; }
+  .spacing-item { text-align: center; }
+  .spacing-block { background: var(--akomeya-charcoal); height: 32px; border-radius: 0; margin-bottom: 8px; }
+  .spacing-value { font-family: var(--font-mono); font-size: 11px; color: var(--akomeya-soft-gray); }
+
+  /* SURFACE STACK */
+  .surface-stack { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; }
+  .surface-card {
+    height: 120px; padding: 16px;
+    border: 1px solid var(--soft-border);
+    display: flex; flex-direction: column; justify-content: flex-end;
+  }
+  .surface-card .name { font-family: var(--font-mincho); font-size: 14px; font-weight: 400; }
+  .surface-card .hex { font-family: var(--font-mono); font-size: 11px; }
+
+  /* FOOTER */
+  .footer {
+    padding: 64px 24px 40px;
+    background: var(--akomeya-sand);
+    color: var(--akomeya-text);
+    text-align: center;
+    font-family: var(--font-gothic);
+    font-size: 13px; font-weight: 500; line-height: 1.7;
+  }
+  .footer a { color: var(--akomeya-text); text-decoration: underline; }
+  .footer-mincho {
+    font-family: var(--font-mincho);
+    font-size: 24px; font-weight: 400;
+    margin-bottom: 16px;
+    letter-spacing: 0.04em;
+  }
+  .footer-tiny {
+    font-family: var(--font-caption);
+    font-size: 10px; color: var(--akomeya-soft-gray); letter-spacing: 1px;
+    margin-top: 24px;
+  }
+
+  @media (max-width: 769px) {
+    .hero h1, .feature-copy-large, .section-title { font-size: 24px; }
+    .nav { gap: 16px; }
+    .section { padding: 56px 20px; }
+    .feature-copy { padding: 64px 20px; }
+    .product-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Strong top bar -->
+<div class="strong-bar">5,500 lorem ipsum dolor sit amet ／ lorem ipsum dolor 500 lorem ipsum dolor sit</div>
+
+<!-- Cream header -->
+<header class="header">
+  <div class="header-left">
+    <div class="header-message">lorem ipsum dolor sit amet consectetur</div>
+  </div>
+  <div class="header-brand">lorem ipsum</div>
+  <div class="header-right">
+    <a href="#">lorem ipsum</a>
+    <a href="#">lorem ipsum</a>
+    <a href="#">lorem(0)</a>
+  </div>
+</header>
+
+<!-- Charcoal nav -->
+<nav class="nav">
+  <a href="#colors">lorem</a>
+  <a href="#typography">lorem</a>
+  <a href="#products">lorem</a>
+  <a href="#buttons">lorem / lorem</a>
+  <a href="#forms">lorem ipsum</a>
+  <a href="#elevation">lorem ipsum</a>
+</nav>
+
+<section class="hero">
+  <div class="hero-eyebrow">DESIGN SYSTEM PREVIEW</div>
+  <h1>lorem ipsum dolor, lorem ipsum dolor.</h1>
+  <p>AKOMEYA TOKYO(akomeya.jp)lorem ipsum dolor sit amet consectetur adipiscing. lorem ipsum dolor + lorem ipsum W6 lorem ipsum + lorem ipsum dolor sit amet consectetur adipiscing EC lorem ipsum dolor sit. lorem ipsum computed style lorem ipsum dolor.</p>
+  <div class="hero-buttons">
+    <a class="btn-standard" href="#">lorem ipsum</a>
+    <a class="btn-mincho-link" href="#">— lorem ipsum dolor</a>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- COLORS -->
+<section class="section" id="colors">
+  <div class="section-eyebrow">01 / COLORS</div>
+  <h2 class="section-title">lorem ipsum</h2>
+
+  <div class="color-group-label">lorem ipsum dolor</div>
+  <div class="color-grid">
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#efebdd"></div><div class="color-swatch-info"><div class="color-swatch-name">Cream Header</div><div class="color-swatch-hex">#efebdd</div><div class="color-swatch-role">lorem ipsum(lorem)</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#f6f4ef"></div><div class="color-swatch-info"><div class="color-swatch-name">Sand Footer</div><div class="color-swatch-hex">#f6f4ef</div><div class="color-swatch-role">lorem ipsum(lorem ipsum)</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#f5f5f5"></div><div class="color-swatch-info"><div class="color-swatch-name">List Surface</div><div class="color-swatch-hex">#f5f5f5</div><div class="color-swatch-role">lorem ipsum dolor</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#ffffff; border-bottom:1px solid #eee"></div><div class="color-swatch-info"><div class="color-swatch-name">Pure White</div><div class="color-swatch-hex">#ffffff</div><div class="color-swatch-role">lorem / lorem ipsum</div></div></div>
+  </div>
+
+  <div class="color-group-label">lorem</div>
+  <div class="color-grid">
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#3c3c3c"></div><div class="color-swatch-info"><div class="color-swatch-name">Charcoal</div><div class="color-swatch-hex">#3c3c3c</div><div class="color-swatch-role">lorem ipsum(lorem BG)</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#444444"></div><div class="color-swatch-info"><div class="color-swatch-name">Body Dark</div><div class="color-swatch-hex">#444444</div><div class="color-swatch-role">lorem / lorem CTA</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#222222"></div><div class="color-swatch-info"><div class="color-swatch-name">Strong Black</div><div class="color-swatch-hex">#222222</div><div class="color-swatch-role">lorem ipsum</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#000000"></div><div class="color-swatch-info"><div class="color-swatch-name">Pure Black</div><div class="color-swatch-hex">#000000</div><div class="color-swatch-role">lorem ipsum dolor</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#666666"></div><div class="color-swatch-info"><div class="color-swatch-name">Soft Gray</div><div class="color-swatch-hex">#666666</div><div class="color-swatch-role">lorem ipsum dolor</div></div></div>
+  </div>
+
+  <div class="color-group-label">lorem ipsum</div>
+  <div class="color-grid">
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#41c395"></div><div class="color-swatch-info"><div class="color-swatch-name">Gift Green</div><div class="color-swatch-hex">#41c395</div><div class="color-swatch-role">e lorem CTA(lorem)</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#ed4831"></div><div class="color-swatch-info"><div class="color-swatch-name">Sale Red</div><div class="color-swatch-hex">#ed4831</div><div class="color-swatch-role">SALE lorem(lorem)</div></div></div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- TYPOGRAPHY -->
+<section class="section" id="typography">
+  <div class="section-eyebrow">02 / TYPOGRAPHY — lorem</div>
+  <h2 class="section-title">lorem ipsum</h2>
+
+  <div class="type-sample">
+    <div style="font-family:var(--font-mincho); font-size:34px; font-weight:400; line-height:1.5; color:#444444; letter-spacing:0.02em;">ABOUT AKOMEYA</div>
+    <div class="type-meta">Yu Mincho / 34px / 400 / line-height: 1.5 (51px) / color #444444<span class="type-context">H2 SECTION (Mincho)</span></div>
+  </div>
+  <div class="type-sample">
+    <div style="font-family:var(--font-mincho); font-size:22px; font-weight:700; line-height:1.5; color:#444444;">lorem ipsum, lorem ipsum dolor.</div>
+    <div class="type-meta">Yu Mincho / 22px / 700 / line-height: 1.5 (33px) / color #444444<span class="type-context">H2 STRONG (Mincho)</span></div>
+  </div>
+  <div class="type-sample">
+    <div style="font-family:var(--font-mincho); font-size:18px; font-weight:700; line-height:1.5; color:#000000;">lorem ipsum, lorem ipsum dolor</div>
+    <div class="type-meta">Yu Mincho / 18px / 700 / line-height: 1.5 (27px) / color #000000<span class="type-context">CARD HEADING</span></div>
+  </div>
+  <div class="type-sample">
+    <div style="font-family:var(--font-gothic); font-size:14px; font-weight:500; line-height:1.5; color:#444444; max-width:640px;">AKOMEYA TOKYO lorem 2013 lorem ipsum 1 lorem ipsum dolor. “lorem ipsum dolor sit amet consectetur”lorem ipsum dolor, lorem ipsum dolor, lorem ipsum dolor sit, lorem / lorem ipsum dolor, lorem ipsum dolor, lorem ipsum dolor sit amet consectetur adipiscing elit sed.</div>
+    <div class="type-meta">Yu Gothic / 14px / 500 / line-height: 1.5 (21px) / color #444444<span class="type-context">BODY lorem</span></div>
+  </div>
+  <div class="type-sample">
+    <div style="font-family:var(--font-gothic); font-size:13px; font-weight:700; line-height:1.5; color:#444444;">lorem : 5,500 lorem ipsum dolor sit amet consectetur(lorem ipsum dolor)</div>
+    <div class="type-meta">Yu Gothic / 13px / 700 / line-height: 1.5 (19.5px) / color #444444<span class="type-context">BODY STRONG</span></div>
+  </div>
+  <div class="type-sample">
+    <div style="font-family:var(--font-gothic); font-size:12px; font-weight:500; line-height:1.5; color:#444444;">lorem ipsum ／ lorem ipsum dolor ／ lorem ipsum dolor ／ lorem ipsum</div>
+    <div class="type-meta">Yu Gothic / 12px / 500 / line-height: 1.5 (18px) / color #444444<span class="type-context">SUB BODY</span></div>
+  </div>
+  <div class="type-sample">
+    <div style="font-family:var(--font-caption); font-size:10px; font-weight:500; line-height:1.5; color:#666666; letter-spacing:1px;">＊lorem ipsum dolor sit. lorem ipsum dolor sit amet consectetur.</div>
+    <div class="type-meta">lorem ipsum (W3) / 10px / 500 / line-height: 1.5 / letter-spacing: 1px / color #666666<span class="type-context">CAPTION (W3)</span></div>
+  </div>
+  <div class="type-sample">
+    <div style="font-family:var(--font-mincho); font-size:15px; font-weight:400; line-height:1.0; color:#000000;">— lorem ipsum</div>
+    <div class="type-meta">Yu Mincho / 15px / 400 / line-height: 1.0 / color #000000<span class="type-context">ANCHOR (Mincho)</span></div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ARTICLE -->
+<section class="section" id="article">
+  <div class="section-eyebrow">03 / ARTICLE — lorem ipsum</div>
+  <h2 class="section-title">lorem ipsum dolor sit</h2>
+
+  <article style="max-width: 720px; margin: 0 auto; font-family: var(--font-gothic);">
+    <div style="font-family: var(--font-gothic); font-size:12px; font-weight:700; color: var(--akomeya-soft-gray); letter-spacing: 0.1em; margin-bottom: 8px;">2026.05.08 / lorem</div>
+    <h3 style="font-family: var(--font-mincho); font-size: 28px; font-weight: 400; line-height: 1.5; color: var(--akomeya-text); margin-bottom: 24px; letter-spacing: 0.02em;">lorem, lorem ipsum dolor, lorem ipsum dolor sit.</h3>
+    <p style="font-size: 14px; font-weight: 500; line-height: 1.8; color: var(--akomeya-text); margin-bottom: 20px;">lorem ipsum dolor sit amet consectetur. lorem ipsum dolor, lorem ipsum dolor sit amet consectetur adipiscing. lorem, lorem ipsum dolor sit amet consectetur, lorem ipsum dolor sit amet consectetur, lorem ipsum dolor sit amet consectetur.</p>
+    <p style="font-size: 14px; font-weight: 500; line-height: 1.8; color: var(--akomeya-text); margin-bottom: 20px;">lorem ipsum dolor, lorem ipsum dolor, lorem ipsum dolor sit amet consectetur. lorem ipsum dolor sit amet consectetur, lorem ipsum dolor sit amet consectetur adipiscing, lorem ipsum dolor sit amet.</p>
+    <h3 style="font-family: var(--font-mincho); font-size: 22px; font-weight: 700; line-height: 1.5; color: var(--akomeya-text); margin: 40px 0 16px;">lorem ipsum dolor</h3>
+    <p style="font-size: 14px; font-weight: 500; line-height: 1.8; color: var(--akomeya-text);">lorem ipsum dolor sit amet consectetur, lorem ipsum dolor sit amet consectetur. lorem ipsum dolor, lorem ipsum“lorem ipsum”lorem ipsum dolor. lorem ipsum, lorem ipsum dolor sit amet consectetur.</p>
+    <div style="margin-top: 32px; text-align: center;">
+      <a class="btn-mincho-link" href="#">— lorem ipsum</a>
+    </div>
+  </article>
+</section>
+
+<hr class="section-divider">
+
+<!-- FEATURE COPY (cream) -->
+<section style="background: var(--akomeya-cream);">
+  <div class="feature-copy">
+    <div class="feature-copy-eyebrow">CONCEPT</div>
+    <div class="feature-copy-large">lorem ipsum dolor,<br>lorem ipsum dolor.</div>
+    <div class="feature-copy-sub">AKOMEYA TOKYO lorem, lorem ipsum, lorem ipsum dolor. lorem ipsum dolor, lorem ipsum dolor sit, lorem ipsum dolor sit, lorem ipsum dolor sit amet consectetur, lorem 10 lorem ipsum dolor sit amet consectetur.</div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- PRODUCTS -->
+<section class="section" id="products">
+  <div class="section-eyebrow">04 / PRODUCTS — SELECTION</div>
+  <h2 class="section-title">AKOMEYA SELECTION</h2>
+
+  <div class="product-grid">
+    <a class="product-card" href="#">
+      <div class="product-card-image"><span class="product-card-badge">NEW</span>lorem</div>
+      <div class="product-card-body">
+        <h3>lorem ipsum dolor lorem ipsum 5kg</h3>
+        <div class="price">¥5,400(lorem)</div>
+        <p>＊lorem: 2026.10.15</p>
+      </div>
+    </a>
+    <a class="product-card" href="#">
+      <div class="product-card-image b"><span class="product-card-badge gift">GIFT</span>lorem</div>
+      <div class="product-card-body">
+        <h3>lorem ipsum lorem ipsum lorem</h3>
+        <div class="price">¥9,900(lorem)</div>
+        <p>＊lorem / lorem ipsum dolor</p>
+      </div>
+    </a>
+    <a class="product-card" href="#">
+      <div class="product-card-image c">lorem</div>
+      <div class="product-card-body">
+        <h3>lorem ipsum dolor lorem lorem ipsum</h3>
+        <div class="price">¥3,780(lorem)</div>
+        <p>＊lorem ipsum dolor</p>
+      </div>
+    </a>
+    <a class="product-card" href="#">
+      <div class="product-card-image d">lorem</div>
+      <div class="product-card-body">
+        <h3>lorem ipsum dolor lorem lorem lorem</h3>
+        <div class="price">¥2,860(lorem)</div>
+        <p>＊lorem ipsum dolor + lorem</p>
+      </div>
+    </a>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- BUTTONS -->
+<section class="section" id="buttons">
+  <div class="section-eyebrow">05 / BUTTONS</div>
+  <h2 class="section-title">lorem ipsum dolor</h2>
+
+  <div class="button-row">
+    <div class="button-item">
+      <a class="btn-standard" href="#">lorem ipsum</a>
+      <div class="button-label">lorem CTA<br>#444 / lorem / radius 2px</div>
+    </div>
+    <div class="button-item">
+      <a class="btn-large" href="#">lorem ipsum</a>
+      <div class="button-label">lorem CTA<br>16px / radius 2px</div>
+    </div>
+    <div class="button-item">
+      <a class="btn-gift" href="#">e lorem ipsum dolor</a>
+      <div class="button-label">e lorem CTA<br>#41c395 / lorem / radius 0</div>
+    </div>
+    <div class="button-item">
+      <a class="btn-mincho-link" href="#">— lorem ipsum dolor</a>
+      <div class="button-label">lorem ipsum<br>Yu Mincho / lorem</div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- FORMS -->
+<section class="section" id="forms">
+  <div class="section-eyebrow">06 / FORMS</div>
+  <h2 class="section-title">lorem ipsum dolor</h2>
+
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 32px;">
+    <div>
+      <div class="form-group">
+        <label class="form-label">lorem ipsum dolor(lorem)</label>
+        <input class="form-input" placeholder="example@akomeya.jp">
+        <div class="form-state-label">DEFAULT — border #cccccc</div>
+      </div>
+    </div>
+    <div>
+      <div class="form-group">
+        <label class="form-label">lorem ipsum dolor(lorem)</label>
+        <input class="form-input form-input--focus" value="example@akomeya.jp">
+        <div class="form-state-label">FOCUS — border #444444</div>
+      </div>
+    </div>
+    <div>
+      <div class="form-group">
+        <label class="form-label" style="color:var(--akomeya-sale-red);">lorem ipsum dolor(lorem)</label>
+        <input class="form-input form-input--error" value="不正な形式です">
+        <div class="form-state-label" style="color:var(--akomeya-sale-red);">ERROR — border #ed4831</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ELEVATION -->
+<section class="section" id="elevation">
+  <div class="section-eyebrow">07 / ELEVATION & SURFACE</div>
+  <h2 class="section-title">lorem ipsum</h2>
+
+  <p style="margin-bottom: 24px; color: var(--akomeya-text); max-width: 720px; font-family: var(--font-gothic); font-size: 14px; font-weight: 500; line-height: 1.7;">AKOMEYA lorem ipsum dolor, lorem ipsum dolor sit amet consectetur. lorem ipsum, lorem, lorem ipsum, lorem ipsum dolor, lorem ipsum dolor sit amet consectetur.</p>
+
+  <div class="surface-stack">
+    <div class="surface-card" style="background:#ffffff;"><div class="name">Pure White</div><div class="hex">#ffffff</div></div>
+    <div class="surface-card" style="background:#f5f5f5;"><div class="name">List Surface</div><div class="hex">#f5f5f5</div></div>
+    <div class="surface-card" style="background:#f6f4ef;"><div class="name">Sand Footer</div><div class="hex">#f6f4ef</div></div>
+    <div class="surface-card" style="background:#efebdd;"><div class="name">Cream Header</div><div class="hex">#efebdd</div></div>
+    <div class="surface-card" style="background:#3c3c3c; color: var(--pure-white);"><div class="name" style="color:var(--pure-white);">Charcoal</div><div class="hex" style="color:var(--pure-white);">#3c3c3c</div></div>
+    <div class="surface-card" style="background:#222222; color: var(--pure-white);"><div class="name" style="color:var(--pure-white);">Strong Black</div><div class="hex" style="color:var(--pure-white);">#222222</div></div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- LAYOUT -->
+<section class="section" id="layout">
+  <div class="section-eyebrow">08 / LAYOUT — SPACING</div>
+  <h2 class="section-title">lorem ipsum dolor</h2>
+
+  <div class="spacing-row">
+    <div class="spacing-item"><div class="spacing-block" style="width:4px"></div><div class="spacing-value">XS<br>4px</div></div>
+    <div class="spacing-item"><div class="spacing-block" style="width:8px"></div><div class="spacing-value">S<br>8px</div></div>
+    <div class="spacing-item"><div class="spacing-block" style="width:16px"></div><div class="spacing-value">M<br>16px</div></div>
+    <div class="spacing-item"><div class="spacing-block" style="width:24px"></div><div class="spacing-value">L<br>24px</div></div>
+    <div class="spacing-item"><div class="spacing-block" style="width:40px"></div><div class="spacing-value">XL<br>40px</div></div>
+    <div class="spacing-item"><div class="spacing-block" style="width:64px"></div><div class="spacing-value">XXL<br>64px</div></div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-mincho">lorem ipsum</div>
+  <p>lorem ipsum dolor AKOMEYA TOKYO lorem ipsum(akomeya.jp)lorem ipsum dolor DESIGN.md lorem ipsum dolor.</p>
+  <p>Yu Mincho lorem ipsum ／ Yu Gothic lorem ／ lorem ipsum dolor sit ／ #41c395 lorem e lorem ／ #ed4831 lorem ipsum</p>
+  <p class="footer-tiny">© AKOMEYA TOKYO. lorem ipsum dolor awesome-design-md-jp lorem ipsum dolor sit.</p>
+</footer>
+
+</body>
+</html>
